@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+<script type="module">
+
+	import {Jdm} from "../dist/jdm.js";
+
+	const typeHiddenInput = 'text';
+
+	const bodyString = `
+			<div class="d-flex flex-column h-100 w-100">
+				<header class="headerTop shadow ps-3" data-name="header">
+					<h1 class="title">titolo</h1>
+					<div class="toolBar pe-2" data-name="toolbar"></div>
+				</header>
+				<main class="main pt-3 bg-grey-light-4">
+					<form id="form" class="form container-fluid p-3" data-name="form">
+						<input type="${typeHiddenInput}" class="hidden" name="page[idWebPage]" data-name="idWebPage" readonly>
+						<input type="${typeHiddenInput}" class="hidden" name="page[idLocalization]" data-name="idLocalization" readonly>
+						<input type="${typeHiddenInput}" class="hidden" name="page[type]" data-name="type" value="page" readonly>
+						<input type="${typeHiddenInput}" class="hidden" name="copyFrom" data-name="copyFrom" readonly>
+						<fieldset class="container-fluid containerField ">
+							<legend>Essenziali</legend>
+							<div class="row">
+								<div class="col-12">
+									<div class="containerField mb-3">
+										<label for="title" class="form-label">Titolo *</label>
+										<input id="title" type="text" class="form-control" name="page[title]" data-name="title" required>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+						<fieldset class="container-fluid containerField ">
+							<legend>Immagine rappresentativa</legend>
+							<div class="col-12">
+								<div class="containerField mb-3" data-name="fileImportantContainer">
+<!--									<label for="fileImportant" class="form-label">Immagine rappresentativa</label>-->
+									<filemanager name="page[fileImportant]" data-name="fileImportant" data-idNode="WEBSITEa3e24b22_78570233"></filemanager>
+								</div>
+							</div>
+						</fieldset>
+						<fieldset class="container-fluid containerField ">
+							<legend>Seo</legend>
+							<div class="row">
+								<div class="col-12 col-md-6">
+									<div class="containerField mb-3">
+										<div class="d-flex justify-content-between align-items-center">
+											<label for="friendly" class="form-label">Friendly  *</label>
+											<small class="text-grey-light-1">
+												<i class="fal fa-info-circle" title="Questo valore indica l'url della pagina ad esempio www.miodominio.it/it/friendly"></i>
+											</small>
+										</div>
+										<input id="friendly" type="text" class="form-control" name="page[friendly]" data-name="friendly" required>
+									</div>
+								</div>
+								<div class="col-12 col-md-6">
+									<div class="containerField mb-3">
+										<div class="d-flex justify-content-between align-items-center">
+											<label for="metaTitle" class="form-label">Meta titolo *</label>
+											<small class="text-grey-light-1">
+												<i class="fal fa-info-circle" title="Questo titolo sarà visualizzato in alto nella tab del browser "></i>
+											</small>
+										</div>
+										<input id="metaTitle" type="text" class="form-control" name="page[metaTitle]" data-name="metaTitle" required>
+									</div>
+								</div>
+								<div class="col-12">
+									<div class="containerField mb-3">
+										<div class="d-flex justify-content-between align-items-center">
+											<label for="metaDescription" class="form-label">Meta descrizione</label>
+											<small class="text-grey-light-1">
+												caratteri: <span data-name="metaDescriptionNCharacters">0</span> consigliati: 150/160
+												<i class="fal fa-info-circle" title="Questa descrizione sarà visualizzata ai motori di ricerca per indicizzare meglio la pagina. Sono consigliati circa 150/160 caratteri. L'eccedenza potrebbe non essere visualizzata dai browser"></i>
+											</small>
+										</div>
+										<textarea id="metaDescription" type="text" class="form-control" name="page[metaDescription]" data-name="metaDescription" rows="3">test</textarea>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+						<fieldset class="container-fluid containerField ">
+							<legend>Extra</legend>
+							<div class="row mt-2">
+								<div class="col-12" data-name="extra"> </div>
+							</div>
+						</fieldset>
+					</form>
+				</main>
+			</div>
+		`;
+        const dom = {}
+        const test = document.createElement('div')
+    test.innerHTML='SONO PRIMO'
+        const jdmNode = new Jdm(bodyString, document.body, null , true).jdm_prepend(test)
+        console.log(jdmNode)
+</script>
+</html>
