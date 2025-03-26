@@ -1,6 +1,6 @@
 {
-  "name": "jdm",
-  "version": "2.0.0",
+  "name": "jdm_javascript_dom_manipulator",
+  "version": "2.1.1",
   "description": "framework javascript",
   "main": "index.js",
   "directories": {
@@ -16,7 +16,7 @@
     "url": "git+https://github.com/giacomarco/jdm.git"
   },
   "keywords": [
-    "tutorial"
+    "jdm", "javascript", "dom", "manipulator"
   ],
   "author": "Marco Giacobazzi",
   "license": "ISC",
@@ -33,15 +33,15 @@
     "html-webpack-plugin": "^5.6.3",
     "jsdoc": "^4.0.4",
     "jsdoc-to-markdown": "^9.1.1",
+    "minami": "^1.2.3",
     "mini-css-extract-plugin": "^2.9.2",
     "sass": "^1.86.0",
     "sass-loader": "^16.0.5",
     "style-loader": "^4.0.0",
+    "taffydb": "^2.7.3",
     "webpack": "^5.98.0",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0",
     "webpack-shell-plugin-next": "^2.3.2"
-  },
-  "dependencies": {
   }
 }

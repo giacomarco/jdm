@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>CREAZIONE DOM</h1>
+<hr>
+
+</body>
+<script type="module">
+    import "../dist/jdm.js";
+    const string = 'stringa';
+
+    //language=html
+    const domString = `
+    <div>
+        <ul>
+            <li data-name="element1">1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>${string.toCapitalize()}</li>
+        </ul>
+    </div>
+    `;
+
+    const dom = JDM(domString, document.body, ['test', 'element'])
+        .jdm_extendChildNode()
+        .jdm_addClassList('test2')
+        .jdm_addId('elemento1');
+
+    const test = new Jdm(domString, document.body, ['test2', 'element2'])
+
+    console.log('tst',test)
+
+</script>
+</html>

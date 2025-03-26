@@ -92,8 +92,8 @@
 </body>
 <script type="module">
 
-    import {Jdm, JdmData} from "../dist/jdm.js";
-    const form = new Jdm( new JdmData(document.querySelector('#form')))
+    import {Jdm} from "../dist/jdm.js";
+    const form = new Jdm( document.querySelector('#form'))
 
     form.jdm_setValue({
         nome: 'Foo',

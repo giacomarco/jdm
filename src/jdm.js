@@ -1,879 +1,1088 @@
-import {_common} from "./_common.js";
-import {Proto} from "./proto.js";
-
-const v= '3.3'
+import { _common } from "./_common.js";
+import { Proto } from "./proto.js";
 
 new Proto();
-
 /**
- * Classe che rappresenta un oggetto contenente i dati del nodo HTML.
+ * Classe Jdm che fornisce un framework per la manipolazione del DOM.
+ * Permette di creare un elemento DOM, aggiungerlo a un genitore, assegnargli delle classi
+ * e manipolarlo in modo ricorsivo, se richiesto.
+ * I metodi della classe sono concatenabili per facilitare le operazioni sul DOM.
+ *
+ * @class
  */
-export class JdmData {
-	/**
-	 * Crea un'istanza di JdmData.
-	 * @param {Element|null|string} element - L'elemento HTML del nodo.
-	 * @param {Element|Jdm|null} parent - L'elemento HTML del nodo padre.
-	 * @param {string|Array<string>|null} classList - La lista di classi del nodo.
-	 * @param {boolean} deep - Un flag che indica se il nodo deve essere creato con eventuali nodi figli.
-	 * @param {...any} args - Argomenti aggiuntivi opzionali per la classe JdmData.
-	 */
-	constructor(element = null, parent = null, classList = null, deep = true, ...args) {
-		this.element = element;
-		this.parent = parent;
-		this.classList = classList;
-		this.deep = deep;
-		this.args = args;
-	}
-}
+class Jdm {
+    /**
+     * Crea una nuova istanza della classe Jdm e manipola l'elemento DOM.
+     *
+     * @constructor
+     * @param {HTMLElement|null} [element=null] - L'elemento DOM da manipolare. Se non specificato, verrà creato un nuovo nodo.
+     * @param {HTMLElement|null} [parent=null] - Il genitore dell'elemento. Se specificato, l'elemento verrà aggiunto come figlio del genitore.
+     * @param {string[]|null} [classList=null] - Una lista di classi da aggiungere all'elemento. Se specificato, verranno aggiunte le classi all'elemento.
+     * @param {boolean} [deep=true] - Se impostato su `true`, i figli dell'elemento verranno manipolati ricorsivamente.
+     * @param {...*} [args] - Altri argomenti opzionali che possono essere passati per la manipolazione del nodo.
+     * @returns {HTMLElement} - Restituisce il nodo appena creato o manipolato.
+     *
+     * @example
+     * const div = new Jdm('div', document.body, ['my-class'], true);
+     * // Crea un nuovo div con la classe 'my-class' e lo aggiunge al body
+     */
+    constructor(element = null, parent = null, classList = null, deep = true, ...args) {
+        const data = { element: element, parent: parent, classList: classList, deep: deep, args: args };
+        this.node = this.init(data);
+        this.tag = this.node.tagName.toLowerCase();
+        if (data.classList) this.jdm_addClassList(data.classList);
+        if (data.parent) data.parent.appendChild(this.node);
+        if (data.deep) {
+            const mainNode = data.args?.length > 0 ? data.args[0]?.mainNode : null;
+            this.loopOverChild(this.node.childNodes, data.args[0]?.mainNode);
+        }
+        this.addJdmMethodToNode();
+        return this.node;
+    }
 
+    /**
+     * Inizializza l'elemento DOM con i dati forniti, creando l'elemento o parsando una stringa HTML,
+     * a seconda del tipo di dato passato.
+     *
+     * @private
+     * @param {Object} data - I dati utilizzati per inizializzare l'elemento.
+     * @param {HTMLElement|string} data.element - Può essere un tag HTML come stringa, un elemento DOM esistente,
+     *                                            o una stringa HTML da parsare.
+     * @returns {HTMLElement|null} - Restituisce l'elemento DOM creato o parsato, oppure `null` in caso di errore.
+     *
+     * @throws {Error} Se il tipo dell'elemento è sconosciuto o non supportato, viene registrato un errore nel console.
+     */
+    init(data) {
+        switch (this.checkType(data.element)) {
+            case "tagString":
+                return document.createElement(data.element);
+            case "domFromString":
+                const parser = new DOMParser();
+                return parser.parseFromString(data.element, "text/html").getRootNode().body.firstChild;
+            case "elementDom":
+                return data.element;
+            case "domFromHtml":
+                const parserHtml = new DOMParser();
+                return parserHtml.parseFromString(data.element, "text/html").getRootNode().body.firstChild;
+            case "unknown":
+                console.error("Element not supported by jdm:", data);
+                break;
+        }
+    }
+
+    /**
+     * Controlla il tipo di variabile passata e restituisce una stringa che indica il tipo specifico.
+     * Questo metodo viene utilizzato per determinare se la variabile è una stringa HTML, un tag stringa,
+     * un elemento DOM o altro tipo sconosciuto.
+     *
+     * @private
+     * @param {*} variable - La variabile il cui tipo deve essere verificato.
+     * @returns {string} - Una stringa che rappresenta il tipo dell'elemento:
+     *                     - `"domFromString"` se la variabile è una stringa che sembra un'intera struttura HTML.
+     *                     - `"domFromHtml"` se la variabile è una stringa HTML che rappresenta un frammento di HTML.
+     *                     - `"tagString"` se la variabile è una stringa che rappresenta un tag HTML.
+     *                     - `"elementDom"` se la variabile è un nodo DOM.
+     *                     - `"unknown"` se il tipo non è riconosciuto.
+     *
+     * @example
+     * checkType("<div></div>"); // Restituisce "domFromString"
+     * checkType("<p>Test</p>"); // Restituisce "domFromHtml"
+     * checkType("div"); // Restituisce "tagString"
+     * checkType(document.createElement('div')); // Restituisce "elementDom"
+     * checkType(123); // Restituisce "unknown"
+     */
+    checkType(variable) {
+        if (typeof variable === "string") {
+            if (variable.charAt(0) === "<" && variable.charAt(variable.length - 1) === ">") {
+                return "domFromString";
+            } else if (/<[a-z][\s\S]*>/i.test(variable)) {
+                return "domFromHtml";
+            } else {
+                return "tagString";
+            }
+        } else if (variable.nodeType && variable.nodeType === Node.ELEMENT_NODE) {
+            return "elementDom";
+        } else {
+            return "unknown";
+        }
+    }
+
+    /**
+     * Esegue una manipolazione ricorsiva sui figli di un nodo DOM, aggiungendo metodi specifici
+     * per ogni figlio e organizzandoli in un oggetto `jdm_childNode` associato al nodo principale.
+     *
+     * @private
+     * @param {NodeList|Array} childNodes - Una lista o un array di nodi figli da manipolare.
+     * @param {HTMLElement|null} [mainNode=null] - Il nodo principale a cui associare i figli. Se non specificato,
+     *                                             verrà utilizzato il nodo corrente (`this.node`).
+     * @returns {void} - Non restituisce alcun valore.
+     *
+     * @example
+     * const parentElement = document.createElement('div');
+     * const childElement = document.createElement('span');
+     * parentElement.appendChild(childElement);
+     * const jdmInstance = new Jdm(parentElement);
+     * jdmInstance.loopOverChild(parentElement.childNodes);
+     * // Questo itererà sui nodi figli e li assocerà all'oggetto `jdm_childNode` di `parentElement`
+     */
+    loopOverChild(childNodes, mainNode = null) {
+        childNodes = Array.from(childNodes).filter(child => child.nodeType <= 2);
+        mainNode = mainNode ? mainNode : this.node;
+
+        if (childNodes.length > 0) {
+            mainNode.jdm_childNode = mainNode.jdm_childNode ? mainNode.jdm_childNode : {};
+            for (const child of childNodes) {
+                const name = child.getAttribute("name");
+                const dataName = child.getAttribute("data-name");
+
+                const jdmElement = new Jdm(child, null, null, true, { mainNode: mainNode });
+                if (dataName) {
+                    mainNode.jdm_childNode[dataName] = jdmElement;
+                } else if (name) {
+                    mainNode.jdm_childNode[name] = jdmElement;
+                }
+            }
+        }
+    }
+
+    /**
+     * Aggiunge tutti i metodi che iniziano con "jdm_" dall'istanza di `Jdm` all'elemento DOM
+     * (associandoli come metodi dell'oggetto `node`), permettendo così di chiamare questi metodi direttamente
+     * sull'elemento DOM associato.
+     *
+     * @private
+     * @returns {void} - Non restituisce alcun valore, ma modifica l'oggetto `node` aggiungendo metodi ad esso.
+     *
+     * @example
+     * const div = new Jdm(document.createElement('div'));
+     * div.jdm_addClassList(['class1', 'class2']);
+     * // Questo aggiunge il metodo `jdm_addClassList` all'elemento DOM creato e consente di chiamarlo come metodo diretto su `div`.
+     */
+    addJdmMethodToNode() {
+        const methodList = Object.getOwnPropertyNames(Jdm.prototype);
+        const jdm_methodList = methodList.filter(elemento => {
+            return elemento.startsWith("jdm_");
+        });
+
+        for (const jdmMethod of jdm_methodList) {
+            this.node[jdmMethod] = this[jdmMethod].bind(this);
+        }
+    }
+
+    /**
+     * Imposta un attributo su un elemento DOM e genera un evento personalizzato per il cambiamento.
+     *
+     * @param {string} attribute - Il nome dell'attributo da impostare sull'elemento DOM.
+     * @param {string|null} [value=null] - Il valore dell'attributo. Se non fornito, l'attributo sarà impostato su `null`.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui l'attributo è stato impostato, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const div = new Jdm(document.createElement('div'));
+     * div.jdm_setAttribute('id', 'myDiv');
+     * // Imposta l'attributo "id" su "myDiv" per l'elemento div.
+     */
+    jdm_setAttribute(attribute, value = null) {
+        this.node.setAttribute(attribute, value);
+        this.jdm_genEvent("setAttribute", { attribute: attribute, value: value });
+        return this.node;
+    }
+
+    /**
+     * Recupera il valore di un attributo di un elemento DOM.
+     *
+     * @param {string} attribute - Il nome dell'attributo di cui si desidera ottenere il valore.
+     * @returns {string|null} - Restituisce il valore dell'attributo se esiste, altrimenti `null` se l'attributo non è presente.
+     *
+     * @example
+     * const div = new Jdm(document.createElement('div'));
+     * div.jdm_setAttribute('id', 'myDiv');
+     * const idValue = div.jdm_getAttribute('id');
+     * console.log(idValue); // Stampa "myDiv"
+     */
+    jdm_getAttribute(attribute) {
+        return this.node.getAttribute(attribute);
+    }
+
+    /**
+     * Aggiunge uno o più elementi figli a un elemento DOM.
+     * Se viene fornita una lista di elementi, tutti gli elementi vengono aggiunti all'elemento DOM.
+     *
+     * @param {HTMLElement|HTMLElement[]} elementList - Un singolo elemento DOM o un array di elementi DOM da aggiungere come figli.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui gli elementi sono stati aggiunti, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const div = new Jdm(document.createElement('div'));
+     * const p1 = document.createElement('p');
+     * const p2 = document.createElement('p');
+     * div.jdm_append([p1, p2]); // Aggiunge entrambi i paragrafi come figli del div.
+     *
+     * const span = document.createElement('span');
+     * div.jdm_append(span); // Aggiunge il singolo elemento span come figlio del div.
+     */
+    jdm_append(elementList) {
+        if (Array.isArray(elementList)) {
+            for (const element of elementList) {
+                this.node.appendChild(element);
+            }
+        } else if (elementList) {
+            this.node.appendChild(elementList);
+        }
+        return this.node;
+    }
+
+    /**
+     * Aggiunge uno o più elementi figli a un elemento DOM.
+     * Se viene fornita una lista di elementi, tutti gli elementi vengono aggiunti come figli dell'elemento.
+     * Se viene fornito un singolo elemento, questo viene aggiunto come unico figlio.
+     *
+     * @param {HTMLElement|HTMLElement[]} elementList - Un singolo elemento DOM o un array di elementi DOM da aggiungere come figli.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui gli elementi sono stati aggiunti, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const div = new Jdm(document.createElement('div'));
+     * const p1 = document.createElement('p');
+     * const p2 = document.createElement('p');
+     * div.jdm_append([p1, p2]); // Aggiunge entrambi i paragrafi come figli del div.
+     *
+     * const span = document.createElement('span');
+     * div.jdm_append(span); // Aggiunge il singolo elemento span come figlio del div.
+     */
+    jdm_prepend(elementList) {
+        const firstChild = this.node.firstElementChild;
+
+        if (Array.isArray(elementList)) {
+            for (const element of elementList) {
+                this.node.prepend(element);
+            }
+        } else if (elementList) {
+            this.node.prepend(elementList);
+        }
+        return this.node;
+    }
+    /**
+     * Aggiunge un attributo `id` all'elemento DOM specificato.
+     *
+     * @param {string} id - Il valore dell'attributo `id` da impostare sull'elemento DOM.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato impostato l'attributo `id`, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const div = new Jdm(document.createElement('div'));
+     * div.jdm_addId('myDiv'); // Imposta l'attributo id="myDiv" sull'elemento div.
+     */
+    jdm_addId(id) {
+        this.node.setAttribute("id", id);
+        return this.node;
+    }
+    /**
+     * Aggiunge una o più classi CSS all'elemento DOM.
+     * Se viene fornito un array di classi, tutte le classi vengono aggiunte all'elemento.
+     * Se viene fornita una singola classe, questa viene aggiunta come unica classe.
+     *
+     * @param {string|string[]} classList - Una singola classe CSS o un array di classi CSS da aggiungere all'elemento DOM.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui le classi sono state aggiunte, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const div = new Jdm(document.createElement('div'));
+     * div.jdm_addClassList('myClass'); // Aggiunge la classe "myClass" all'elemento div.
+     *
+     * const div2 = new Jdm(document.createElement('div'));
+     * div2.jdm_addClassList(['class1', 'class2']); // Aggiunge "class1" e "class2" all'elemento div2.
+     */
+    jdm_addClassList(classList) {
+        if (Array.isArray(classList)) {
+            for (const cls of classList) {
+                this.node.classList.add(cls);
+            }
+        } else if (classList) {
+            this.node.classList.add(classList);
+        }
+        return this.node;
+    }
+
+    /**
+     * Rimuove una o più classi CSS dall'elemento DOM.
+     * Se viene fornito un array di classi, tutte le classi vengono rimosse dall'elemento.
+     * Se viene fornita una singola classe, questa viene rimossa.
+     *
+     * @param {string|string[]} classList - Una singola classe CSS o un array di classi CSS da rimuovere dall'elemento DOM.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui le classi sono state rimosse, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const div = new Jdm(document.createElement('div'));
+     * div.jdm_removeClassList('myClass'); // Rimuove la classe "myClass" dall'elemento div.
+     *
+     * const div2 = new Jdm(document.createElement('div'));
+     * div2.jdm_removeClassList(['class1', 'class2']); // Rimuove "class1" e "class2" dall'elemento div2.
+     */
+    jdm_removeClassList(classList) {
+        if (Array.isArray(classList)) {
+            for (const cls of classList) {
+                this.node.classList.remove(cls);
+            }
+        } else if (classList) {
+            this.node.classList.remove(classList);
+        }
+        return this.node;
+    }
+    /**
+     * Attiva o disattiva una o più classi CSS su un elemento DOM.
+     * Se viene fornito un array di classi, ciascuna classe verrà alternata (aggiunta se non presente, rimossa se presente).
+     * Se viene fornita una singola classe, questa verrà alternata.
+     *
+     * @param {string|string[]} classList - Una singola classe CSS o un array di classi CSS da alternare sull'elemento DOM.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui le classi sono state alternate, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const div = new Jdm(document.createElement('div'));
+     * div.jdm_toggleClassList('active'); // Alterna la classe "active" sull'elemento div.
+     *
+     * const div2 = new Jdm(document.createElement('div'));
+     * div2.jdm_toggleClassList(['class1', 'class2']); // Alterna le classi "class1" e "class2" sull'elemento div2.
+     */
+    jdm_toggleClassList(classList) {
+        if (Array.isArray(classList)) {
+            for (const cls of classList) {
+                this.node.classList.toggle(cls);
+            }
+        } else if (classList) {
+            this.node.classList.toggle(classList);
+        }
+        return this.node;
+    }
+    /**
+     * Svuota il contenuto dell'elemento DOM.
+     * A seconda del tipo di elemento, il comportamento di "svuotamento" varia:
+     * - Per gli elementi `input` di tipo `checkbox` o `radio`, deseleziona l'elemento (imposta `checked` a `false`).
+     * - Per gli altri elementi `input` o `textarea`, imposta il valore a `null` (svuotando il campo di testo).
+     * - Per un elemento `form`, esegue il reset del modulo (ripristina tutti i campi al loro stato iniziale).
+     * - Per altri tipi di elementi, rimuove il contenuto HTML dell'elemento (imposta `innerHTML` a una stringa vuota).
+     *
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato effettuato lo svuotamento, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const inputText = new Jdm(document.createElement('input'));
+     * inputText.jdm_empty(); // Imposta il valore dell'input text a null.
+     *
+     * const checkbox = new Jdm(document.createElement('input'));
+     * checkbox.node.type = 'checkbox';
+     * checkbox.jdm_empty(); // Deseleziona la checkbox.
+     *
+     * const form = new Jdm(document.createElement('form'));
+     * form.jdm_empty(); // Esegue il reset del modulo.
+     */
+    jdm_empty() {
+        if (this.tag === "input" && (this.node.element === "checkbox" || this.node.element === "radio")) {
+            this.node.checked = false;
+        } else if (this.tag === "input" || this.tag === "textarea") {
+            this.node.value = null;
+        } else if (this.tag === "form") {
+            this.node.reset();
+        } else {
+            this.node.innerHTML = "";
+        }
+
+        return this.node;
+    }
+    /**
+     * Rimuove l'elemento DOM dal documento e genera un evento di distruzione.
+     * Questo metodo elimina l'elemento DOM rappresentato da `this.node` dalla struttura del documento.
+     * Inoltre, viene generato un evento personalizzato chiamato "destroy".
+     *
+     * @returns {HTMLElement} - Restituisce l'elemento DOM che è stato rimosso, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const div = new Jdm(document.createElement('div'));
+     * div.jdm_destroy(); // Rimuove l'elemento div dal documento e genera un evento "destroy".
+     */
+    jdm_destroy() {
+        this.node.remove();
+        this.jdm_genEvent("destroy");
+        return this.node;
+    }
+    /**
+     * Verifica la validità dell'elemento `input` o `form` secondo le regole di validazione HTML.
+     * Se l'elemento è valido, il metodo restituisce `true`; altrimenti, restituisce `false` e attiva un evento di validazione.
+     * Dopo la verifica, viene generato un evento personalizzato chiamato "validate".
+     *
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stata effettuata la validazione, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const input = new Jdm(document.createElement('input'));
+     * input.node.setAttribute('required', 'true');
+     * input.jdm_validate(); // Verifica la validità dell'input e genera l'evento "validate".
+     */
+    jdm_validate() {
+        this.node.checkValidity();
+        this.jdm_genEvent("validate");
+        return this.node;
+    }
+    /**
+     * Rimuove un attributo dall'elemento DOM e genera un evento di rimozione dell'attributo.
+     * Questo metodo rimuove l'attributo specificato dall'elemento DOM rappresentato da `this.node`.
+     * Inoltre, viene generato un evento personalizzato chiamato "removeAttribute" con il nome dell'attributo rimosso.
+     *
+     * @param {string} attribute - Il nome dell'attributo da rimuovere dall'elemento DOM.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui l'attributo è stato rimosso, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const div = new Jdm(document.createElement('div'));
+     * div.jdm_removeAttribute('id'); // Rimuove l'attributo 'id' dall'elemento div.
+     */
+    jdm_removeAttribute(attribute) {
+        this.node.removeAttribute(attribute);
+        this.jdm_genEvent("removeAttribute", { attribute: attribute });
+        return this.node;
+    }
+    /**
+     * Imposta un valore per una proprietà di stile CSS su un elemento DOM.
+     * Questo metodo applica una dichiarazione di stile CSS all'elemento DOM rappresentato da `this.node`.
+     *
+     * @param {string} style - Il nome della proprietà di stile CSS da impostare (ad esempio, "color", "backgroundColor").
+     * @param {string} value - Il valore da assegnare alla proprietà di stile CSS (ad esempio, "red", "10px").
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato applicato lo stile, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const div = new Jdm(document.createElement('div'));
+     * div.jdm_setStyle('color', 'red'); // Imposta il colore del testo dell'elemento div su rosso.
+     */
+    jdm_setStyle(style, value) {
+        this.node.style[style] = value;
+        return this.node;
+    }
+    /**
+     * Estende l'elemento DOM aggiungendo una proprietà personalizzata.
+     * Questo metodo assegna un oggetto o un valore alla proprietà `name` dell'elemento DOM rappresentato da `this.node`.
+     *
+     * @param {string} name - Il nome della proprietà da aggiungere all'elemento DOM.
+     * @param {Object|null} [object=null] - L'oggetto o il valore da associare alla proprietà. Può essere qualsiasi tipo di valore, incluso `null`.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stata aggiunta la proprietà personalizzata, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const div = new Jdm(document.createElement('div'));
+     * div.jdm_extendNode('customData', { id: 123, name: 'My Div' });
+     * // Aggiunge la proprietà 'customData' all'elemento div con un oggetto come valore.
+     * console.log(div.node.customData); // { id: 123, name: 'My Div' }
+     */
+    jdm_extendNode(name, object = null) {
+        this.node[name] = object;
+        return this.node;
+    }
+    /**
+     * Imposta o restituisce il contenuto HTML interno dell'elemento DOM.
+     * Questo metodo imposta il valore di `innerHTML` dell'elemento DOM rappresentato da `this.node`.
+     * Se il parametro `value` viene fornito, aggiorna il contenuto HTML; altrimenti, restituisce il contenuto HTML attuale.
+     *
+     * @param {string} value - Il contenuto HTML da impostare all'interno dell'elemento DOM.
+     *                           Se non fornito, il metodo restituirà il contenuto HTML corrente.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM con il nuovo contenuto HTML impostato, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const div = new Jdm(document.createElement('div'));
+     * div.jdm_innerHTML('<p>Nuovo contenuto HTML</p>');
+     * // Imposta il contenuto HTML del div con un nuovo paragrafo.
+     */
+    jdm_innerHTML(value) {
+        this.node.innerHTML = value;
+        return this.node;
+    }
+    /**
+     * Imposta un binding di dati tra l'elemento corrente e un altro o più elementi.
+     * Questo metodo consente di sincronizzare i valori tra gli elementi DOM, abilitando il data binding unidirezionale o bidirezionale.
+     * Se un valore cambia nell'elemento sorgente (ad esempio un `input`), il valore dell'elemento di destinazione (ad esempio un altro `input` o `div`) viene aggiornato.
+     * Se il binding bidirezionale è abilitato, i cambiamenti sono sincronizzati in entrambe le direzioni.
+     *
+     * @param {HTMLElement|HTMLElement[]} el - L'elemento o la lista di elementi con cui si desidera stabilire il binding.
+     * @param {string} [event="input"] - Il tipo di evento da ascoltare per attivare il binding. Default è "input".
+     * @param {boolean} [twoWayDataBinding=true] - Se `true`, attiva il binding bidirezionale. Se `false`, il binding sarà unidirezionale.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato applicato il binding, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const input = new Jdm(document.createElement('input'));
+     * const output = new Jdm(document.createElement('div'));
+     * input.jdm_binding(output);
+     * // Crea un binding tra l'input e l'output, così che quando l'input cambia, l'output si aggiorna.
+     *
+     * @example
+     * const input = new Jdm(document.createElement('input'));
+     * const output = new Jdm(document.createElement('div'));
+     * input.jdm_binding(output, "change", false);
+     * // Crea un binding unidirezionale tra l'input e l'output, che si attiva sull'evento 'change'.
+     */
+    jdm_binding(el, event = "input", twoWayDataBinding = true) {
+        let elementList = [];
+
+        if (Array.isArray(el)) {
+            elementList = elementList.concat(el);
+        } else {
+            elementList.push(el);
+        }
+
+        for (const element of elementList) {
+            if (
+                element.tagName.toLowerCase() === "input" ||
+                element.tagName.toLowerCase() === "select" ||
+                element.tagName.toLowerCase() === "textarea"
+            ) {
+                this.node.addEventListener(event, () => {
+                    element.jdm_setValue(this.jdm_getValue());
+                });
+            } else {
+                this.node.addEventListener(event, () => {
+                    element.jdm_innerHTML(this.jdm_getValue());
+                });
+            }
+
+            if (twoWayDataBinding) {
+                const elementListTmp = elementList.filter(elementTmp => elementTmp !== element);
+                elementListTmp.push(this.node);
+                for (const elementTmp of elementListTmp) {
+                    element.jdm_binding(elementListTmp, event, false);
+                }
+            }
+        }
+
+        return this.node;
+    }
+    /**
+     * Aggiunge un listener per l'evento `input` all'elemento DOM.
+     * Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `input` sull'elemento.
+     *
+     * @param {Function} [fn=() => {}] - La funzione di callback da eseguire quando si verifica l'evento `input`.
+     *                                    La funzione riceverà l'evento come parametro.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const input = new Jdm(document.createElement('input'));
+     * input.jdm_onInput((event) => {
+     *   console.log('Input modificato:', event.target.value);
+     * });
+     * // Aggiunge un listener per l'evento 'input' che stampa il valore dell'input ogni volta che cambia.
+     */
+    jdm_onInput(fn = () => {}) {
+        this.node.addEventListener("input", fn);
+
+        return this.node;
+    }
+    /**
+     * Aggiunge un listener per l'evento `change` all'elemento DOM.
+     * Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `change` sull'elemento.
+     * L'evento `change` viene attivato quando il valore di un elemento, come un campo di input, viene modificato e l'elemento perde il focus.
+     *
+     * @param {Function} [fn=() => {}] - La funzione di callback da eseguire quando si verifica l'evento `change`.
+     *                                    La funzione riceverà l'evento come parametro.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const input = new Jdm(document.createElement('input'));
+     * input.jdm_onChange((event) => {
+     *   console.log('Valore cambiato:', event.target.value);
+     * });
+     * // Aggiunge un listener per l'evento 'change' che stampa il valore dell'input ogni volta che cambia.
+     */
+    jdm_onChange(fn = () => {}) {
+        this.node.addEventListener("change", fn);
+
+        return this.node;
+    }
+    /**
+     * Aggiunge un listener per l'evento `select` all'elemento DOM.
+     * Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `select` sull'elemento.
+     * L'evento `select` viene attivato quando una parte del testo all'interno di un elemento, come un campo di input o una textarea, viene selezionata dall'utente.
+     *
+     * @param {Function} [fn=() => {}] - La funzione di callback da eseguire quando si verifica l'evento `select`.
+     *                                    La funzione riceverà l'evento come parametro.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const input = new Jdm(document.createElement('input'));
+     * input.jdm_onSelect((event) => {
+     *   console.log('Testo selezionato:', event.target.value);
+     * });
+     * // Aggiunge un listener per l'evento 'select' che stampa il valore del campo di input ogni volta che viene selezionato del testo.
+     */
+    jdm_onSelect(fn = () => {}) {
+        this.node.addEventListener("select", fn);
+        return this.node;
+    }
+    /**
+     * Aggiunge un listener per l'evento `input` all'elemento DOM con un meccanismo di debounce.
+     * Questo metodo permette di eseguire una funzione di callback solo dopo che l'utente ha smesso di digitare per un determinato periodo di tempo.
+     * È utile per evitare l'esecuzione ripetitiva di funzioni (come una ricerca o un aggiornamento) mentre l'utente sta digitando, migliorando le prestazioni.
+     *
+     * @param {Function} [fn=() => {}] - La funzione di callback da eseguire quando si verifica l'evento `input`.
+     *                                    La funzione verrà eseguita dopo che l'utente smette di digitare per un periodo di tempo specificato dal parametro `timeout`.
+     * @param {number} [timeout=300] - Il tempo di attesa (in millisecondi) dopo l'ultimo evento `input` prima che la funzione di callback venga eseguita.
+     *                                  Il valore predefinito è 300 millisecondi.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const input = new Jdm(document.createElement('input'));
+     * input.jdm_onDebounce((event) => {
+     *   console.log('Input debounced:', event.target.value);
+     * }, 500);
+     * // Aggiunge un listener per l'evento 'input' con un debounce di 500 millisecondi,
+     * // evitando chiamate troppo frequenti alla funzione di callback mentre l'utente sta digitando.
+     */
+    jdm_onDebounce(fn = () => {}, timeout = 300) {
+        this.node.addEventListener("input", _common.debounce(fn, timeout));
+        return this.node;
+    }
+    /**
+     * Aggiunge un listener per l'evento `click` all'elemento DOM.
+     * Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `click` sull'elemento.
+     * L'evento `click` viene attivato quando l'utente clicca su un elemento, come un pulsante o un link.
+     *
+     * @param {Function} [fn=() => {}] - La funzione di callback da eseguire quando si verifica l'evento `click`.
+     *                                    La funzione riceverà l'evento come parametro.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const button = new Jdm(document.createElement('button'));
+     * button.jdm_onClick((event) => {
+     *   console.log('Button clicked');
+     * });
+     * // Aggiunge un listener per l'evento 'click' che stampa un messaggio ogni volta che il pulsante viene cliccato.
+     */
+    jdm_onClick(fn = () => {}) {
+        this.node.addEventListener("click", fn);
+
+        return this.node;
+    }
+    /**
+     * Aggiunge un listener per l'evento `contextmenu` (clic destro) all'elemento DOM.
+     * Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `contextmenu` sull'elemento,
+     * che viene attivato dal clic destro del mouse (o equivalente, come il tocco prolungato su dispositivi mobili).
+     * L'evento `contextmenu` è tipicamente usato per visualizzare il menu contestuale di un elemento.
+     *
+     * @param {Function} [fn=() => {}] - La funzione di callback da eseguire quando si verifica l'evento `contextmenu`.
+     *                                    La funzione riceverà l'evento come parametro.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const element = new Jdm(document.createElement('div'));
+     * element.jdm_onRightClick((event) => {
+     *   event.preventDefault(); // Previene il menu contestuale predefinito
+     *   console.log('Clic destro eseguito!');
+     * });
+     * // Aggiunge un listener per l'evento 'contextmenu' che esegue la funzione di callback ogni volta che si fa clic destro sull'elemento.
+     */
+    jdm_onRightClick(fn = () => {}) {
+        this.node.addEventListener("contextmenu", fn);
+        return this.node;
+    }
+    /**
+     * Aggiunge un listener per l'evento `dblclick` (doppio clic) all'elemento DOM.
+     * Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `dblclick` sull'elemento,
+     * che viene attivato quando l'utente fa doppio clic su un elemento.
+     * L'evento `dblclick` è comunemente utilizzato per azioni che richiedono un'interazione più rapida dell'utente, come l'apertura di un file o l'attivazione di una funzionalità.
+     *
+     * @param {Function} [fn=() => {}] - La funzione di callback da eseguire quando si verifica l'evento `dblclick`.
+     *                                    La funzione riceverà l'evento come parametro.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const element = new Jdm(document.createElement('div'));
+     * element.jdm_onDoubleClick((event) => {
+     *   console.log('Elemento doppiamente cliccato');
+     * });
+     * // Aggiunge un listener per l'evento 'dblclick' che esegue la funzione di callback ogni volta che l'utente fa doppio clic sull'elemento.
+     */
+    jdm_onDoubleClick(fn = () => {}) {
+        this.node.addEventListener("dblclick", fn);
+        return this.node;
+    }
+    /**
+     * Aggiunge un listener per l'evento `invalid` all'elemento DOM.
+     * Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `invalid` sull'elemento,
+     * che viene attivato quando un elemento di modulo non soddisfa i suoi vincoli di validazione.
+     * L'evento `invalid` viene in genere generato automaticamente dal browser quando un utente invia un modulo con campi non validi.
+     *
+     * @param {Function} [fn=() => {}] - La funzione di callback da eseguire quando si verifica l'evento `invalid`.
+     *                                    La funzione riceverà l'evento come parametro.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const inputElement = new Jdm(document.createElement('input'));
+     * inputElement.jdm_onInvalid((event) => {
+     *   console.log('Il campo input è invalido');
+     *   event.preventDefault(); // Previene l'azione predefinita (se desiderato)
+     * });
+     * // Aggiunge un listener per l'evento 'invalid' che esegue la funzione di callback quando l'input non è valido.
+     */
+    jdm_onInvalid(fn = () => {}) {
+        this.node.addEventListener("invalid", fn);
+        return this.node;
+    }
+    /**
+     * Aggiunge un listener per l'evento `load` all'elemento DOM.
+     * Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `load` sull'elemento,
+     * che viene attivato quando l'elemento o le risorse a esso associate sono completamente caricate.
+     * L'evento `load` viene comunemente utilizzato per monitorare il caricamento di immagini, script o altri contenuti multimediali,
+     * ma può essere attivato anche quando una pagina o un elemento è stato completamente caricato nel DOM.
+     *
+     * @param {Function} [fn=() => {}] - La funzione di callback da eseguire quando si verifica l'evento `load`.
+     *                                    La funzione riceverà l'evento come parametro.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const imgElement = new Jdm(document.createElement('img'));
+     * imgElement.jdm_onLoad(() => {
+     *   console.log('Immagine caricata con successo');
+     * });
+     * // Aggiunge un listener per l'evento 'load' che esegue la funzione di callback ogni volta che l'immagine è completamente caricata.
+     */
+    jdm_onLoad(fn = () => {}) {
+        this.node.addEventListener("load", fn);
+        return this.node;
+    }
+    /**
+     * Aggiunge un listener per l'evento `error` all'elemento DOM.
+     * Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `error` sull'elemento,
+     * che viene attivato quando si verifica un errore durante il caricamento di risorse o altre operazioni.
+     * L'evento `error` viene comunemente utilizzato per gestire errori di caricamento, come quando un'immagine non riesce a caricarsi
+     * o quando un file JavaScript o CSS non può essere caricato correttamente.
+     *
+     * @param {Function} [fn=() => {}] - La funzione di callback da eseguire quando si verifica l'evento `error`.
+     *                                    La funzione riceverà l'evento come parametro.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const imgElement = new Jdm(document.createElement('img'));
+     * imgElement.jdm_onError(() => {
+     *   console.log('Si è verificato un errore nel caricamento dell\'immagine');
+     * });
+     * // Aggiunge un listener per l'evento 'error' che esegue la funzione di callback ogni volta che si verifica un errore nel caricamento dell'immagine.
+     */
+    jdm_onError(fn = () => {}) {
+        this.node.addEventListener("error", fn);
+        return this.node;
+    }
+    /**
+     * Aggiunge un listener per l'evento `submit` all'elemento DOM.
+     * Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `submit` sull'elemento,
+     * che viene attivato quando un modulo viene inviato.
+     * L'evento `submit` viene generato quando un utente invia un modulo, sia tramite il pulsante di invio che premendo il tasto "Enter"
+     * in un campo del modulo.
+     *
+     * @param {Function} [fn=() => {}] - La funzione di callback da eseguire quando si verifica l'evento `submit`.
+     *                                    La funzione riceverà l'evento come parametro.
+     *                                    Se necessario, la funzione di callback può chiamare `event.preventDefault()` per prevenire l'invio del modulo.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const formElement = new Jdm(document.createElement('form'));
+     * formElement.jdm_onSubmit((event) => {
+     *   event.preventDefault(); // Previene l'invio del modulo
+     *   console.log('Modulo inviato');
+     * });
+     * // Aggiunge un listener per l'evento 'submit' che esegue la funzione di callback ogni volta che il modulo viene inviato.
+     */
+    jdm_onSubmit(fn = () => {}) {
+        this.node.addEventListener("submit", fn);
+        return this.node;
+    }
+    /**
+     * Imposta il valore di un elemento DOM. Se l'elemento è una checkbox, un radio button o un modulo,
+     * il valore verrà impostato di conseguenza. Se l'elemento è un modulo (`<form>`), verranno impostati
+     * i valori di tutti i campi del modulo, compresi i checkbox e i radio buttons.
+     * Inoltre, è possibile forzare il valore a essere trattato come booleano tramite il parametro `tooBoolean`.
+     *
+     * @param {any} value - Il valore da impostare sull'elemento DOM. Il tipo di valore dipende dall'elemento e dal contesto.
+     * @param {boolean} [tooBoolean=true] - Se impostato su `true`, tenterà di convertire il valore in booleano.
+     *                                       Se il valore non è convertibile in booleano, verrà mantenuto il valore originale.
+     *                                       Se impostato su `false`, il valore non verrà modificato.
+     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato impostato il valore, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const checkboxElement = new Jdm(document.createElement('input'));
+     * checkboxElement.jdm_setValue(true);
+     * // Imposta il valore di una checkbox su 'true', facendo in modo che sia selezionata.
+     *
+     * const formElement = new Jdm(document.createElement('form'));
+     * const formData = {
+     *   username: 'user1',
+     *   password: 'password123',
+     *   terms: true
+     * };
+     * formElement.jdm_setValue(formData);
+     * // Imposta i valori del modulo, inclusi i checkbox e altri input.
+     */
+    jdm_setValue(value, tooBoolean = true) {
+        if (tooBoolean) {
+            try {
+                value = value.toBoolean();
+            } catch (e) {
+                value = value;
+            }
+        }
+
+        if (this.node.type === "checkbox" || this.node.type === "radio") {
+            this.node.checked = value;
+        } else if (this.tag === "form") {
+            const setValue = (el, value) => {
+                if (el.type === "checkbox" || el.type === "radio") {
+                    el.checked = value;
+                } else {
+                    el.value = value;
+                }
+            };
+
+            const findElement = (form, name) => {
+                return form.querySelectorAll(`[name="${name}"]`);
+            };
+
+            const populateForm = (form, data, prefix = "") => {
+                for (const key in data) {
+                    const value = data[key];
+                    const name = prefix ? `${prefix}[${key}]` : key;
+                    const elementList = findElement(form, Array.isArray(value) ? `${name}[]` : name);
+                    if (elementList?.length > 0) {
+                        for (const element of elementList) {
+                            if (Array.isArray(value)) {
+                                const checkboxes = form.querySelectorAll(`[name="${name}[]"]`);
+                                checkboxes.forEach(checkbox => {
+                                    setValue(checkbox, value.includes(checkbox.value));
+                                });
+                            } else if (typeof value === "object") {
+                                populateForm(form, value, name);
+                            } else {
+                                setValue(element, value);
+                            }
+                        }
+                    } else if (typeof value === "object") {
+                        populateForm(form, value, name);
+                    }
+                }
+            };
+            populateForm(this.node, value);
+        } else {
+            if (this.node.jdm_getAttribute("type") === "number" || this.node.jdm_getAttribute("type") === "range") {
+                this.node.value = value * 1;
+            } else {
+                this.node.value = value;
+            }
+        }
+
+        return this.node;
+    }
+    /**
+     * Ottiene il valore di un elemento DOM. A seconda del tipo di elemento, il valore verrà restituito in modo appropriato:
+     * - **Input** (checkbox, radio): restituisce il valore `checked` dell'elemento.
+     * - **Form**: restituisce un oggetto JSON con i valori di tutti i campi del modulo, supportando strutture di dati complesse come array e oggetti.
+     * - **Select**: restituisce il valore selezionato dell'elemento `<select>`.
+     * - **Altri input** (testo, numero, range): restituisce il valore dell'elemento come una stringa.
+     *
+     * @returns {any} - Il valore dell'elemento DOM. Se l'elemento è un modulo, restituisce un oggetto JSON con i dati del modulo.
+     *
+     * @example
+     * const checkboxElement = new Jdm(document.createElement('input'));
+     * checkboxElement.node.type = 'checkbox';
+     * checkboxElement.node.checked = true;
+     * console.log(checkboxElement.jdm_getValue()); // true
+     *
+     * const formElement = new Jdm(document.createElement('form'));
+     * const formData = {
+     *   username: 'user1',
+     *   password: 'password123',
+     *   terms: true
+     * };
+     * formElement.jdm_setValue(formData);
+     * console.log(formElement.jdm_getValue());
+     * // Restituisce un oggetto JSON con i dati del modulo, es.
+     * // { username: 'user1', password: 'password123', terms: true }
+     *
+     * const selectElement = new Jdm(document.createElement('select'));
+     * selectElement.node.innerHTML = '<option value="1">Option 1</option><option value="2">Option 2</option>';
+     * selectElement.node.value = '1';
+     * console.log(selectElement.jdm_getValue()); // '1'
+     */
+    jdm_getValue() {
+        if (this.tag === "input" && (this.node.type === "checkbox" || this.node.type === "radio")) {
+            return this.node.checked;
+        } else if (this.tag === "form") {
+            const formData = new FormData(this.node);
+            const json = {};
+
+            for (let [key, value] of formData.entries()) {
+                value = value === "" ? null : value;
+                value = value === "null" ? null : value;
+                let currentObj = json;
+                const keys = key.split(/\[|\]\[|\]/).filter(Boolean);
+                const lastKey = keys.pop();
+
+                for (let i = 0; i < keys.length; i++) {
+                    const currentKey = keys[i];
+                    if (!currentObj[currentKey]) {
+                        currentObj[currentKey] = isNaN(keys[i + 1]) ? {} : [];
+                    }
+                    currentObj = currentObj[currentKey];
+                }
+
+                if (lastKey === "") {
+                    if (!currentObj.length) {
+                        currentObj.length = 0;
+                    }
+                    currentObj[currentObj.length++] = value;
+                } else if (Array.isArray(currentObj[lastKey])) {
+                    currentObj[lastKey].push(value);
+                } else if (currentObj[lastKey]) {
+                    currentObj[lastKey] = [currentObj[lastKey], value];
+                } else {
+                    if (key.endsWith("[]")) {
+                        if (value) {
+                            currentObj[lastKey] = new Array();
+                            currentObj[lastKey].push(value);
+                        }
+                    } else {
+                        currentObj[lastKey] = value;
+                    }
+                }
+            }
+            return json;
+        } else if (this.tag === "select") {
+            return this.node.value;
+        } else {
+            return this.node.value;
+        }
+    }
+    /**
+     * Genera un evento personalizzato per l'elemento DOM associato, utilizzando il metodo di generazione evento definito nella libreria `_common`.
+     * L'evento può essere propagato ai genitori, se necessario.
+     *
+     * @param {string} name - Il nome dell'evento da generare. Può essere qualsiasi stringa che rappresenta un tipo di evento personalizzato.
+     * @param {Object|null} [data=null] - I dati da associare all'evento. Questi dati vengono passati come parte dell'oggetto evento. Può essere `null` se non sono necessari dati aggiuntivi.
+     * @param {boolean} [propagateToParents=true] - Un valore booleano che indica se l'evento deve essere propagato ai genitori dell'elemento. Il valore predefinito è `true`.
+     *
+     * @returns {Node} - Restituisce il nodo dell'elemento su cui è stato generato l'evento, per consentire il chaining.
+     *
+     * @example
+     * // Esempio di come generare un evento personalizzato
+     * const element = new Jdm(document.createElement('div'));
+     * element.jdm_genEvent('customEvent', { message: 'Evento generato!' });
+     *
+     * // Esempio con propagazione a genitori disabilitata
+     * element.jdm_genEvent('customEvent', { message: 'Evento senza propagazione' }, false);
+     */
+    jdm_genEvent(name, data = null, propagateToParents = true) {
+        _common.genEvent(this.node, name, data, propagateToParents);
+
+        return this.node;
+    }
+    /**
+     * Aggiunge un listener per un evento specificato sull'elemento DOM associato.
+     * Consente di eseguire una funzione di callback quando l'evento si verifica.
+     *
+     * @param {string} name - Il nome dell'evento per cui aggiungere il listener (es. "click", "input", ecc.).
+     * @param {Function} [fn=() => {}] - La funzione di callback che viene eseguita quando l'evento si verifica. Il valore predefinito è una funzione vuota.
+     *
+     * @returns {Node} - Restituisce il nodo dell'elemento a cui è stato aggiunto l'evento, per consentire il chaining.
+     *
+     * @example
+     * // Aggiungi un listener per l'evento 'click' su un elemento
+     * const element = new Jdm(document.createElement('div'));
+     * element.jdm_addEventListener('click', () => {
+     *     console.log('Elemento cliccato!');
+     * });
+     *
+     * // Aggiungi un listener per l'evento 'input' su un elemento con funzione di callback predefinita
+     * element.jdm_addEventListener('input');
+     */
+    jdm_addEventListener(name, fn = () => {}) {
+        this.node.addEventListener(name, fn);
+
+        return this.node;
+    }
+    /**
+     * Rimuove un listener per un evento specificato sull'elemento DOM associato.
+     * Questo metodo permette di interrompere l'esecuzione della funzione di callback
+     * quando l'evento si verifica.
+     *
+     * @param {string} name - Il nome dell'evento per cui rimuovere il listener (es. "click", "input", ecc.).
+     * @param {Function} [fn=() => {}] - La funzione di callback che era stata precedentemente aggiunta come listener. Il valore predefinito è una funzione vuota.
+     *
+     * @returns {Node} - Restituisce il nodo dell'elemento da cui è stato rimosso l'evento, per consentire il chaining.
+     *
+     * @example
+     * // Rimuovi un listener per l'evento 'click' su un elemento
+     * const element = new Jdm(document.createElement('div'));
+     * const clickHandler = () => { console.log('Elemento cliccato!'); };
+     * element.jdm_addEventListener('click', clickHandler);
+     * // Dopo un certo punto, rimuoviamo il listener
+     * element.jdm_removeEventListener('click', clickHandler);
+     *
+     * // Rimuovi un listener per l'evento 'input' su un elemento con funzione di callback predefinita
+     * element.jdm_removeEventListener('input');
+     */
+    jdm_removeEventListener(name, fn = () => {}) {
+        this.node.removeEventListener(name, fn);
+        return this.node;
+    }
+
+    /**
+     * Estende l'elemento corrente con i nodi figli definiti in `jdm_childNode`.
+     * Se l'elemento ha nodi figli associati a `jdm_childNode`, questi vengono aggiunti come proprietà dell'elemento stesso.
+     *
+     * @returns {Node} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
+     *
+     * @example
+     * // Esempio di utilizzo di jdm_extendChildNode
+     * const element = new Jdm(document.createElement('div'));
+     * element.node.jdm_childNode = {
+     *     child1: new Jdm(document.createElement('p')),
+     *     child2: new Jdm(document.createElement('span'))
+     * };
+     *
+     * // Estende il nodo con i suoi figli definiti in jdm_childNode
+     * element.jdm_extendChildNode();
+     *
+     * // I nodi child1 e child2 sono ora proprietà di element.node
+     * console.log(element.node.child1); // Jdm { ... }
+     * console.log(element.node.child2); // Jdm { ... }
+     */
+    jdm_extendChildNode() {
+        if (this.node?.jdm_childNode && Object.entries(this.node.jdm_childNode).length > 0) {
+            for (const [key, value] of Object.entries(this.node.jdm_childNode)) {
+                this.node.jdm_extendNode(key, value);
+            }
+        }
+
+        return this.node;
+    }
+}
 /**
- * Classe che rappresenta un nodo HTML
+ * Crea e restituisce un'istanza della classe `Jdm`, che rappresenta un elemento DOM con metodi per manipolarlo.
+ * Questa funzione è una scorciatoia per facilitare l'uso della classe `Jdm`, permettendo la creazione e la manipolazione di nodi DOM in modo semplice e intuitivo.
  *
- * CDN: {@link https://cdn.dev-box.it/jdm/latest/jdm.js}.
+ * @param {Element|string|null} [element=null] - L'elemento DOM da manipolare. Può essere un elemento esistente, una stringa che rappresenta un tag HTML, o `null` per creare un nuovo elemento.
+ * @param {Element|null} [parent=null] - L'elemento genitore a cui aggiungere l'elemento creato. Se non fornito, l'elemento non viene aggiunto al DOM.
+ * @param {string|string[]|null} [classList=null] - Una stringa o un array di stringhe che rappresentano le classi CSS da aggiungere all'elemento. Se non fornito, nessuna classe viene aggiunta.
+ * @param {boolean} [deep=true] - Un valore booleano che indica se eseguire una ricerca ricorsiva sui nodi figli dell'elemento.
+ * @param {...*} [args] - Argomenti aggiuntivi che possono essere utilizzati per altre configurazioni interne della classe `Jdm`.
  *
- * ESEMPI: {@link https://codepen.io/collection/BNzzYd}.
+ * @returns {Node} - Restituisce l'istanza di un nodo DOM creato o manipolato.
+ *
+ * @example
+ * // Crea un nuovo div, aggiunge classi e lo appende al body
+ * const myDiv = JDM('div', document.body, ['my-class', 'another-class']);
+ *
+ * // Crea un nuovo elemento con un tag personalizzato
+ * const customElement = JDM('custom-tag');
+ *
+ * // Aggiunge un input a un elemento esistente e imposta il valore
+ * const myInput = JDM('input');
+ * myInput.jdm_setValue('Test');
  */
-export class Jdm {
-	/**
-	 * Crea un'istanza di Jdm.
-	 * @param {JdmData|string} elementOrData - L'elemento HTML del nodo o l'oggetto JdmData.
-	 * @param {Element|Jdm|null} parent - L'elemento HTML del nodo padre.
-	 * @param {string|Array<string>|null} classList - La lista di classi del nodo.
-	 * @param {boolean} deep - Un flag che indica se il nodo deve essere creato con eventuali nodi figli.
-	 * @returns {Element} L'elemento HTML creato.
-	 */
-	constructor(elementOrData = null, parent = null, classList = null, deep = false) {
-		// Crea un nuovo oggetto JdmData con valori predefiniti
-		let data = new JdmData();
-
-		// Verifica se è stato fornito un oggetto JdmData come primo argomento
-		if (elementOrData instanceof JdmData) {
-			// Se fornito un oggetto JdmData, aggiorna l'oggetto data con le sue proprietà
-			data = { ...data, ...elementOrData };
-		} else {
-			// Se forniti gli argomenti direttamente, aggiorna l'oggetto data con i valori specificati
-			data = { ...data, ...{ element: elementOrData, parent: parent, classList: classList, deep: deep } };
-		}
-
-		// Inizializza l'istanza Jdm con i dati forniti e ottieni il nodo HTML corrispondente
-		this.node = this.init(data);
-
-		// Esegue alcune operazioni aggiuntive sull'istanza
-		this.tag = this.node.tagName.toLowerCase();
-		if (data.classList) this.jdm_addClassList(data.classList);
-		if (data.parent) data.parent.appendChild(this.node);
-		if (data.deep) {
-			const mainNode = data.args?.length > 0 ? data.args[0]?.mainNode : null
-			this.loopOverChild(this.node.childNodes, data.args[0]?.mainNode);
-		}
-		this.addJdmMethodToNode();
-
-		// Restituisce l'elemento HTML creato
-		return this.node;
-	}
-
-	/**
-	 * Inizializza il nodo in base ai dati specificati.
-	 * @private
-	 * @param {JdmData} data - L'oggetto JdmData contenente i dati del nodo.
-	 * @returns {Element} L'elemento HTML creato.
-	 */
-	init(data) {
-		// Switch statement controlla il tipo dell'elemento passato a questa funzione
-		switch (this.checkType(data.element)) {
-			// Se l'elemento è una stringa che rappresenta un tag HTML, crea un nuovo elemento con il nome specificato e lo restituisce
-			case 'tagString':
-				return document.createElement(data.element);
-			// Se l'elemento è una stringa che rappresenta un documento HTML, crea un nuovo documento HTML con il parser DOM e restituisce il primo nodo figlio del body
-			case 'domFromString':
-				const parser = new DOMParser();
-				return parser.parseFromString(data.element, "text/html").getRootNode().body.firstChild;
-			// Se l'elemento è già un elemento del DOM, lo restituisce
-			case 'elementDom':
-				return data.element;
-			// Se il tipo dell'elemento non è riconosciuto, esegue un'operazione di default
-			case 'domFromHtml':
-				const parserHtml = new DOMParser();
-				return parserHtml.parseFromString(data.element, "text/html").getRootNode().body.firstChild;
-			case 'unknown':
-				console.info(data);
-				console.info(data.element.constructor.name)
-				console.log('-------> CHECK TO DO MAY BE ALERT');
-				break;
-		}
-	}
-
-	/**
-	 * Verifica il tipo della variabile specificata.
-	 * La funzione checkType verifica il tipo della variabile passata come parametro e restituisce una stringa che identifica il tipo.
-	 * La stringa restituita può essere una delle seguenti:
-	 * 'domFromString': se la variabile è una stringa che rappresenta un singolo elemento DOM.
-	 * 'domFromHtml': se la variabile è una stringa che rappresenta uno o più elementi HTML.
-	 * 'tagString': se la variabile è una stringa che rappresenta un singolo tag HTML.
-	 * 'elementDom': se la variabile è un oggetto Element del DOM.
-	 * 'unknown': se il tipo della variabile non può essere identificato.
-	 * @private
-	 * @param {*} variable - La variabile da verificare.
-	 * @returns {string} Il tipo della variabile.
-	 */
-	checkType(variable) {
-		if (typeof variable === 'string') {
-			//La funzione variable.charAt(0) === '<' && variable.charAt(variable.length - 1) === '>' verifica se la stringa variable inizia con il carattere < e finisce con il carattere >.
-			// Questa espressione viene utilizzata per controllare se la variabile variable rappresenta un singolo elemento DOM, che è rappresentato da una stringa delimitata dai caratteri < e >.
-			// La funzione restituisce true se la stringa variable inizia con < e finisce con >, altrimenti restituisce false.
-			if (variable.charAt(0) === '<' && variable.charAt(variable.length - 1) === '>') {
-				return 'domFromString';
-				//La funzione /<[a-z][\s\S]*>/i.test(variable) verifica se la variabile variable contiene una stringa che inizia con il carattere <, seguito da un carattere alfabetico minuscolo [a-z] e poi da zero o più caratteri di spazio o non-spazio [\s\S]*. Questa espressione regolare viene quindi usata per controllare se la variabile variable rappresenta uno o più elementi HTML.
-				// Il flag i nella regex indica che la ricerca è case-insensitive, quindi la regex corrisponde anche ai tag scritti in lettere maiuscole.
-				// La funzione restituisce true se la regex corrisponde alla stringa della variabile variable, altrimenti restituisce false.
-			} else if (/<[a-z][\s\S]*>/i.test(variable)) {
-				return 'domFromHtml';
-			} else {
-				return 'tagString';
-			}
-		} else if (variable.nodeType && variable.nodeType === Node.ELEMENT_NODE) {
-			return 'elementDom';
-		} else {
-			console.log('--------------', variable.prototype)
-			return 'unknown';
-		}
-	}
-
-	/**
-	 * Itera sui nodi figli e aggiunge una proprietà "jdm_childNode" all'oggetto principale
-	 * per ogni nodo figlio, indicizzando per nome se presente un attributo "jdm_name" o il alternativa "name" nel nodo figlio.
-	 * @param {NodeList} childNodes - Lista dei nodi figli.
-	 * @param {Object} [mainNode=null] - Oggetto principale a cui aggiungere le proprietà "jdm_childNode".
-	 */
-	loopOverChild(childNodes, mainNode = null) {
-		// Filtra solo i nodi con un nodoType minore o uguale a 2 (cioè nodi elementi e nodi di testo)
-		childNodes = Array.from(childNodes).filter(child => child.nodeType <= 2);
-		// Se non viene passato un mainNode, utilizza il nodo corrente come mainNode
-		mainNode = mainNode ? mainNode : this.node;
-		// Se ci sono nodi figli, crea un oggetto jdm_childNode e aggiungi un'istanza di Jdm ai nodi figli con un attributo "name"
-		if (childNodes.length > 0) {
-			mainNode.jdm_childNode = mainNode.jdm_childNode ? mainNode.jdm_childNode : {};
-			for (const child of childNodes) {
-				const name = child.getAttribute('name');
-				const dataName = child.getAttribute('data-name');
-				// Crea un'istanza di Jdm per il nodo figlio
-				const jdmElement = new Jdm(new JdmData( child, null, null, true, {mainNode: mainNode}));
-				if (dataName) {
-					mainNode.jdm_childNode[dataName] = jdmElement;
-				} else if (name) {
-					mainNode.jdm_childNode[name] = jdmElement;
-				}
-			}
-		}
-	}
-
-	/**
-	 * Aggiunge i metodi di `Jdm` come proprietà del nodo corrente.
-	 * La funzione addJdmMethodToNode() aggiunge i metodi di Jdm come proprietà del nodo corrente.
-	 * La funzione non accetta parametri e non restituisce alcun valore.
-	 * La funzione utilizza il metodo Object.getOwnPropertyNames() per ottenere una lista dei nomi di tutti i metodi definiti nel prototipo di Jdm.
-	 * Successivamente, la funzione filtra la lista dei metodi per includere solo quelli che iniziano con 'jdm_'.
-	 * Infine, la funzione aggiunge ciascun metodo di Jdm come proprietà del nodo corrente utilizzando il metodo bind().
-	 * @private
-	 * @returns {void}
-	 */
-	addJdmMethodToNode() {
-		// Ottiene una lista dei nomi di tutti i metodi definiti nel prototipo di `Jdm`.
-		const methodList = Object.getOwnPropertyNames(Jdm.prototype);
-		// Filtra la lista dei metodi per includere solo quelli che iniziano con 'jdm_'.
-		const jdm_methodList = methodList.filter((elemento) => {
-			return elemento.startsWith('jdm_');
-		});
-		// Aggiunge ciascun metodo di `Jdm` come proprietà del nodo corrente.
-		for (const jdmMethod of jdm_methodList) {
-			this.node[jdmMethod] = this[jdmMethod].bind(this);
-		}
-	}
-
-	/**
-	 * Imposta il valore dell'attributo specificato per il nodo corrente e genera un evento "setAttribute".
-	 * La funzione jdm_setAttribute() imposta il valore dell'attributo specificato per il nodo corrente e genera un evento "setAttribute".
-	 * La funzione accetta due parametri: attribute, che indica il nome dell'attributo da impostare, e value, che rappresenta il valore dell'attributo da impostare.
-	 * Il valore restituito è l'oggetto Element che rappresenta il nodo corrente. La funzione utilizza il metodo setAttribute() per impostare il valore dell'attributo specificato
-	 * per il nodo corrente, e poi utilizza il metodo jdm_genEvent() per generare un evento "setAttribute" con i dati relativi all'attributo impostato.
-	 * @function
-	 * @param {string} attribute - Il nome dell'attributo da impostare.
-	 * @param {*} value - Il valore dell'attributo da impostare.
-	 * @returns {Element} - Il nodo corrente.
-	 */
-	jdm_setAttribute(attribute, value = null) {
-		// Imposta il valore dell'attributo specificato per il nodo corrente.
-		this.node.setAttribute(attribute, value);
-		// Genera un evento "setAttribute" con i dati relativi all'attributo impostato.
-		this.jdm_genEvent('setAttribute', {attribute: attribute, value: value});
-		// Restituisce il nodo corrente.
-		return this.node;
-	}
-
-	/**
-	 * Restituisce il valore dell'attributo specificato per il nodo corrente.
-	 *
-	 * @function jdm_getAttribute
-	 * @param {string} attribute - Il nome dell'attributo di cui si vuole ottenere il valore.
-	 * @returns {string|null} Il valore dell'attributo specificato oppure null se l'attributo non esiste.
-	 */
-	jdm_getAttribute(attribute) {
-		// Ottiene il valore dell'attributo specificato per il nodo corrente.
-		// Utilizziamo il metodo "getAttribute" sul nodo corrente "this.node" passando come parametro il nome dell'attributo "attribute".
-		// Il metodo restituisce il valore dell'attributo se presente, altrimenti restituisce null.
-		return this.node.getAttribute(attribute);
-	}
-
-	/**
-	 * Aggiunge uno o più elementi come figli del nodo corrente.
-	 * @param {Element|Element[]} elementList - L'elemento o la lista di elementi da aggiungere come figli del nodo corrente.
-	 * @returns {Element} L'elemento corrente dopo l'aggiunta degli elementi figli.
-	 */
-	jdm_append(elementList) {
-		// Controlla se elementList è un array
-		if (Array.isArray(elementList)) {
-			// Scorre gli elementi dell'array
-			for (const element of elementList) {
-				// Aggiunge l'elemento come figlio del nodo corrente tramite il metodo appendChild
-				this.node.appendChild(element);
-			}
-		}
-		// Se elementList non è un array ma è comunque definito
-		else if (elementList) {
-			// Aggiunge l'elemento come figlio del nodo corrente tramite il metodo appendChild
-			this.node.appendChild(elementList);
-		}
-		return this.node;
-	}
-
-
-	jdm_prepend( elementList) {
-		const firstChild = this.node.firstElementChild;
-		// Controlla se elementList è un array
-		if (Array.isArray(elementList)) {
-			// Scorre gli elementi dell'array
-			for (const element of elementList) {
-				this.node.prepend(element);
-			}
-		}
-		// Se elementList non è un array ma è comunque definito
-		else if (elementList) {
-			this.node.prepend(elementList);
-		}
-		return this.node;
-	}
-
-
-	/**
-	 * Aggiunge una o più classi all'elemento corrente.
-	 * La funzione prende in input un parametro classList che può essere una stringa o un array di stringhe contenenti le classi da aggiungere all'elemento corrente.
-	 * La funzione aggiunge le classi specificate all'elemento corrente e restituisce l'elemento a cui sono state aggiunte le classi. Se l'input classList è null, undefined o un array vuoto, la funzione non fa nulla e restituisce l'elemento corrente senza modifiche.
-	 * @param {string|string[]} classList - la o le classi da aggiungere.
-	 * @returns {HTMLElement} L'elemento a cui sono state aggiunte le classi.
-	 */
-	jdm_addClassList(classList) {
-		// Controlla se `classList` è un array
-		if (Array.isArray(classList)) {
-			// Aggiunge tutte le classi presenti nell'array
-			for (const cls of classList) {
-				this.node.classList.add(cls);
-			}
-		}
-		// Se `classList` non è un array, controlla se esiste
-		else if (classList) {
-			// Aggiunge la classe unica indicata in `classList`
-			this.node.classList.add(classList);
-		}
-		// Restituisce l'elemento HTML a cui sono state aggiunte le classi
-		return this.node;
-	}
-
-	/**
-	 * La funzione rimuove una o più classi dalla lista di classi del nodo.
-	 * Se la lista di classi è un array, cicla attraverso la lista e rimuove ogni classe dal nodo.
-	 * Se la lista di classi non è un array ma esiste, rimuove la classe dal nodo.
-	 * Restituisce il nodo con la classe (o classi) rimossa/e.
-	 * Rimuove una o più classi dalla lista di classi del nodo.
-	 * @param {(string|string[])} classList - Il nome della classe o un array di nomi di classi da rimuovere.
-	 * @returns {HTMLElement} Il nodo con la classe (o classi) rimossa/e.
-	 */
-	jdm_removeClassList(classList) {
-		// Verifica se la lista di classi è un array
-		if (Array.isArray(classList)) {
-			// Cicla attraverso la lista di classi
-			for (const cls of classList) {
-				// Rimuove la classe dal nodo
-				this.node.classList.remove(cls);
-			}
-		}
-		// Se la lista di classi non è un array ma esiste
-		else if (classList) {
-			// Rimuove la classe dal nodo
-			this.node.classList.remove(classList);
-		}
-		// Restituisce il nodo con la classe (o classi) rimossa/e
-		return this.node;
-	}
-
-	/**
-	 * Toggle delle classi presenti nell'array o della singola classe sul nodo corrente.
-	 * @param {string[]|string} classList - L'array di classi o la singola classe da aggiungere o rimuovere.
-	 * @returns {HTMLElement} - L'elemento corrente con le classi modificate.
-	 */
-	jdm_toggleClassList(classList) {
-		// Se classList è un array, itera attraverso ogni classe e aggiungi o rimuovi la classe dal nodo.
-		if (Array.isArray(classList)) {
-			for (const cls of classList) {
-				// Rimuove la classe dal nodo
-				this.node.classList.toggle(cls);
-			}
-		}
-		// Altrimenti, se classList è una stringa, aggiungi o rimuovi la classe dal nodo.
-		else if (classList) {
-			this.node.classList.toggle(classList);
-		}
-		// Restituisci l'elemento corrente con le classi modificate.
-		return this.node;
-	}
-
-	/**
-	 * Svuota il contenuto dell'elemento HTML corrente.
-	 * @returns {HTMLElement} L'elemento HTML su cui è stata chiamata la funzione.
-	 */
-	jdm_empty() {
-		// Se l'elemento HTML corrente è un input di tipo checkbox o radio, imposta la proprietà checked su false
-		if (this.tag === 'input' && (this.node.element === 'checkbox' || this.node.element === 'radio')) {
-			this.node.checked = false;
-		}
-		// Se l'elemento HTML corrente è un input di tipo text, textarea , imposta la proprietà value su null
-		else if (this.tag === 'input' || this.tag === 'textarea' ) {
-			this.node.value = null;
-		}
-		// Se l'elemento HTML corrente è un form, resetta il form
-		else if (this.tag === 'form') {
-			this.node.reset();
-		}
-		// Se l'elemento HTML corrente non è nessuno dei precedenti, imposta l'innerHTML su una stringa vuota
-		else {
-			this.node.innerHTML = '';
-		}
-		// Restituisce l'elemento HTML su cui è stata chiamata la funzione
-		return this.node;
-	}
-
-	/**
-	 * Rimuove l'elemento HTML dal DOM.
-	 * La funzione jdm_destroy rimuove l'elemento HTML dal DOM.
-	 * Prima di rimuovere l'elemento, genera un evento "destroy" utilizzando il metodo jdm_genEvent. Infine, restituisce l'elemento HTML rimosso dal DOM.
-	 * @returns {HTMLElement} L'elemento HTML rimosso dal DOM.
-	 */
-	jdm_destroy() {
-		// Rimuove l'elemento HTML dal DOM.
-		this.node.remove();
-		// Genera un evento 'destroy'.
-		this.jdm_genEvent('destroy');
-		// Restituisce l'elemento HTML rimosso dal DOM.
-		return this.node;
-	}
-
-	/**
-	 * Esegue la validazione dell'elemento HTML corrente.
-	 * La funzione jdm_validate() esegue la validazione dell'elemento HTML corrente utilizzando il metodo checkValidity() dell'oggetto node.
-	 * Inoltre, la funzione genera un evento 'validate' utilizzando il metodo jdm_genEvent() e restituisce l'elemento HTML su cui è stata chiamata la funzione.
-	 * @returns {HTMLElement} L'elemento HTML su cui è stata chiamata la funzione.
-	 */
-	jdm_validate() {
-		// Esegue la validazione dell'elemento HTML corrente.
-		this.node.checkValidity();
-		// Genera un evento 'validate'.
-		this.jdm_genEvent('validate');
-		// Restituisce l'elemento HTML su cui è stata chiamata la funzione.
-		return this.node;
-	}
-
-	/**
-	 * Rimuove l'attributo specificato dall'elemento.
-	 * Questa funzione rimuove un attributo dall'elemento a cui è stato applicato il metodo.
-	 * Per fare ciò, utilizza il metodo removeAttribute dell'oggetto node che rappresenta l'elemento HTML.
-	 * Successivamente, genera un evento personalizzato di tipo 'removeAttribute' utilizzando il metodo jdm_genEvent.
-	 * Il parametro passato all'evento è un oggetto con l'attributo che è stato rimosso. Infine, restituisce l'elemento a cui è stato rimosso l'attributo.
-	 * @param {string} attribute - L'attributo da rimuovere.
-	 * @returns {HTMLElement} L'elemento a cui è stata rimossa l'attributo.
-	 */
-	jdm_removeAttribute(attribute) {
-		// Rimuove l'attributo dall'elemento.
-		this.node.removeAttribute(attribute);
-		// Genera un evento 'removeAttribute' e passa l'attributo come parametro.
-		this.jdm_genEvent('removeAttribute', {attribute: attribute});
-		// Restituisce l'elemento a cui è stato rimosso l'attributo.
-		return this.node;
-	}
-
-	/**
-	 * Imposta il valore di una proprietà CSS dell'elemento.
-	 * La funzione jdm_setStyle imposta il valore di una proprietà CSS dell'elemento selezionato.
-	 * I parametri richiesti sono il nome della proprietà CSS e il suo valore. La funzione restituisce l'elemento su cui è stata impostata la proprietà CSS.
-	 * @param {string} style - Il nome della proprietà CSS da impostare.
-	 * @param {string} value - Il valore della proprietà CSS da impostare.
-	 * @returns {HTMLElement} - L'elemento su cui è stata impostata la proprietà CSS.
-	 */
-	jdm_setStyle(style, value) {
-		// Imposta il valore della proprietà CSS specificata sull'elemento.
-		this.node.style[style] = value;
-		// Restituisce l'elemento su cui è stata impostata la proprietà CSS.
-		return this.node;
-	}
-
-	/**
-	 * Aggiunge una proprietà all'oggetto "node" e restituisce l'oggetto modificato.
-	 * @param {string} name - Il nome della proprietà da aggiungere.
-	 * @param {Object} [object=null] - L'oggetto da assegnare alla proprietà. Default: null.
-	 * @returns {HTMLElement} L'oggetto "node" con la nuova proprietà aggiunta.
-	 */
-	jdm_extendNode(name, object = null) {
-		// Assegna l'oggetto "object" alla proprietà con il nome "name" dell'oggetto "node".
-		this.node[name] = object;
-		// Restituisce l'oggetto "node" con la nuova proprietà aggiunta.
-		return this.node;
-	}
-
-	/**
-	 * Imposta il contenuto HTML dell'elemento.
-	 * Questa funzione imposta il contenuto HTML dell'elemento corrente con il valore specificato e restituisce l'elemento stesso.
-	 * Il parametro value rappresenta il valore HTML da impostare.
-	 * La funzione utilizza la proprietà innerHTML dell'elemento corrente per impostare il valore specificato come contenuto HTML dell'elemento.
-	 * @param {string | HTMLElement} value - Il valore HTML da impostare.
-	 * @returns {HTMLElement} L'elemento su cui è stato impostato il contenuto HTML.
-	 */
-	jdm_innerHTML(value) {
-		// Imposta il contenuto HTML dell'elemento.
-		this.node.innerHTML = value;
-		// Restituisce l'elemento su cui è stato impostato il contenuto HTML.
-		return this.node;
-	}
-
-	/**
-	 * Aggiunge la possibilità di binding dei dati a un elemento del DOM.
-	 * La funzione jdm_binding esegue il binding di un evento su uno o più elementi HTML. Inoltre, se il twoWayDataBinding è abilitato, esegue il binding bidirezionale tra tutti gli elementi nella lista.
-	 * Parametri:
-	 * el - L'elemento HTML o l'array di elementi HTML a cui applicare il binding.
-	 * event - L'evento su cui applicare il binding (predefinito a 'input').
-	 * twoWayDataBinding - Flag che indica se il binding deve essere bidirezionale (predefinito a true).
-	 * La funzione inizia creando una lista vuota di elementi e verifica se el è un array o un singolo elemento. Se el è un array, concatena la lista vuota con el, altrimenti lo pusha dentro.
-	 * Successivamente, la funzione esegue il binding di un evento sull'elemento se questo è un input, una select o una textarea. Se l'elemento non è uno di questi, esegue il binding sull'innerHTML.
-	 * Se il twoWayDataBinding è abilitato, la funzione esegue il binding bidirezionale tra tutti gli elementi nella lista, escluso quello corrente, creando una copia della lista degli elementi e aggiungendo l'elemento corrente. Per ogni elemento nella nuova lista, viene richiamata la funzione jdm_binding impostando il flag twoWayDataBinding a false.
-	 * Infine, la funzione restituisce l'elemento a cui è stato applicato il binding.
-	 * @param {Element[]} el - L'elemento o gli elementi del DOM a cui bindare i dati.
-	 * @param {string} [event='input'] - L'evento che attiva il binding.
-	 * @param {boolean} [twoWayDataBinding=true] - Indica se il binding deve essere bidirezionale o meno.
-	 * @returns {HTMLElement} L'elemento a cui è stato applicato il binding.
-	 */
-	jdm_binding(el, event = 'input', twoWayDataBinding = true) {
-		let elementList = [];
-		// Se el è un array concatena elementList a esso, altrimenti lo pusha dentro.
-		if (Array.isArray(el)) {
-			elementList = elementList.concat(el);
-		} else {
-			elementList.push(el);
-		}
-		// Per ogni elemento nella lista di elementi el, applica il binding.
-		for (const element of elementList) {
-			// Se l'elemento è un input, una select o una textarea, applica il binding sull'evento indicato.
-			if (element.tagName.toLowerCase() === 'input' || element.tagName.toLowerCase() === 'select' || element.tagName.toLowerCase() === 'textarea') {
-				this.node.addEventListener(event, () => {
-					element.jdm_setValue(this.jdm_getValue());
-				});
-				// Altrimenti, se l'elemento non è un input, una select o una textarea, applica il binding sull'innerHTML.
-			} else {
-				this.node.addEventListener(event, () => {
-					element.jdm_innerHTML(this.jdm_getValue());
-				});
-			}
-			// Se il twoWayDataBinding è abilitato, applica il binding bidirezionale tra tutti gli elementi nella lista.
-			if (twoWayDataBinding) {
-				const elementListTmp = elementList.filter(elementTmp => elementTmp !== element);
-				elementListTmp.push(this.node);
-				for (const elementTmp of elementListTmp) {
-					element.jdm_binding(elementListTmp, event, false);
-				}
-			}
-		}
-		// Restituisce l'elemento a cui è stato applicato il binding.
-		return this.node;
-	}
-
-	/**
-	 * Aggiunge un listener per l'evento "input" all'elemento, che viene attivato quando l'utente modifica il valore dell'input.
-	 * Questo codice definisce un metodo chiamato jdm_onInput che aggiunge un listener per l'evento "input" a un elemento HTML specifico.
-	 * Il listener è una funzione fn che viene fornita come argomento.
-	 * In altre parole, quando viene rilevato l'evento "input" sull'elemento specificato, la funzione fn verrà eseguita.
-	 * Il metodo restituisce l'elemento stesso, in modo che possa essere concatenato con altre operazioni su quell'elemento.
-	 * @param {function} fn - La funzione da eseguire quando l'evento "input" viene attivato.
-	 * @returns {HTMLElement} - L'elemento su cui è stato registrato l'evento.
-	 */
-	jdm_onInput(fn = () => {}) {
-		// Aggiunge un listener per l'evento "input" all'elemento.
-		this.node.addEventListener('input', fn);
-		// Restituisce l'elemento su cui è stato registrato l'evento.
-		return this.node;
-	}
-
-	/**
-	 * Aggiunge un listener per l'evento "change" all'elemento.
-	 * la funzione aggiunge un listener per l'evento "change" all'elemento e restituisce l'elemento su cui è stato registrato l'evento.
-	 * La documentazione JSDOC fornisce ulteriori dettagli sulla funzione, incluso il parametro fn che indica la funzione da eseguire quando si verifica l'evento "change".
-	 * @param {Function} fn - La funzione da eseguire quando si verifica l'evento "change".
-	 * @returns {HTMLElement} L'elemento a cui è stato aggiunto il listener per l'evento "change".
-	 */
-	jdm_onChange(fn = () => {}) {
-		// Aggiunge un listener per l'evento "change" all'elemento.
-		this.node.addEventListener('change', fn);
-		// Restituisce l'elemento su cui è stato registrato l'evento.
-		return this.node;
-	}
-
-	/**
-	 * Aggiunge un gestore di eventi all'evento "select" dell'elemento.
-	 * La funzione jdm_onSelect prende come parametro una funzione fn da eseguire quando l'evento select viene attivato sull'elemento su cui è chiamata la funzione.
-	 * La funzione aggiunge un listener per l'evento select all'elemento usando il metodo addEventListener. Il parametro fn è la funzione da eseguire quando l'evento viene attivato.
-	 * Infine, la funzione restituisce l'elemento su cui è stato registrato l'evento, utilizzando il costrutto return this.node.
-	 * @param {function} fn - La funzione da eseguire quando l'evento "select" viene attivato.
-	 * @returns {HTMLElement} L'elemento su cui è stato registrato l'evento.
-	 */
-	jdm_onSelect(fn = () => {}) {
-		// Aggiunge un listener per l'evento "select" all'elemento.
-		this.node.addEventListener('select', fn);
-		// Restituisce l'elemento su cui è stato registrato l'evento.
-		return this.node;
-	}
-
-	/**
-	 * Aggiunge un listener per l'evento 'input' al nodo dell'oggetto Jdm e applica il pattern debounce alla funzione di callback.
-	 * la funzione aggiunge un listener per l'evento input al nodo dell'oggetto Jdm e applica il pattern debounce alla funzione di callback passata come parametro fn.
-	 * Il pattern debounce ritarda l'esecuzione della funzione di callback per un certo periodo di tempo specificato dal parametro opzionale timeout.
-	 * Il valore di default per timeout è 300 millisecondi. Infine, la funzione restituisce il nodo dell'oggetto Jdm.
-	 * @param {Function} fn - La funzione di callback da eseguire quando l'evento 'input' viene attivato.
-	 * @param {number} [timeout=300] - Il tempo in millisecondi per cui la funzione di callback deve essere ritardata.
-	 * @returns {HTMLElement} Il nodo dell'oggetto Jdm.
-	 */
-	jdm_onDebounce(fn = () => {}, timeout = 300) {
-		// Aggiunge un listener per l'evento 'input' al nodo dell'oggetto Jdm e applica il pattern debounce alla funzione di callback.
-		this.node.addEventListener('input', _common.debounce(fn, timeout));
-		// Restituisce il nodo dell'oggetto Jdm.
-		return this.node;
-	}
-
-	/**
-	 * Aggiunge un gestore di eventi "click" all'elemento e restituisce l'elemento stesso.
-	 * Questa funzione viene utilizzata per aggiungere un gestore di eventi "click" all'elemento specifico e restituisce l'elemento stesso. La funzione addEventListener() viene utilizzata per aggiungere il gestore di eventi "click" all'elemento.
-	 * Il parametro fn rappresenta la funzione che deve essere eseguita quando si verifica l'evento "click". Se non viene fornita alcuna funzione, viene utilizzata una funzione vuota di default.
-	 * La funzione restituisce l'elemento a cui è stato aggiunto il gestore di eventi "click", in modo che possa essere ulteriormente elaborato o utilizzato in altre parti del codice.
-	 * @param {Function} fn - La funzione che deve essere eseguita quando si verifica l'evento "click".
-	 * @returns {HTMLElement} L'elemento a cui è stato aggiunto il gestore di eventi "click".
-	 */
-	jdm_onClick(fn = () => {}) {
-		// Utilizza la funzione addEventListener() per aggiungere un gestore di eventi "click" all'elemento
-		this.node.addEventListener('click', fn);
-		// Restituisce l'elemento stesso
-		return this.node;
-	}
-
-	/**
-	 * Aggiunge un gestore di eventi "dblclick" all'elemento e restituisce l'elemento stesso.
-	 * Questa funzione viene utilizzata per aggiungere un gestore di eventi "dblclick" all'elemento specifico e restituisce l'elemento stesso. La funzione addEventListener() viene utilizzata per aggiungere il gestore di eventi "dblclick" all'elemento.
-	 * Il parametro fn rappresenta la funzione che deve essere eseguita quando si verifica l'evento "dblclick". Se non viene fornita alcuna funzione, viene utilizzata una funzione vuota di default.
-	 * La funzione restituisce l'elemento a cui è stato aggiunto il gestore di eventi "dblclick", in modo che possa essere ulteriormente elaborato o utilizzato in altre parti del codice.
-	 * @param {Function} fn - La funzione che deve essere eseguita quando si verifica l'evento "dblclick".
-	 * @returns {HTMLElement} L'elemento a cui è stato aggiunto il gestore di eventi "dblclick".
-	 */
-	jdm_onDoubleClick(fn = () => {}) {
-		// Utilizza la funzione addEventListener() per aggiungere un gestore di eventi "dblclick" all'elemento
-		this.node.addEventListener('dblclick', fn);
-		// Restituisce l'elemento stesso
-		return this.node;
-	}
-
-	/**
-	 * Aggiunge un gestore di eventi "invalid" all'elemento e restituisce l'elemento stesso.
-	 * Questa funzione viene utilizzata per aggiungere un gestore di eventi "invalid" all'elemento specifico e restituisce l'elemento stesso. La funzione addEventListener() viene utilizzata per aggiungere il gestore di eventi "invalid" all'elemento.
-	 * Il parametro fn rappresenta la funzione che deve essere eseguita quando si verifica l'evento "invalid". Se non viene fornita alcuna funzione, viene utilizzata una funzione vuota di default.
-	 * La funzione restituisce l'elemento a cui è stato aggiunto il gestore di eventi "invalid", in modo che possa essere ulteriormente elaborato o utilizzato in altre parti del codice.
-	 * @param {Function} fn - La funzione che deve essere eseguita quando si verifica l'evento "invalid".
-	 * @returns {HTMLElement} L'elemento a cui è stato aggiunto il gestore di eventi "invalid".
-	 */
-	jdm_onInvalid(fn = () => {}) {
-		// Utilizza la funzione addEventListener() per aggiungere un gestore di eventi "invalid" all'elemento
-		this.node.addEventListener('invalid', fn);
-		// Restituisce l'elemento stesso
-		return this.node;
-	}
-
-	/**
-	 * Aggiunge un gestore di eventi "load" all'elemento e restituisce l'elemento.
-	 * Questa funzione aggiunge un gestore di eventi "load" a un elemento specifico e restituisce l'elemento stesso. La funzione addEventListener() viene utilizzata per aggiungere l'evento "load" all'elemento.
-	 * Il parametro fn rappresenta la funzione che deve essere eseguita quando si verifica l'evento "load". Se non viene fornita alcuna funzione, viene utilizzata una funzione vuota di default.
-	 * La funzione restituisce l'elemento a cui è stato aggiunto il gestore di eventi "load", in modo che possa essere ulteriormente elaborato o utilizzato in altre parti del codice.
-	 * @param {Function} fn - La funzione che deve essere eseguita quando si verifica l'evento "load".
-	 * @returns {HTMLElement} L'elemento a cui è stato aggiunto il gestore di eventi "load".
-	 */
-	jdm_onLoad(fn = () => {}) {
-		// Viene utilizzata la funzione addEventListener() per aggiungere l'evento "load" all'elemento specifico
-		this.node.addEventListener('load', fn);
-		// La funzione restituisce l'elemento a cui è stato aggiunto il gestore di eventi "load"
-		return this.node;
-	}
-
-	/**
-	 * Aggiunge un listener per gestire gli errori generati dal nodo specificato.
-	 * La funzione prende come parametro una funzione che verrà eseguita quando viene generato un errore sul nodo specificato.
-	 * Se la funzione non viene fornita, viene utilizzata una funzione vuota come valore predefinito.
-	 * @param {Function} [fn=() => {}] - La funzione che gestisce l'errore.
-	 * @returns {Object} - L'oggetto del nodo a cui è stato aggiunto il listener per l'errore.
-	 */
-	jdm_onError(fn = () => {}) {
-		// Aggiunge un listener per l'evento 'error' al nodo.
-		this.node.addEventListener('error', fn);
-		// Restituisce l'oggetto del nodo per consentire l'utilizzo di altre funzioni su di esso.
-		return this.node;
-	}
-
-	/**
-	 * Associa una funzione all'evento di submit del nodo corrente.
-	 * @param {function} fn - La funzione da associare all'evento di submit.
-	 * @returns {HTMLElement} Il nodo corrente a cui è stata associata la funzione.
-	 */
-	jdm_onSubmit(fn = () => {}) {
-		// Aggiunge un ascoltatore di eventi all'elemento corrente, che verrà attivato quando viene inviato il form
-		this.node.addEventListener('submit', fn);
-		// Restituisce l'elemento corrente
-		return this.node;
-	}
-
-	/**
-	 * Imposta il valore di un elemento del DOM
-	 * @param {*} value - il valore da impostare sull'elemento del DOM
-	 * @param tooBoolean - cerca di creare un booleano come valore (1 = true, 'true' = true)
-	 * @returns {*} il nodo del DOM a cui è stato impostato il valore
-	 */
-	jdm_setValue(value, tooBoolean = true) {
-
-		if (tooBoolean) {
-			try {
-				value = value.toBoolean()
-			} catch (e) {
-				value = value;
-			}
-		}
-
-
-		// Verifica se l'elemento corrente è una casella di controllo o un pulsante di opzione
-		if (this.node.type === 'checkbox' || this.node.type === 'radio') {
-			// Imposta il valore della casella di controllo o del pulsante di opzione
-			this.node.checked = value;
-		}
-		// Verifica se il tag corrente è un form
-		else if (this.tag === 'form') {
-			const setValue = (el, value) => {
-				if (el.type === "checkbox" || el.type === "radio") {
-					el.checked = value;
-				} else {
-					el.value = value;
-				}
-			}
-
-			const findElement = (form, name) => {
-				return form.querySelectorAll(`[name="${name}"]`);
-			}
-
-			const populateForm = (form, data, prefix = "") => {
-				for (const key in data) {
-					const value = data[key];
-					const name = prefix ? `${prefix}[${key}]` : key;
-					const elementList = findElement(form, Array.isArray(value) ? `${name}[]` : name);
-					if (elementList?.length > 0) {
-						for (const element of elementList) {
-							if (Array.isArray(value)) {
-								const checkboxes = form.querySelectorAll(`[name="${name}[]"]`);
-								checkboxes.forEach((checkbox) => {
-									setValue(checkbox, value.includes(checkbox.value));
-								});
-							} else if (typeof value === "object") {
-								populateForm(form, value, name);
-							} else {
-								setValue(element, value);
-							}
-						}
-					} else if (typeof value === "object") {
-						populateForm(form, value, name);
-					}
-				}
-			}
-			populateForm(this.node, value);
-		}
-
-		// Altrimenti, imposta il valore dell'elemento corrente
-		else {
-			if (this.node.jdm_getAttribute('type') === 'number' || this.node.jdm_getAttribute('type') === 'range') {
-				this.node.value = value * 1;
-			} else {
-				this.node.value = value;
-			}
-		}
-		// Restituisce il nodo aggiornato
-		return this.node;
-	}
-
-
-	/**
-	 * Restituisce il valore dell'elemento HTML rappresentato dall'oggetto corrente.
-	 * Se l'elemento è una casella di controllo (checkbox) o un pulsante di opzione (radio), restituisce true se l'elemento è selezionato, altrimenti false.
-	 * Se l'elemento è un modulo (form), restituisce un oggetto con i valori dei campi d'input del modulo.
-	 * Se l'elemento non è una casella di controllo, un pulsante di opzione o un modulo, restituisce il valore dell'elemento.
-	 * @returns {(boolean|Object|string)} Il valore dell'elemento HTML.
-	 */
-	jdm_getValue() {
-		// Se l'elemento corrente è un input di tipo checkbox o radio, restituisci il valore di "checked" del nodo HTML rappresentato dall'oggetto corrente
-		if (this.tag === 'input' && (this.node.type === 'checkbox' || this.node.type === 'radio')) {
-			return this.node.checked;
-		}
-		// Se l'elemento corrente è un modulo, restituisci un oggetto con i valori dei campi d'input del modulo
-		else if (this.tag === 'form') {
-			const formData = new FormData(this.node);
-			const json = {};
-
-			for (let [key, value] of formData.entries()) {
-
-				value = (value === '') ? null : value;//todo check trim()
-				value = (value === 'null') ? null : value; //todo check trim()
-				let currentObj = json;
-				const keys = key.split(/\[|\]\[|\]/).filter(Boolean);
-				const lastKey = keys.pop();
-
-				for (let i = 0; i < keys.length; i++) {
-					const currentKey = keys[i];
-					if (!currentObj[currentKey]) {
-						currentObj[currentKey] = isNaN(keys[i + 1]) ? {} : [];
-					}
-					currentObj = currentObj[currentKey];
-				}
-
-				if (lastKey === "") {
-					if (!currentObj.length) {
-						currentObj.length = 0;
-					}
-					currentObj[currentObj.length++] = value;
-
-				} else if (Array.isArray(currentObj[lastKey])) {
-
-					currentObj[lastKey].push(value);
-				} else if (currentObj[lastKey]) {
-
-					currentObj[lastKey] = [currentObj[lastKey], value];
-				} else {
-
-					if (key.endsWith("[]")) {
-						if (value) {
-							currentObj[lastKey] = new Array;
-							currentObj[lastKey].push(value);
-						}
-					} else {
-						currentObj[lastKey] = value;
-					}
-				}
-			}
-			return json;
-		}
-		// Se l'elemento è una select (potrebbe avere il multiple)
-		else if (this.tag === 'select') {
-			//todo gestire il multiplo da controllare
-			return this.node.value;
-		}
-		// In tutti gli altri casi, restituisci il valore dell'elemento HTML rappresentato dall'oggetto corrente
-		else {
-			return this.node.value;
-		}
-	}
-
-	/**
-	 * Genera un evento personalizzato sulla node corrente e opzionalmente lo propaga ai genitori.
-	 * @param {string} name - Il nome dell'evento personalizzato.
-	 * @param {*} [data=null] - Dati opzionali associati all'evento.
-	 * @param {boolean} [propagateToParents=true] - Flag opzionale che indica se l'evento deve essere propagato ai genitori.
-	 * @returns {HTMLElement} La node corrente.
-	 */
-	jdm_genEvent(name, data = null, propagateToParents = true) {
-		// Chiamiamo la funzione "genEvent" dell'oggetto "_common" passando la node corrente come primo parametro, il nome dell'evento personalizzato come secondo parametro,
-		// i dati associati all'evento come terzo parametro e un flag booleano che indica se l'evento deve essere propagato ai genitori come quarto parametro.
-		_common.genEvent(this.node, name, data, propagateToParents);
-		// Restituiamo la node corrente.
-		return this.node;
-	}
-
-	/**
-	 * Aggiunge un ascoltatore di eventi all'elemento HTML corrente.
-	 * Il parametro name è di tipo string e rappresenta il nome dell'evento che l'ascoltatore deve attendere, ad esempio "click", "submit", "keyup", ecc.
-	 * Il parametro fn è opzionale e rappresenta la funzione da eseguire quando l'evento viene attivato. Il valore predefinito è una funzione vuota.
-	 * @param {string} name - Il nome dell'evento da ascoltare (ad esempio "click").
-	 * @param {Function} [fn=() => {}] - La funzione da eseguire quando l'evento viene attivato. Default: una funzione vuota.
-	 * @returns {HTMLElement} L'elemento HTML corrente con l'ascoltatore di eventi aggiunto.
-	 */
-	jdm_addEventListener(name, fn = () => {}) {
-		// Aggiunge un listener per un evento specifico al nodo HTML rappresentato dall'oggetto "this.node"
-		this.node.addEventListener(name, fn);
-		// Restituisce il nodo HTML rappresentato dall'oggetto "this.node"
-		return this.node;
-	}
-
-	/**
-	 * Rimuove un gestore eventi precedentemente associato all'elemento.
-	 *
-	 * @function
-	 * @param {string} name - Il nome dell'evento da rimuovere.
-	 * @param {Function} [fn=() => {}] - La funzione gestore da rimuovere (impostata su una funzione vuota di default se non specificata).
-	 * @returns {HTMLElement} - L'elemento HTML a cui è stata rimossa l'associazione dell'evento.
-	 *
-	 * @example
-	 * const oggetto = new NomeDellaClasse();
-	 * const nomeEvento = 'click';
-	 * const gestoreEvento = () => {
-	 *     // Logica del gestore evento
-	 * };
-	 * oggetto.node.addEventListener(nomeEvento, gestoreEvento);
-	 * oggetto.jdm_removeEventListener(nomeEvento, gestoreEvento); // Rimuove il gestore evento.
-	 */
-	jdm_removeEventListener(name, fn = () => {}) {
-		// Rimuove il gestore evento dall'elemento.
-		this.node.removeEventListener(name, fn);
-		return this.node;
-	}
-
-	/**
-	 * Estende i nodi figli dell'oggetto `node` chiamando il metodo `jdm_extendNode`
-	 * su ciascun nodo figlio presente in `jdm_childNode`.
-	 *
-	 * Questa funzione verifica se ci sono nodi figli definiti nell'oggetto `jdm_childNode`.
-	 * Se presenti, itera su ciascun nodo figlio (coppie chiave-valore) e chiama il metodo
-	 * `jdm_extendNode` passando la chiave e il valore del nodo figlio.
-	 *
-	 * @returns {Object} Ritorna l'oggetto `node` dopo aver esteso i nodi figli.
-	 */
-	jdm_extendChildNode() {
-		// Controlla se ci sono nodi figli definiti in jdm_childNode
-		if (this.node?.jdm_childNode && Object.entries(this.node.jdm_childNode).length > 0) {
-			// Itera su ciascun nodo figlio (chiave-valore) in jdm_childNode
-			for (const [key, value] of Object.entries(this.node.jdm_childNode)) {
-				// Estende il nodo chiamando il metodo jdm_extendNode con chiave e valore
-				this.node.jdm_extendNode(key, value);
-			}
-		}
-		// Ritorna l'oggetto node per consentire ulteriori operazioni
-		return this.node;
-	}
-
-}
-
+window.JDM = (element = null, parent = null, classList = null, deep = true, ...args) => {
+    return new Jdm(element, parent, classList, deep, ...args);
+};
+/**
+ * Assegna la classe `Jdm` all'oggetto globale `window`, rendendola disponibile globalmente nel contesto del browser.
+ * In questo modo, la classe `Jdm` può essere utilizzata direttamente in qualsiasi parte del codice JavaScript senza la necessità di importarla esplicitamente.
+ *
+ * @example
+ * // Una volta che Jdm è stato assegnato a window, puoi usarlo ovunque nel tuo codice
+ * const myDiv = new Jdm('div', document.body, ['my-class']);
+ */
 window.Jdm = Jdm;
-window.JdmData = JdmData;
 
-
-//potresti generarmi la documentazione in lingua italiana con JSDOC per la seguente funzione in javascript? Potresti anche aggiungere commenti al codice con dei commenti javascript in italiano?
+export { Jdm };
