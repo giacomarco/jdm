@@ -8,6 +8,72 @@ new Proto();
  * e manipolarlo in modo ricorsivo, se richiesto.
  * I metodi della classe sono concatenabili per facilitare le operazioni sul DOM.
  *
+ * # INSTALLAZIONE:
+ * NPM
+ * ```bash
+ * npm install jdm_javascript_dom_manipulator
+ * ```
+ * Esempio di utilizzo di un modulo ES6:
+ * ```javascript
+ * import './yourPath/dist/jdm.js";
+ * ```
+ *
+ * # USO
+ * ```javascript
+ * JDM('div', container, ['fooClass','barClass'])
+ * ```
+ * # COMPARAZIONE:
+ *
+ * ## jQuery:
+ * ```javascript
+ * const $div = $('<div>', { class: 'foo bar' });
+ * const $ul = $('<ul>');
+ * const $li1 = $('<li>').text('Elemento 1');
+ * const $li2 = $('<li>').text('Elemento 2');
+ * const $li3 = $('<li>').text('Elemento 3');
+ * const $li4 = $('<li>').text('Elemento 4');
+ * const $li5 = $('<li>').text('Elemento 5');
+ * $ul.append($li1, $li2, $li3, $li4, $li5);
+ * $div.append($ul);
+ * $('body').append($div);
+ * ```
+ *
+ * ## JavaScript puro:
+ * ```javascript
+ * const div = 'div';
+ * div.classList.add('foo', 'bar');
+ * const ul = document.createElement('ul');
+ * const li1 = document.createElement('li');
+ * li1.textContent = 'Elemento 1';
+ * const li2 = document.createElement('li');
+ * li2.textContent = 'Elemento 2';
+ * const li3 = document.createElement('li');
+ * li3.textContent = 'Elemento 3';
+ * const li4 = document.createElement('li');
+ * li4.textContent = 'Elemento 4';
+ * const li5 = document.createElement('li');
+ * li5.textContent = 'Elemento 5';
+ * ul.append(li1, li2, li3, li4, li5);
+ * div.appendChild(ul);
+ * document.body.appendChild(div);
+ * ```
+ *
+ * ## Jdm:
+ *
+ * ```javascript
+ * const domString = `
+ * <div class="foo bar">
+ *     <ul>
+ *         <li> Elemento 1 </li>
+ *         <li> Elemento 2 </li>
+ *         <li> Elemento 3 </li>
+ *         <li> Elemento 4 </li>
+ *         <li> Elemento 5 </li>
+ *     </ul>
+ * </div>`;
+ * const div = JDM(domString, document.body);
+ * ```
+ *
  * @class
  */
 class Jdm {
@@ -23,8 +89,17 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce il nodo appena creato o manipolato.
      *
      * @example
-     * const div = new Jdm('div', document.body, ['my-class'], true);
+     * const div = JDM('<div>lorem ipsum</div>', document.body, ['my-class'], true);
      * // Crea un nuovo div con la classe 'my-class' e lo aggiunge al body
+     *
+     * //language=html
+     * const domString = `
+     *     <div class="my-class">
+     *         <p> paragraph </p>
+     *     </div>
+     *     `;
+     * JDM(domString, document.body)
+     * // Crea un nuovo div con la classe 'my-class', un paragrafo child e lo aggiunge tutto al body
      */
     constructor(element = null, parent = null, classList = null, deep = true, ...args) {
         const data = { element: element, parent: parent, classList: classList, deep: deep, args: args };
@@ -88,7 +163,7 @@ class Jdm {
      * checkType("<div></div>"); // Restituisce "domFromString"
      * checkType("<p>Test</p>"); // Restituisce "domFromHtml"
      * checkType("div"); // Restituisce "tagString"
-     * checkType(document.createElement('div')); // Restituisce "elementDom"
+     * checkType('div'); // Restituisce "elementDom"
      * checkType(123); // Restituisce "unknown"
      */
     checkType(variable) {
@@ -117,13 +192,6 @@ class Jdm {
      *                                             verrà utilizzato il nodo corrente (`this.node`).
      * @returns {void} - Non restituisce alcun valore.
      *
-     * @example
-     * const parentElement = document.createElement('div');
-     * const childElement = document.createElement('span');
-     * parentElement.appendChild(childElement);
-     * const jdmInstance = new Jdm(parentElement);
-     * jdmInstance.loopOverChild(parentElement.childNodes);
-     * // Questo itererà sui nodi figli e li assocerà all'oggetto `jdm_childNode` di `parentElement`
      */
     loopOverChild(childNodes, mainNode = null) {
         childNodes = Array.from(childNodes).filter(child => child.nodeType <= 2);
@@ -135,7 +203,7 @@ class Jdm {
                 const name = child.getAttribute("name");
                 const dataName = child.getAttribute("data-name");
 
-                const jdmElement = new Jdm(child, null, null, true, { mainNode: mainNode });
+                const jdmElement = JDM(child, null, null, true, { mainNode: mainNode });
                 if (dataName) {
                     mainNode.jdm_childNode[dataName] = jdmElement;
                 } else if (name) {
@@ -153,10 +221,6 @@ class Jdm {
      * @private
      * @returns {void} - Non restituisce alcun valore, ma modifica l'oggetto `node` aggiungendo metodi ad esso.
      *
-     * @example
-     * const div = new Jdm(document.createElement('div'));
-     * div.jdm_addClassList(['class1', 'class2']);
-     * // Questo aggiunge il metodo `jdm_addClassList` all'elemento DOM creato e consente di chiamarlo come metodo diretto su `div`.
      */
     addJdmMethodToNode() {
         const methodList = Object.getOwnPropertyNames(Jdm.prototype);
@@ -175,11 +239,13 @@ class Jdm {
      * @param {string} attribute - Il nome dell'attributo da impostare sull'elemento DOM.
      * @param {string|null} [value=null] - Il valore dell'attributo. Se non fornito, l'attributo sarà impostato su `null`.
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui l'attributo è stato impostato, consentendo il chaining dei metodi.
+     * @chainable
      *
      * @example
-     * const div = new Jdm(document.createElement('div'));
-     * div.jdm_setAttribute('id', 'myDiv');
-     * // Imposta l'attributo "id" su "myDiv" per l'elemento div.
+     * const div = JDM('<div>lorem ipsum</div>', document.body)
+     *   .jdm_setAttribute('id', 'myDiv')
+     *   .jdm_setAttribute('data-test', 'foo')
+     *   .jdm_setAttribute('counter', 1);
      */
     jdm_setAttribute(attribute, value = null) {
         this.node.setAttribute(attribute, value);
@@ -194,10 +260,9 @@ class Jdm {
      * @returns {string|null} - Restituisce il valore dell'attributo se esiste, altrimenti `null` se l'attributo non è presente.
      *
      * @example
-     * const div = new Jdm(document.createElement('div'));
-     * div.jdm_setAttribute('id', 'myDiv');
-     * const idValue = div.jdm_getAttribute('id');
-     * console.log(idValue); // Stampa "myDiv"
+     * const div = JDM('<div>lorem ipsum</div>', document.body)
+     *  .jdm_setAttribute('data-test', 'foo');
+     * const dataTest = div.jdm_getAttribute('data-test')
      */
     jdm_getAttribute(attribute) {
         return this.node.getAttribute(attribute);
@@ -211,12 +276,12 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui gli elementi sono stati aggiunti, consentendo il chaining dei metodi.
      *
      * @example
-     * const div = new Jdm(document.createElement('div'));
-     * const p1 = document.createElement('p');
-     * const p2 = document.createElement('p');
-     * div.jdm_append([p1, p2]); // Aggiunge entrambi i paragrafi come figli del div.
+     * const p1 = JDM('<p>paragrafo 1</p>');
+     * const p2 = JDM('<p>paragrafo 2</p>');
+     * const div = JDM('<div>lorem ipsum</div>', document.body)
+     *  .jdm_append([p1, p2]); // Aggiunge entrambi i paragrafi come figli del div.
      *
-     * const span = document.createElement('span');
+     * const span = JDM('span');
      * div.jdm_append(span); // Aggiunge il singolo elemento span come figlio del div.
      */
     jdm_append(elementList) {
@@ -239,13 +304,15 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui gli elementi sono stati aggiunti, consentendo il chaining dei metodi.
      *
      * @example
-     * const div = new Jdm(document.createElement('div'));
-     * const p1 = document.createElement('p');
-     * const p2 = document.createElement('p');
-     * div.jdm_append([p1, p2]); // Aggiunge entrambi i paragrafi come figli del div.
-     *
-     * const span = document.createElement('span');
-     * div.jdm_append(span); // Aggiunge il singolo elemento span come figlio del div.
+     * const div = JDM('<div><p>paragrafo</p></div>', document.body);
+     * const span = JDM('<span>foo</span>');
+     * div.jdm_prepend(span);
+     * // Risultato
+     * <div>
+     *     <span>foo</span>
+     *     <p>paragrafo</p>
+     * </div>
+
      */
     jdm_prepend(elementList) {
         const firstChild = this.node.firstElementChild;
@@ -259,6 +326,7 @@ class Jdm {
         }
         return this.node;
     }
+
     /**
      * Aggiunge un attributo `id` all'elemento DOM specificato.
      *
@@ -266,8 +334,8 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato impostato l'attributo `id`, consentendo il chaining dei metodi.
      *
      * @example
-     * const div = new Jdm(document.createElement('div'));
-     * div.jdm_addId('myDiv'); // Imposta l'attributo id="myDiv" sull'elemento div.
+     * const div = JDM('<div>lorem ipsum</div>', document.body)
+     *  .jdm_addId('myDiv'); // Imposta l'attributo id="myDiv" sull'elemento div.
      */
     jdm_addId(id) {
         this.node.setAttribute("id", id);
@@ -282,11 +350,11 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui le classi sono state aggiunte, consentendo il chaining dei metodi.
      *
      * @example
-     * const div = new Jdm(document.createElement('div'));
-     * div.jdm_addClassList('myClass'); // Aggiunge la classe "myClass" all'elemento div.
+     * const div = JDM('<div>lorem ipsum</div>', document.body)
+     *  .jdm_addClassList('myClass'); // Aggiunge la classe "myClass" all'elemento div.
      *
-     * const div2 = new Jdm(document.createElement('div'));
-     * div2.jdm_addClassList(['class1', 'class2']); // Aggiunge "class1" e "class2" all'elemento div2.
+     * const div2 = JDM('<div>lorem ipsum</div>', document.body)
+     *  .jdm_addClassList(['class1', 'class2']); // Aggiunge "class1" e "class2" all'elemento div2.
      */
     jdm_addClassList(classList) {
         if (Array.isArray(classList)) {
@@ -308,11 +376,11 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui le classi sono state rimosse, consentendo il chaining dei metodi.
      *
      * @example
-     * const div = new Jdm(document.createElement('div'));
-     * div.jdm_removeClassList('myClass'); // Rimuove la classe "myClass" dall'elemento div.
+     * JDM('<div class="foo bar myClass"></div>', document.body)
+     *  .jdm_removeClassList('myClass'); // Rimuove la classe "myClass" dall'elemento.
      *
-     * const div2 = new Jdm(document.createElement('div'));
-     * div2.jdm_removeClassList(['class1', 'class2']); // Rimuove "class1" e "class2" dall'elemento div2.
+     * JDM('<div class="foo bar myClass"></div>', document.body)
+     *  .jdm_removeClassList(['foo', 'bar']); // Rimuove "foo" e "bar" dall'elemento.
      */
     jdm_removeClassList(classList) {
         if (Array.isArray(classList)) {
@@ -333,11 +401,11 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui le classi sono state alternate, consentendo il chaining dei metodi.
      *
      * @example
-     * const div = new Jdm(document.createElement('div'));
-     * div.jdm_toggleClassList('active'); // Alterna la classe "active" sull'elemento div.
+     * const div = JDM('<div>lorem ipsum</div>', document.body)
+     * .jdm_toggleClassList('active'); // Alterna la classe "active" sull'elemento div.
      *
-     * const div2 = new Jdm(document.createElement('div'));
-     * div2.jdm_toggleClassList(['class1', 'class2']); // Alterna le classi "class1" e "class2" sull'elemento div2.
+     * const div2 = JDM('<div>lorem ipsum</div>', document.body)
+     * .jdm_toggleClassList(['class1', 'class2']); // Alterna le classi "class1" e "class2" sull'elemento div2.
      */
     jdm_toggleClassList(classList) {
         if (Array.isArray(classList)) {
@@ -360,15 +428,14 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato effettuato lo svuotamento, consentendo il chaining dei metodi.
      *
      * @example
-     * const inputText = new Jdm(document.createElement('input'));
-     * inputText.jdm_empty(); // Imposta il valore dell'input text a null.
+     * const inputText = JDM('input', document.body)
+     *  .jdm_empty(); // Imposta il valore dell'input text a null.
      *
-     * const checkbox = new Jdm(document.createElement('input'));
-     * checkbox.node.type = 'checkbox';
-     * checkbox.jdm_empty(); // Deseleziona la checkbox.
+     * const checkbox = JDM('input', document.body)
+     *  .jdm_setAttribute('type', 'checkbox')
+     *  .jdm_empty(); // Deseleziona la checkbox.
      *
-     * const form = new Jdm(document.createElement('form'));
-     * form.jdm_empty(); // Esegue il reset del modulo.
+     * const form = JDM('form').jdm_empty(); // Esegue il reset del modulo.
      */
     jdm_empty() {
         if (this.tag === "input" && (this.node.element === "checkbox" || this.node.element === "radio")) {
@@ -383,6 +450,7 @@ class Jdm {
 
         return this.node;
     }
+
     /**
      * Rimuove l'elemento DOM dal documento e genera un evento di distruzione.
      * Questo metodo elimina l'elemento DOM rappresentato da `this.node` dalla struttura del documento.
@@ -391,31 +459,32 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM che è stato rimosso, consentendo il chaining dei metodi.
      *
      * @example
-     * const div = new Jdm(document.createElement('div'));
-     * div.jdm_destroy(); // Rimuove l'elemento div dal documento e genera un evento "destroy".
+     * const div = JDM('<div>lorem ipsum</div>', document.body)
+     *  .jdm_destroy(); // Rimuove l'elemento div dal documento e genera un evento "destroy".
      */
     jdm_destroy() {
         this.node.remove();
         this.jdm_genEvent("destroy");
         return this.node;
     }
+
     /**
      * Verifica la validità dell'elemento `input` o `form` secondo le regole di validazione HTML.
-     * Se l'elemento è valido, il metodo restituisce `true`; altrimenti, restituisce `false` e attiva un evento di validazione.
-     * Dopo la verifica, viene generato un evento personalizzato chiamato "validate".
+     * Dopo la verifica, viene generato un evento personalizzato chiamato "validate", che segnala il risultato della validazione.
      *
-     * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stata effettuata la validazione, consentendo il chaining dei metodi.
+     * @returns {HTMLElement} L'elemento DOM su cui è stata effettuata la validazione, consentendo il chaining dei metodi.
      *
      * @example
-     * const input = new Jdm(document.createElement('input'));
-     * input.node.setAttribute('required', 'true');
-     * input.jdm_validate(); // Verifica la validità dell'input e genera l'evento "validate".
+     * JDM('input', document.body)
+     *  .jdm_setAttribute('required', 'true')
+     *  .jdm_validate(); // Verifica la validità dell'input e genera l'evento "validate".
      */
     jdm_validate() {
-        this.node.checkValidity();
-        this.jdm_genEvent("validate");
+        const validity = this.node.checkValidity();
+        this.jdm_genEvent("validate", validity);
         return this.node;
     }
+
     /**
      * Rimuove un attributo dall'elemento DOM e genera un evento di rimozione dell'attributo.
      * Questo metodo rimuove l'attributo specificato dall'elemento DOM rappresentato da `this.node`.
@@ -425,8 +494,8 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui l'attributo è stato rimosso, consentendo il chaining dei metodi.
      *
      * @example
-     * const div = new Jdm(document.createElement('div'));
-     * div.jdm_removeAttribute('id'); // Rimuove l'attributo 'id' dall'elemento div.
+     * JDM('<div id="foo">lorem ipsum</div>', document.body)
+     *  .jdm_removeAttribute('id'); // Rimuove l'attributo 'id' dall'elemento div.
      */
     jdm_removeAttribute(attribute) {
         this.node.removeAttribute(attribute);
@@ -442,8 +511,8 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato applicato lo stile, consentendo il chaining dei metodi.
      *
      * @example
-     * const div = new Jdm(document.createElement('div'));
-     * div.jdm_setStyle('color', 'red'); // Imposta il colore del testo dell'elemento div su rosso.
+     * const div = JDM('<div>lorem ipsum</div>', document.body)
+     * .jdm_setStyle('color', 'red'); // Imposta il colore del testo dell'elemento div su rosso.
      */
     jdm_setStyle(style, value) {
         this.node.style[style] = value;
@@ -458,10 +527,10 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stata aggiunta la proprietà personalizzata, consentendo il chaining dei metodi.
      *
      * @example
-     * const div = new Jdm(document.createElement('div'));
-     * div.jdm_extendNode('customData', { id: 123, name: 'My Div' });
+     * const div = JDM('<div>lorem ipsum</div>', document.body)
+     *  .jdm_extendNode('customData', { id: 123, name: 'My Div' });
      * // Aggiunge la proprietà 'customData' all'elemento div con un oggetto come valore.
-     * console.log(div.node.customData); // { id: 123, name: 'My Div' }
+     * console.log(div.customData); // { id: 123, name: 'My Div' }
      */
     jdm_extendNode(name, object = null) {
         this.node[name] = object;
@@ -477,8 +546,8 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM con il nuovo contenuto HTML impostato, consentendo il chaining dei metodi.
      *
      * @example
-     * const div = new Jdm(document.createElement('div'));
-     * div.jdm_innerHTML('<p>Nuovo contenuto HTML</p>');
+     * JDM('<div>lorem ipsum</div>', document.body)
+     *  .jdm_innerHTML('<p>Dolor sit amet</p>');
      * // Imposta il contenuto HTML del div con un nuovo paragrafo.
      */
     jdm_innerHTML(value) {
@@ -497,15 +566,9 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato applicato il binding, consentendo il chaining dei metodi.
      *
      * @example
-     * const input = new Jdm(document.createElement('input'));
-     * const output = new Jdm(document.createElement('div'));
-     * input.jdm_binding(output);
-     * // Crea un binding tra l'input e l'output, così che quando l'input cambia, l'output si aggiorna.
-     *
-     * @example
-     * const input = new Jdm(document.createElement('input'));
-     * const output = new Jdm(document.createElement('div'));
-     * input.jdm_binding(output, "change", false);
+     *  const input = JDM('input', document.body);
+     *  const output = JDM('input', document.body);
+     *  input.jdm_binding(output, "input", true);
      * // Crea un binding unidirezionale tra l'input e l'output, che si attiva sull'evento 'change'.
      */
     jdm_binding(el, event = "input", twoWayDataBinding = true) {
@@ -552,9 +615,9 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
      *
      * @example
-     * const input = new Jdm(document.createElement('input'));
-     * input.jdm_onInput((event) => {
-     *   console.log('Input modificato:', event.target.value);
+     * const input = JDM('input', document.body)
+     *  .jdm_onInput((event) => {
+     *   console.log('Input modificato:', input.jdm_getValue());
      * });
      * // Aggiunge un listener per l'evento 'input' che stampa il valore dell'input ogni volta che cambia.
      */
@@ -563,6 +626,7 @@ class Jdm {
 
         return this.node;
     }
+
     /**
      * Aggiunge un listener per l'evento `change` all'elemento DOM.
      * Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `change` sull'elemento.
@@ -573,15 +637,14 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
      *
      * @example
-     * const input = new Jdm(document.createElement('input'));
-     * input.jdm_onChange((event) => {
-     *   console.log('Valore cambiato:', event.target.value);
+     * const input = JDM('input', document.body)
+     *  .jdm_onChange(() => {
+     *   console.log('Valore cambiato:', input.jdm_getValue());
      * });
      * // Aggiunge un listener per l'evento 'change' che stampa il valore dell'input ogni volta che cambia.
      */
     jdm_onChange(fn = () => {}) {
         this.node.addEventListener("change", fn);
-
         return this.node;
     }
     /**
@@ -594,9 +657,9 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
      *
      * @example
-     * const input = new Jdm(document.createElement('input'));
-     * input.jdm_onSelect((event) => {
-     *   console.log('Testo selezionato:', event.target.value);
+     * const input = JDM('<input>', document.body)
+     *  .jdm_onSelect((event) => {
+     *   console.log('Testo selezionato:', input.jdm_getValue());
      * });
      * // Aggiunge un listener per l'evento 'select' che stampa il valore del campo di input ogni volta che viene selezionato del testo.
      */
@@ -604,6 +667,7 @@ class Jdm {
         this.node.addEventListener("select", fn);
         return this.node;
     }
+
     /**
      * Aggiunge un listener per l'evento `input` all'elemento DOM con un meccanismo di debounce.
      * Questo metodo permette di eseguire una funzione di callback solo dopo che l'utente ha smesso di digitare per un determinato periodo di tempo.
@@ -616,10 +680,10 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
      *
      * @example
-     * const input = new Jdm(document.createElement('input'));
-     * input.jdm_onDebounce((event) => {
-     *   console.log('Input debounced:', event.target.value);
-     * }, 500);
+     * const input = JDM('input', document.body)
+     *  .jdm_onDebounce(() => {
+     *      console.log('Input debounced:',input.jdm_getValue());
+     *  }, 500);
      * // Aggiunge un listener per l'evento 'input' con un debounce di 500 millisecondi,
      * // evitando chiamate troppo frequenti alla funzione di callback mentre l'utente sta digitando.
      */
@@ -637,10 +701,10 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
      *
      * @example
-     * const button = new Jdm(document.createElement('button'));
-     * button.jdm_onClick((event) => {
-     *   console.log('Button clicked');
-     * });
+     * const button = JDM('<button>CLICK</button>', document.body)
+     *  .jdm_onClick((event) => {
+     *      console.log('Button clicked');
+     *  });
      * // Aggiunge un listener per l'evento 'click' che stampa un messaggio ogni volta che il pulsante viene cliccato.
      */
     jdm_onClick(fn = () => {}) {
@@ -648,6 +712,7 @@ class Jdm {
 
         return this.node;
     }
+
     /**
      * Aggiunge un listener per l'evento `contextmenu` (clic destro) all'elemento DOM.
      * Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `contextmenu` sull'elemento,
@@ -659,8 +724,7 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
      *
      * @example
-     * const element = new Jdm(document.createElement('div'));
-     * element.jdm_onRightClick((event) => {
+     * const element = JDM('<div> RIGHT CLICK </div>', document.body).jdm_onRightClick((event) => {
      *   event.preventDefault(); // Previene il menu contestuale predefinito
      *   console.log('Clic destro eseguito!');
      * });
@@ -670,6 +734,7 @@ class Jdm {
         this.node.addEventListener("contextmenu", fn);
         return this.node;
     }
+
     /**
      * Aggiunge un listener per l'evento `dblclick` (doppio clic) all'elemento DOM.
      * Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `dblclick` sull'elemento,
@@ -681,16 +746,18 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
      *
      * @example
-     * const element = new Jdm(document.createElement('div'));
-     * element.jdm_onDoubleClick((event) => {
-     *   console.log('Elemento doppiamente cliccato');
-     * });
+     * const element = JDM('<div>Double click</div>', document.body)
+     *  .jdm_onDoubleClick((event) => {
+     *      console.log('Elemento doppiamente cliccato');
+     *  });
      * // Aggiunge un listener per l'evento 'dblclick' che esegue la funzione di callback ogni volta che l'utente fa doppio clic sull'elemento.
      */
     jdm_onDoubleClick(fn = () => {}) {
+        console.log("ìqweqwe");
         this.node.addEventListener("dblclick", fn);
         return this.node;
     }
+
     /**
      * Aggiunge un listener per l'evento `invalid` all'elemento DOM.
      * Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `invalid` sull'elemento,
@@ -702,14 +769,20 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
      *
      * @example
-     * const inputElement = new Jdm(document.createElement('input'));
-     * inputElement.jdm_onInvalid((event) => {
-     *   console.log('Il campo input è invalido');
-     *   event.preventDefault(); // Previene l'azione predefinita (se desiderato)
-     * });
+     * const formString = `
+     *  <form>
+     *      <input name="inputNumeric" type="number" min="1" max="10" required />
+     *      <button type="submit"> Submit </button>
+     *  </form>`;
+     *  const form = JDM(formString, document.body)
+     *  form.jdm_childNode.inputNumeric
+     *      .jdm_onInvalid((e) => {
+     *          console.log('Il campo input è invalido');
+     *      })
      * // Aggiunge un listener per l'evento 'invalid' che esegue la funzione di callback quando l'input non è valido.
      */
     jdm_onInvalid(fn = () => {}) {
+        console.log("invalid");
         this.node.addEventListener("invalid", fn);
         return this.node;
     }
@@ -725,10 +798,10 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
      *
      * @example
-     * const imgElement = new Jdm(document.createElement('img'));
-     * imgElement.jdm_onLoad(() => {
-     *   console.log('Immagine caricata con successo');
-     * });
+     * const image = JDM('<img src="https://picsum.photos/200/300" alt="test">', document.body)
+     *  .jdm_onLoad(() => {
+     *      console.log('Immagine caricata con successo');
+     *  });
      * // Aggiunge un listener per l'evento 'load' che esegue la funzione di callback ogni volta che l'immagine è completamente caricata.
      */
     jdm_onLoad(fn = () => {}) {
@@ -747,16 +820,17 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
      *
      * @example
-     * const imgElement = new Jdm(document.createElement('img'));
-     * imgElement.jdm_onError(() => {
-     *   console.log('Si è verificato un errore nel caricamento dell\'immagine');
-     * });
+     *  const imgElement = JDM('<img src="invalidUrl" alt="invalid url">', document.body)
+     *      .jdm_onError(() => {
+     *          console.log('Si è verificato un errore nel caricamento dell\'immagine');
+     *      });
      * // Aggiunge un listener per l'evento 'error' che esegue la funzione di callback ogni volta che si verifica un errore nel caricamento dell'immagine.
      */
     jdm_onError(fn = () => {}) {
         this.node.addEventListener("error", fn);
         return this.node;
     }
+
     /**
      * Aggiunge un listener per l'evento `submit` all'elemento DOM.
      * Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `submit` sull'elemento,
@@ -770,17 +844,24 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
      *
      * @example
-     * const formElement = new Jdm(document.createElement('form'));
-     * formElement.jdm_onSubmit((event) => {
-     *   event.preventDefault(); // Previene l'invio del modulo
-     *   console.log('Modulo inviato');
-     * });
+     * const formString = `
+     *  <form>
+     *      <input name="inputNumeric" type="number" min="1" max="10" required />
+     *      <button type="submit"> Submit </button>
+     *  </form>`;
+     *  const form = JDM(formString, document.body)
+     *      .jdm_onSubmit((e)=> {
+     *          e.preventDefault();
+     *          console.log('submit');
+     *      })
      * // Aggiunge un listener per l'evento 'submit' che esegue la funzione di callback ogni volta che il modulo viene inviato.
      */
-    jdm_onSubmit(fn = () => {}) {
+    jdm_onSubmit(fn = e => {}) {
+        console.log(e);
         this.node.addEventListener("submit", fn);
         return this.node;
     }
+
     /**
      * Imposta il valore di un elemento DOM. Se l'elemento è una checkbox, un radio button o un modulo,
      * il valore verrà impostato di conseguenza. Se l'elemento è un modulo (`<form>`), verranno impostati
@@ -794,17 +875,25 @@ class Jdm {
      * @returns {HTMLElement} - Restituisce l'elemento DOM su cui è stato impostato il valore, consentendo il chaining dei metodi.
      *
      * @example
-     * const checkboxElement = new Jdm(document.createElement('input'));
-     * checkboxElement.jdm_setValue(true);
+     * const checkboxElement = JDM('<input type="checkbox">', document.body)
+     *  .jdm_setValue(true);
      * // Imposta il valore di una checkbox su 'true', facendo in modo che sia selezionata.
      *
-     * const formElement = new Jdm(document.createElement('form'));
-     * const formData = {
-     *   username: 'user1',
-     *   password: 'password123',
-     *   terms: true
-     * };
-     * formElement.jdm_setValue(formData);
+     * const data = {
+     *  inputNumeric: 1,
+     *  name: 'foo',
+     *  surname : 'bar'
+     *  }
+     *
+     * const formString = `
+     *  <form>
+     *      <input name="inputNumeric" type="number" min="1" max="10"/>
+     *      <input name="name" type="text"/>
+     *      <input name="surname" type="text"/>
+     *      <button type="submit"> Submit </button>
+     *  </form>`;
+     *  const form = JDM(formString, document.body)
+     *      .jdm_setValue(data);
      * // Imposta i valori del modulo, inclusi i checkbox e altri input.
      */
     jdm_setValue(value, tooBoolean = true) {
@@ -865,6 +954,7 @@ class Jdm {
 
         return this.node;
     }
+
     /**
      * Ottiene il valore di un elemento DOM. A seconda del tipo di elemento, il valore verrà restituito in modo appropriato:
      * - **Input** (checkbox, radio): restituisce il valore `checked` dell'elemento.
@@ -875,26 +965,36 @@ class Jdm {
      * @returns {any} - Il valore dell'elemento DOM. Se l'elemento è un modulo, restituisce un oggetto JSON con i dati del modulo.
      *
      * @example
-     * const checkboxElement = new Jdm(document.createElement('input'));
-     * checkboxElement.node.type = 'checkbox';
-     * checkboxElement.node.checked = true;
-     * console.log(checkboxElement.jdm_getValue()); // true
+     * const checkboxValue = JDM('<input type="checkbox" checked>', document.body)
+     *  .jdm_getValue();
+     * console.log(checkboxValue); // log true
      *
-     * const formElement = new Jdm(document.createElement('form'));
-     * const formData = {
-     *   username: 'user1',
-     *   password: 'password123',
-     *   terms: true
-     * };
-     * formElement.jdm_setValue(formData);
-     * console.log(formElement.jdm_getValue());
+     * const data = {
+     *  inputNumeric: 1,
+     *  name: 'foo',
+     *  surname: 'bar'
+     * }
+     *
+     * const formString = `
+     * <form>
+     *   <input name="inputNumeric" type="number" min="1" max="10"/>
+     *   <input name="name" type="text"/>
+     *   <input name="surname" type="text"/>
+     *   <button type="submit"> Submit </button>
+     * </form>`;
+     * const form = JDM(formString, document.body)
+     *  .jdm_setValue(data);
+     *  console.log(form.jdm_getValue());
      * // Restituisce un oggetto JSON con i dati del modulo, es.
-     * // { username: 'user1', password: 'password123', terms: true }
+     * // { inputNumeric: '1', name: 'foo', surname: 'bar' }
      *
-     * const selectElement = new Jdm(document.createElement('select'));
-     * selectElement.node.innerHTML = '<option value="1">Option 1</option><option value="2">Option 2</option>';
-     * selectElement.node.value = '1';
-     * console.log(selectElement.jdm_getValue()); // '1'
+     * const selectString = `
+     * <select name="foo">
+     *  <option value="foo">foo</option>
+     *  <option value="bar" selected>bar</option>
+     * </select>`;
+     * const select = JDM(selectString, document.body);
+     * console.log(select.jdm_getValue()); // log 'bar'
      */
     jdm_getValue() {
         if (this.tag === "input" && (this.node.type === "checkbox" || this.node.type === "radio")) {
@@ -945,6 +1045,7 @@ class Jdm {
             return this.node.value;
         }
     }
+
     /**
      * Genera un evento personalizzato per l'elemento DOM associato, utilizzando il metodo di generazione evento definito nella libreria `_common`.
      * L'evento può essere propagato ai genitori, se necessario.
@@ -956,18 +1057,17 @@ class Jdm {
      * @returns {Node} - Restituisce il nodo dell'elemento su cui è stato generato l'evento, per consentire il chaining.
      *
      * @example
-     * // Esempio di come generare un evento personalizzato
-     * const element = new Jdm(document.createElement('div'));
+     * const element = JDM('<input>', document.body)
+     *  .jdm_addEventListener('customEvent', (event)=> {
+     *      console.log(event.detail)
+     * })
      * element.jdm_genEvent('customEvent', { message: 'Evento generato!' });
-     *
-     * // Esempio con propagazione a genitori disabilitata
-     * element.jdm_genEvent('customEvent', { message: 'Evento senza propagazione' }, false);
      */
     jdm_genEvent(name, data = null, propagateToParents = true) {
         _common.genEvent(this.node, name, data, propagateToParents);
-
         return this.node;
     }
+
     /**
      * Aggiunge un listener per un evento specificato sull'elemento DOM associato.
      * Consente di eseguire una funzione di callback quando l'evento si verifica.
@@ -978,20 +1078,20 @@ class Jdm {
      * @returns {Node} - Restituisce il nodo dell'elemento a cui è stato aggiunto l'evento, per consentire il chaining.
      *
      * @example
-     * // Aggiungi un listener per l'evento 'click' su un elemento
-     * const element = new Jdm(document.createElement('div'));
-     * element.jdm_addEventListener('click', () => {
-     *     console.log('Elemento cliccato!');
-     * });
-     *
-     * // Aggiungi un listener per l'evento 'input' su un elemento con funzione di callback predefinita
-     * element.jdm_addEventListener('input');
+     * const element = JDM('<div>Click me</div>', document.body)
+     *  .jdm_addEventListener('click', () => {
+     *      console.log('Click!');
+     *  })
+     *  .jdm_addEventListener('contextmenu', () => {
+     *      console.log('Right Click!');
+     *  })
      */
     jdm_addEventListener(name, fn = () => {}) {
         this.node.addEventListener(name, fn);
 
         return this.node;
     }
+
     /**
      * Rimuove un listener per un evento specificato sull'elemento DOM associato.
      * Questo metodo permette di interrompere l'esecuzione della funzione di callback
@@ -1004,7 +1104,7 @@ class Jdm {
      *
      * @example
      * // Rimuovi un listener per l'evento 'click' su un elemento
-     * const element = new Jdm(document.createElement('div'));
+     * const element = JDM('<div>lorem ipsum</div>', document.body);
      * const clickHandler = () => { console.log('Elemento cliccato!'); };
      * element.jdm_addEventListener('click', clickHandler);
      * // Dopo un certo punto, rimuoviamo il listener
@@ -1021,23 +1121,21 @@ class Jdm {
     /**
      * Estende l'elemento corrente con i nodi figli definiti in `jdm_childNode`.
      * Se l'elemento ha nodi figli associati a `jdm_childNode`, questi vengono aggiunti come proprietà dell'elemento stesso.
-     *
+     * ### NB:questo metodo NON funziona sui form
      * @returns {Node} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
      *
      * @example
-     * // Esempio di utilizzo di jdm_extendChildNode
-     * const element = new Jdm(document.createElement('div'));
-     * element.node.jdm_childNode = {
-     *     child1: new Jdm(document.createElement('p')),
-     *     child2: new Jdm(document.createElement('span'))
-     * };
-     *
-     * // Estende il nodo con i suoi figli definiti in jdm_childNode
-     * element.jdm_extendChildNode();
-     *
-     * // I nodi child1 e child2 sono ora proprietà di element.node
-     * console.log(element.node.child1); // Jdm { ... }
-     * console.log(element.node.child2); // Jdm { ... }
+     * const domString = `
+     *  <div class="foo">
+     *      <div data-name="element1"> Element 1</div>
+     *      <div data-name="element2"> Element 2</div>
+     *      <div data-name="element3"> Element 3</div>
+     *  </div>`;
+     *  const div = JDM(domString, document.body)
+     *   .jdm_extendChildNode();
+     *   console.log(div.element1);
+     *   console.log(div.element2);
+     *   console.log(div.element3);
      */
     jdm_extendChildNode() {
         if (this.node?.jdm_childNode && Object.entries(this.node.jdm_childNode).length > 0) {
@@ -1063,14 +1161,14 @@ class Jdm {
  *
  * @example
  * // Crea un nuovo div, aggiunge classi e lo appende al body
- * const myDiv = JDM('div', document.body, ['my-class', 'another-class']);
+ * const myDiv = JDM('<div> lorem ipsum</div>', document.body, ['my-class', 'another-class']);
  *
  * // Crea un nuovo elemento con un tag personalizzato
- * const customElement = JDM('custom-tag');
+ * const customElement = JDM('<custom>custom <br></custom>', document.body);
  *
  * // Aggiunge un input a un elemento esistente e imposta il valore
- * const myInput = JDM('input');
- * myInput.jdm_setValue('Test');
+ * JDM('input', document.body)
+ * .jdm_setValue('Test');
  */
 window.JDM = (element = null, parent = null, classList = null, deep = true, ...args) => {
     return new Jdm(element, parent, classList, deep, ...args);
@@ -1081,7 +1179,7 @@ window.JDM = (element = null, parent = null, classList = null, deep = true, ...a
  *
  * @example
  * // Una volta che Jdm è stato assegnato a window, puoi usarlo ovunque nel tuo codice
- * const myDiv = new Jdm('div', document.body, ['my-class']);
+ * const myDiv = JDM('div', document.body, ['my-class']);
  */
 window.Jdm = Jdm;
 

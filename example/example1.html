@@ -11,28 +11,20 @@
 </body>
 <script type="module">
     import "../dist/jdm.js";
-    const string = 'stringa';
 
-    //language=html
-    const domString = `
-    <div>
-        <ul>
-            <li data-name="element1">1</li>
-            <li>2</li>
-            <li>3</li>
-            <li>${string.toCapitalize()}</li>
-        </ul>
-    </div>
-    `;
+    // Crea un nuovo div, aggiunge classi e lo appende al body
+    const myDiv = JDM('<div> lorem ipsum</div>', document.body, ['my-class', 'another-class']);
 
-    const dom = JDM(domString, document.body, ['test', 'element'])
-        .jdm_extendChildNode()
-        .jdm_addClassList('test2')
-        .jdm_addId('elemento1');
+    // Crea un nuovo elemento con un tag personalizzato
+    const customElement = JDM('<custom>custom <br></custom>', document.body);
 
-    const test = new Jdm(domString, document.body, ['test2', 'element2'])
+    // Aggiunge un input a un elemento esistente e imposta il valore
+    const myInput = JDM('input', document.body);
+    myInput.jdm_setValue('Test');
 
-    console.log('tst',test)
+
+
+
 
 </script>
 </html>

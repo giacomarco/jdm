@@ -48,7 +48,73 @@
             <div class="class-description">Classe Jdm che fornisce un framework per la manipolazione del DOM.
 Permette di creare un elemento DOM, aggiungerlo a un genitore, assegnargli delle classi
 e manipolarlo in modo ricorsivo, se richiesto.
-I metodi della classe sono concatenabili per facilitare le operazioni sul DOM.</div>
+I metodi della classe sono concatenabili per facilitare le operazioni sul DOM.
+
+# INSTALLAZIONE:
+NPM
+```bash
+npm install jdm_javascript_dom_manipulator
+```
+Esempio di utilizzo di un modulo ES6:
+```javascript
+import './yourPath/dist/jdm.js";
+```
+
+# USO
+```javascript
+JDM('div', container, ['fooClass','barClass'])
+```
+# COMPARAZIONE:
+
+## jQuery:
+```javascript
+const $div = $('<div>', { class: 'foo bar' });
+const $ul = $('<ul>');
+const $li1 = $('<li>').text('Elemento 1');
+const $li2 = $('<li>').text('Elemento 2');
+const $li3 = $('<li>').text('Elemento 3');
+const $li4 = $('<li>').text('Elemento 4');
+const $li5 = $('<li>').text('Elemento 5');
+$ul.append($li1, $li2, $li3, $li4, $li5);
+$div.append($ul);
+$('body').append($div);
+```
+
+## JavaScript puro:
+```javascript
+const div = 'div';
+div.classList.add('foo', 'bar');
+const ul = document.createElement('ul');
+const li1 = document.createElement('li');
+li1.textContent = 'Elemento 1';
+const li2 = document.createElement('li');
+li2.textContent = 'Elemento 2';
+const li3 = document.createElement('li');
+li3.textContent = 'Elemento 3';
+const li4 = document.createElement('li');
+li4.textContent = 'Elemento 4';
+const li5 = document.createElement('li');
+li5.textContent = 'Elemento 5';
+ul.append(li1, li2, li3, li4, li5);
+div.appendChild(ul);
+document.body.appendChild(div);
+```
+
+## Jdm:
+
+```javascript
+const domString = `
+<div class="foo bar">
+    <ul>
+        <li> Elemento 1 </li>
+        <li> Elemento 2 </li>
+        <li> Elemento 3 </li>
+        <li> Elemento 4 </li>
+        <li> Elemento 5 </li>
+    </ul>
+</div>`;
+const div = JDM(domString, document.body);
+```</div>
         
     
 </header>
@@ -106,7 +172,7 @@ I metodi della classe sono concatenabili per facilitare le operazioni sul DOM.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line13">line 13</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line79">line 79</a>
     </li></ul></dd>
     
 
@@ -416,8 +482,17 @@ I metodi della classe sono concatenabili per facilitare le operazioni sul DOM.</
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const div = new Jdm('div', document.body, ['my-class'], true);
-// Crea un nuovo div con la classe 'my-class' e lo aggiunge al body</code></pre>
+    <pre class="prettyprint"><code>const div = JDM('&lt;div>lorem ipsum&lt;/div>', document.body, ['my-class'], true);
+// Crea un nuovo div con la classe 'my-class' e lo aggiunge al body
+
+//language=html
+const domString = `
+    &lt;div class="my-class">
+        &lt;p> paragraph &lt;/p>
+    &lt;/div>
+    `;
+JDM(domString, document.body)
+// Crea un nuovo div con la classe 'my-class', un paragrafo child e lo aggiunge tutto al body</code></pre>
 
 </div>
 
@@ -491,7 +566,7 @@ Se viene fornita una singola classe, questa viene aggiunta come unica classe.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line291">line 291</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line359">line 359</a>
     </li></ul></dd>
     
 
@@ -607,11 +682,11 @@ Se viene fornita una singola classe, questa viene aggiunta come unica classe.
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const div = new Jdm(document.createElement('div'));
-div.jdm_addClassList('myClass'); // Aggiunge la classe "myClass" all'elemento div.
+    <pre class="prettyprint"><code>const div = JDM('&lt;div>lorem ipsum&lt;/div>', document.body)
+ .jdm_addClassList('myClass'); // Aggiunge la classe "myClass" all'elemento div.
 
-const div2 = new Jdm(document.createElement('div'));
-div2.jdm_addClassList(['class1', 'class2']); // Aggiunge "class1" e "class2" all'elemento div2.</code></pre>
+const div2 = JDM('&lt;div>lorem ipsum&lt;/div>', document.body)
+ .jdm_addClassList(['class1', 'class2']); // Aggiunge "class1" e "class2" all'elemento div2.</code></pre>
 
 </div>
 
@@ -666,7 +741,7 @@ Consente di eseguire una funzione di callback quando l'evento si verifica.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line990">line 990</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line1089">line 1089</a>
     </li></ul></dd>
     
 
@@ -837,14 +912,13 @@ Consente di eseguire una funzione di callback quando l'evento si verifica.
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>// Aggiungi un listener per l'evento 'click' su un elemento
-const element = new Jdm(document.createElement('div'));
-element.jdm_addEventListener('click', () => {
-    console.log('Elemento cliccato!');
-});
-
-// Aggiungi un listener per l'evento 'input' su un elemento con funzione di callback predefinita
-element.jdm_addEventListener('input');</code></pre>
+    <pre class="prettyprint"><code>const element = JDM('&lt;div>Click me&lt;/div>', document.body)
+ .jdm_addEventListener('click', () => {
+     console.log('Click!');
+ })
+ .jdm_addEventListener('contextmenu', () => {
+     console.log('Right Click!');
+ })</code></pre>
 
 </div>
 
@@ -898,7 +972,7 @@ element.jdm_addEventListener('input');</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line272">line 272</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line340">line 340</a>
     </li></ul></dd>
     
 
@@ -1011,8 +1085,8 @@ element.jdm_addEventListener('input');</code></pre>
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const div = new Jdm(document.createElement('div'));
-div.jdm_addId('myDiv'); // Imposta l'attributo id="myDiv" sull'elemento div.</code></pre>
+    <pre class="prettyprint"><code>const div = JDM('&lt;div>lorem ipsum&lt;/div>', document.body)
+ .jdm_addId('myDiv'); // Imposta l'attributo id="myDiv" sull'elemento div.</code></pre>
 
 </div>
 
@@ -1067,7 +1141,7 @@ Se viene fornita una lista di elementi, tutti gli elementi vengono aggiunti all'
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line222">line 222</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line287">line 287</a>
     </li></ul></dd>
     
 
@@ -1183,12 +1257,12 @@ Se viene fornita una lista di elementi, tutti gli elementi vengono aggiunti all'
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const div = new Jdm(document.createElement('div'));
-const p1 = document.createElement('p');
-const p2 = document.createElement('p');
-div.jdm_append([p1, p2]); // Aggiunge entrambi i paragrafi come figli del div.
+    <pre class="prettyprint"><code>const p1 = JDM('&lt;p>paragrafo 1&lt;/p>');
+const p2 = JDM('&lt;p>paragrafo 2&lt;/p>');
+const div = JDM('&lt;div>lorem ipsum&lt;/div>', document.body)
+ .jdm_append([p1, p2]); // Aggiunge entrambi i paragrafi come figli del div.
 
-const span = document.createElement('span');
+const span = JDM('span');
 div.jdm_append(span); // Aggiunge il singolo elemento span come figlio del div.</code></pre>
 
 </div>
@@ -1246,7 +1320,7 @@ Se il binding bidirezionale è abilitato, i cambiamenti sono sincronizzati in en
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line511">line 511</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line574">line 574</a>
     </li></ul></dd>
     
 
@@ -1460,16 +1534,11 @@ Se il binding bidirezionale è abilitato, i cambiamenti sono sincronizzati in en
 
 
 <div class="section-examples">
-<h5>Examples</h5>
+<h5>Example</h5>
 
-    <pre class="prettyprint"><code>const input = new Jdm(document.createElement('input'));
-const output = new Jdm(document.createElement('div'));
-input.jdm_binding(output);
-// Crea un binding tra l'input e l'output, così che quando l'input cambia, l'output si aggiorna.</code></pre>
-
-    <pre class="prettyprint"><code>const input = new Jdm(document.createElement('input'));
-const output = new Jdm(document.createElement('div'));
-input.jdm_binding(output, "change", false);
+    <pre class="prettyprint"><code>const input = JDM('input', document.body);
+ const output = JDM('input', document.body);
+ input.jdm_binding(output, "input", true);
 // Crea un binding unidirezionale tra l'input e l'output, che si attiva sull'evento 'change'.</code></pre>
 
 </div>
@@ -1526,7 +1595,7 @@ Inoltre, viene generato un evento personalizzato chiamato "destroy".
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line397">line 397</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line465">line 465</a>
     </li></ul></dd>
     
 
@@ -1587,8 +1656,8 @@ Inoltre, viene generato un evento personalizzato chiamato "destroy".
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const div = new Jdm(document.createElement('div'));
-div.jdm_destroy(); // Rimuove l'elemento div dal documento e genera un evento "destroy".</code></pre>
+    <pre class="prettyprint"><code>const div = JDM('&lt;div>lorem ipsum&lt;/div>', document.body)
+ .jdm_destroy(); // Rimuove l'elemento div dal documento e genera un evento "destroy".</code></pre>
 
 </div>
 
@@ -1647,7 +1716,7 @@ A seconda del tipo di elemento, il comportamento di "svuotamento" varia:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line373">line 373</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line440">line 440</a>
     </li></ul></dd>
     
 
@@ -1708,15 +1777,14 @@ A seconda del tipo di elemento, il comportamento di "svuotamento" varia:
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const inputText = new Jdm(document.createElement('input'));
-inputText.jdm_empty(); // Imposta il valore dell'input text a null.
+    <pre class="prettyprint"><code>const inputText = JDM('input', document.body)
+ .jdm_empty(); // Imposta il valore dell'input text a null.
 
-const checkbox = new Jdm(document.createElement('input'));
-checkbox.node.type = 'checkbox';
-checkbox.jdm_empty(); // Deseleziona la checkbox.
+const checkbox = JDM('input', document.body)
+ .jdm_setAttribute('type', 'checkbox')
+ .jdm_empty(); // Deseleziona la checkbox.
 
-const form = new Jdm(document.createElement('form'));
-form.jdm_empty(); // Esegue il reset del modulo.</code></pre>
+const form = JDM('form').jdm_empty(); // Esegue il reset del modulo.</code></pre>
 
 </div>
 
@@ -1736,6 +1804,7 @@ form.jdm_empty(); // Esegue il reset del modulo.</code></pre>
 <div class="description">
     Estende l'elemento corrente con i nodi figli definiti in `jdm_childNode`.
 Se l'elemento ha nodi figli associati a `jdm_childNode`, questi vengono aggiunti come proprietà dell'elemento stesso.
+### NB:questo metodo NON funziona sui form
 </div>
 
 
@@ -1771,7 +1840,7 @@ Se l'elemento ha nodi figli associati a `jdm_childNode`, questi vengono aggiunti
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line1042">line 1042</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line1140">line 1140</a>
     </li></ul></dd>
     
 
@@ -1832,19 +1901,17 @@ Se l'elemento ha nodi figli associati a `jdm_childNode`, questi vengono aggiunti
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>// Esempio di utilizzo di jdm_extendChildNode
-const element = new Jdm(document.createElement('div'));
-element.node.jdm_childNode = {
-    child1: new Jdm(document.createElement('p')),
-    child2: new Jdm(document.createElement('span'))
-};
-
-// Estende il nodo con i suoi figli definiti in jdm_childNode
-element.jdm_extendChildNode();
-
-// I nodi child1 e child2 sono ora proprietà di element.node
-console.log(element.node.child1); // Jdm { ... }
-console.log(element.node.child2); // Jdm { ... }</code></pre>
+    <pre class="prettyprint"><code>const domString = `
+ &lt;div class="foo">
+     &lt;div data-name="element1"> Element 1&lt;/div>
+     &lt;div data-name="element2"> Element 2&lt;/div>
+     &lt;div data-name="element3"> Element 3&lt;/div>
+ &lt;/div>`;
+ const div = JDM(domString, document.body)
+  .jdm_extendChildNode();
+  console.log(div.element1);
+  console.log(div.element2);
+  console.log(div.element3);</code></pre>
 
 </div>
 
@@ -1899,7 +1966,7 @@ Questo metodo assegna un oggetto o un valore alla proprietà `name` dell'element
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line466">line 466</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line535">line 535</a>
     </li></ul></dd>
     
 
@@ -2073,10 +2140,10 @@ Questo metodo assegna un oggetto o un valore alla proprietà `name` dell'element
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const div = new Jdm(document.createElement('div'));
-div.jdm_extendNode('customData', { id: 123, name: 'My Div' });
+    <pre class="prettyprint"><code>const div = JDM('&lt;div>lorem ipsum&lt;/div>', document.body)
+ .jdm_extendNode('customData', { id: 123, name: 'My Div' });
 // Aggiunge la proprietà 'customData' all'elemento div con un oggetto come valore.
-console.log(div.node.customData); // { id: 123, name: 'My Div' }</code></pre>
+console.log(div.customData); // { id: 123, name: 'My Div' }</code></pre>
 
 </div>
 
@@ -2131,7 +2198,7 @@ L'evento può essere propagato ai genitori, se necessario.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line966">line 966</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line1066">line 1066</a>
     </li></ul></dd>
     
 
@@ -2347,12 +2414,11 @@ L'evento può essere propagato ai genitori, se necessario.
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>// Esempio di come generare un evento personalizzato
-const element = new Jdm(document.createElement('div'));
-element.jdm_genEvent('customEvent', { message: 'Evento generato!' });
-
-// Esempio con propagazione a genitori disabilitata
-element.jdm_genEvent('customEvent', { message: 'Evento senza propagazione' }, false);</code></pre>
+    <pre class="prettyprint"><code>const element = JDM('&lt;input>', document.body)
+ .jdm_addEventListener('customEvent', (event)=> {
+     console.log(event.detail)
+})
+element.jdm_genEvent('customEvent', { message: 'Evento generato!' });</code></pre>
 
 </div>
 
@@ -2406,7 +2472,7 @@ element.jdm_genEvent('customEvent', { message: 'Evento senza propagazione' }, fa
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line202">line 202</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line267">line 267</a>
     </li></ul></dd>
     
 
@@ -2522,10 +2588,9 @@ element.jdm_genEvent('customEvent', { message: 'Evento senza propagazione' }, fa
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const div = new Jdm(document.createElement('div'));
-div.jdm_setAttribute('id', 'myDiv');
-const idValue = div.jdm_getAttribute('id');
-console.log(idValue); // Stampa "myDiv"</code></pre>
+    <pre class="prettyprint"><code>const div = JDM('&lt;div>lorem ipsum&lt;/div>', document.body)
+ .jdm_setAttribute('data-test', 'foo');
+const dataTest = div.jdm_getAttribute('data-test')</code></pre>
 
 </div>
 
@@ -2583,7 +2648,7 @@ console.log(idValue); // Stampa "myDiv"</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line899">line 899</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line999">line 999</a>
     </li></ul></dd>
     
 
@@ -2644,26 +2709,36 @@ console.log(idValue); // Stampa "myDiv"</code></pre>
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const checkboxElement = new Jdm(document.createElement('input'));
-checkboxElement.node.type = 'checkbox';
-checkboxElement.node.checked = true;
-console.log(checkboxElement.jdm_getValue()); // true
+    <pre class="prettyprint"><code>const checkboxValue = JDM('&lt;input type="checkbox" checked>', document.body)
+ .jdm_getValue();
+console.log(checkboxValue); // log true
 
-const formElement = new Jdm(document.createElement('form'));
-const formData = {
-  username: 'user1',
-  password: 'password123',
-  terms: true
-};
-formElement.jdm_setValue(formData);
-console.log(formElement.jdm_getValue());
+const data = {
+ inputNumeric: 1,
+ name: 'foo',
+ surname: 'bar'
+}
+
+const formString = `
+&lt;form>
+  &lt;input name="inputNumeric" type="number" min="1" max="10"/>
+  &lt;input name="name" type="text"/>
+  &lt;input name="surname" type="text"/>
+  &lt;button type="submit"> Submit &lt;/button>
+&lt;/form>`;
+const form = JDM(formString, document.body)
+ .jdm_setValue(data);
+ console.log(form.jdm_getValue());
 // Restituisce un oggetto JSON con i dati del modulo, es.
-// { username: 'user1', password: 'password123', terms: true }
+// { inputNumeric: '1', name: 'foo', surname: 'bar' }
 
-const selectElement = new Jdm(document.createElement('select'));
-selectElement.node.innerHTML = '&lt;option value="1">Option 1&lt;/option>&lt;option value="2">Option 2&lt;/option>';
-selectElement.node.value = '1';
-console.log(selectElement.jdm_getValue()); // '1'</code></pre>
+const selectString = `
+&lt;select name="foo">
+ &lt;option value="foo">foo&lt;/option>
+ &lt;option value="bar" selected>bar&lt;/option>
+&lt;/select>`;
+const select = JDM(selectString, document.body);
+console.log(select.jdm_getValue()); // log 'bar'</code></pre>
 
 </div>
 
@@ -2719,7 +2794,7 @@ Se il parametro `value` viene fornito, aggiorna il contenuto HTML; altrimenti, r
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line484">line 484</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line553">line 553</a>
     </li></ul></dd>
     
 
@@ -2833,8 +2908,8 @@ Se il parametro `value` viene fornito, aggiorna il contenuto HTML; altrimenti, r
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const div = new Jdm(document.createElement('div'));
-div.jdm_innerHTML('&lt;p>Nuovo contenuto HTML&lt;/p>');
+    <pre class="prettyprint"><code>JDM('&lt;div>lorem ipsum&lt;/div>', document.body)
+ .jdm_innerHTML('&lt;p>Dolor sit amet&lt;/p>');
 // Imposta il contenuto HTML del div con un nuovo paragrafo.</code></pre>
 
 </div>
@@ -2891,7 +2966,7 @@ L'evento `change` viene attivato quando il valore di un elemento, come un campo 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line582">line 582</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line646">line 646</a>
     </li></ul></dd>
     
 
@@ -3025,9 +3100,9 @@ L'evento `change` viene attivato quando il valore di un elemento, come un campo 
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const input = new Jdm(document.createElement('input'));
-input.jdm_onChange((event) => {
-  console.log('Valore cambiato:', event.target.value);
+    <pre class="prettyprint"><code>const input = JDM('input', document.body)
+ .jdm_onChange(() => {
+  console.log('Valore cambiato:', input.jdm_getValue());
 });
 // Aggiunge un listener per l'evento 'change' che stampa il valore dell'input ogni volta che cambia.</code></pre>
 
@@ -3085,7 +3160,7 @@ L'evento `click` viene attivato quando l'utente clicca su un elemento, come un p
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line646">line 646</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line710">line 710</a>
     </li></ul></dd>
     
 
@@ -3219,10 +3294,10 @@ L'evento `click` viene attivato quando l'utente clicca su un elemento, come un p
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const button = new Jdm(document.createElement('button'));
-button.jdm_onClick((event) => {
-  console.log('Button clicked');
-});
+    <pre class="prettyprint"><code>const button = JDM('&lt;button>CLICK&lt;/button>', document.body)
+ .jdm_onClick((event) => {
+     console.log('Button clicked');
+ });
 // Aggiunge un listener per l'evento 'click' che stampa un messaggio ogni volta che il pulsante viene cliccato.</code></pre>
 
 </div>
@@ -3279,7 +3354,7 @@ Questo metodo permette di eseguire una funzione di callback solo dopo che l'uten
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line626">line 626</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line690">line 690</a>
     </li></ul></dd>
     
 
@@ -3456,10 +3531,10 @@ Questo metodo permette di eseguire una funzione di callback solo dopo che l'uten
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const input = new Jdm(document.createElement('input'));
-input.jdm_onDebounce((event) => {
-  console.log('Input debounced:', event.target.value);
-}, 500);
+    <pre class="prettyprint"><code>const input = JDM('input', document.body)
+ .jdm_onDebounce(() => {
+     console.log('Input debounced:',input.jdm_getValue());
+ }, 500);
 // Aggiunge un listener per l'evento 'input' con un debounce di 500 millisecondi,
 // evitando chiamate troppo frequenti alla funzione di callback mentre l'utente sta digitando.</code></pre>
 
@@ -3518,7 +3593,7 @@ L'evento `dblclick` è comunemente utilizzato per azioni che richiedono un'inter
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line690">line 690</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line755">line 755</a>
     </li></ul></dd>
     
 
@@ -3652,10 +3727,10 @@ L'evento `dblclick` è comunemente utilizzato per azioni che richiedono un'inter
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const element = new Jdm(document.createElement('div'));
-element.jdm_onDoubleClick((event) => {
-  console.log('Elemento doppiamente cliccato');
-});
+    <pre class="prettyprint"><code>const element = JDM('&lt;div>Double click&lt;/div>', document.body)
+ .jdm_onDoubleClick((event) => {
+     console.log('Elemento doppiamente cliccato');
+ });
 // Aggiunge un listener per l'evento 'dblclick' che esegue la funzione di callback ogni volta che l'utente fa doppio clic sull'elemento.</code></pre>
 
 </div>
@@ -3714,7 +3789,7 @@ o quando un file JavaScript o CSS non può essere caricato correttamente.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line756">line 756</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line829">line 829</a>
     </li></ul></dd>
     
 
@@ -3848,10 +3923,10 @@ o quando un file JavaScript o CSS non può essere caricato correttamente.
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const imgElement = new Jdm(document.createElement('img'));
-imgElement.jdm_onError(() => {
-  console.log('Si è verificato un errore nel caricamento dell\'immagine');
-});
+    <pre class="prettyprint"><code>const imgElement = JDM('&lt;img src="invalidUrl" alt="invalid url">', document.body)
+     .jdm_onError(() => {
+         console.log('Si è verificato un errore nel caricamento dell\'immagine');
+     });
 // Aggiunge un listener per l'evento 'error' che esegue la funzione di callback ogni volta che si verifica un errore nel caricamento dell'immagine.</code></pre>
 
 </div>
@@ -3907,7 +3982,7 @@ Questo metodo consente di eseguire una funzione di callback ogni volta che si ve
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line561">line 561</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line624">line 624</a>
     </li></ul></dd>
     
 
@@ -4041,9 +4116,9 @@ Questo metodo consente di eseguire una funzione di callback ogni volta che si ve
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const input = new Jdm(document.createElement('input'));
-input.jdm_onInput((event) => {
-  console.log('Input modificato:', event.target.value);
+    <pre class="prettyprint"><code>const input = JDM('input', document.body)
+ .jdm_onInput((event) => {
+  console.log('Input modificato:', input.jdm_getValue());
 });
 // Aggiunge un listener per l'evento 'input' che stampa il valore dell'input ogni volta che cambia.</code></pre>
 
@@ -4102,7 +4177,7 @@ L'evento `invalid` viene in genere generato automaticamente dal browser quando u
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line712">line 712</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line784">line 784</a>
     </li></ul></dd>
     
 
@@ -4236,11 +4311,16 @@ L'evento `invalid` viene in genere generato automaticamente dal browser quando u
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const inputElement = new Jdm(document.createElement('input'));
-inputElement.jdm_onInvalid((event) => {
-  console.log('Il campo input è invalido');
-  event.preventDefault(); // Previene l'azione predefinita (se desiderato)
-});
+    <pre class="prettyprint"><code>const formString = `
+ &lt;form>
+     &lt;input name="inputNumeric" type="number" min="1" max="10" required />
+     &lt;button type="submit"> Submit &lt;/button>
+ &lt;/form>`;
+ const form = JDM(formString, document.body)
+ form.jdm_childNode.inputNumeric
+     .jdm_onInvalid((e) => {
+         console.log('Il campo input è invalido');
+     })
 // Aggiunge un listener per l'evento 'invalid' che esegue la funzione di callback quando l'input non è valido.</code></pre>
 
 </div>
@@ -4299,7 +4379,7 @@ ma può essere attivato anche quando una pagina o un elemento è stato completam
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line734">line 734</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line807">line 807</a>
     </li></ul></dd>
     
 
@@ -4433,10 +4513,10 @@ ma può essere attivato anche quando una pagina o un elemento è stato completam
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const imgElement = new Jdm(document.createElement('img'));
-imgElement.jdm_onLoad(() => {
-  console.log('Immagine caricata con successo');
-});
+    <pre class="prettyprint"><code>const image = JDM('&lt;img src="https://picsum.photos/200/300" alt="test">', document.body)
+ .jdm_onLoad(() => {
+     console.log('Immagine caricata con successo');
+ });
 // Aggiunge un listener per l'evento 'load' che esegue la funzione di callback ogni volta che l'immagine è completamente caricata.</code></pre>
 
 </div>
@@ -4494,7 +4574,7 @@ L'evento `contextmenu` è tipicamente usato per visualizzare il menu contestuale
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line669">line 669</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line733">line 733</a>
     </li></ul></dd>
     
 
@@ -4628,8 +4708,7 @@ L'evento `contextmenu` è tipicamente usato per visualizzare il menu contestuale
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const element = new Jdm(document.createElement('div'));
-element.jdm_onRightClick((event) => {
+    <pre class="prettyprint"><code>const element = JDM('&lt;div> RIGHT CLICK &lt;/div>', document.body).jdm_onRightClick((event) => {
   event.preventDefault(); // Previene il menu contestuale predefinito
   console.log('Clic destro eseguito!');
 });
@@ -4689,7 +4768,7 @@ L'evento `select` viene attivato quando una parte del testo all'interno di un el
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line603">line 603</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line666">line 666</a>
     </li></ul></dd>
     
 
@@ -4823,9 +4902,9 @@ L'evento `select` viene attivato quando una parte del testo all'interno di un el
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const input = new Jdm(document.createElement('input'));
-input.jdm_onSelect((event) => {
-  console.log('Testo selezionato:', event.target.value);
+    <pre class="prettyprint"><code>const input = JDM('&lt;input>', document.body)
+ .jdm_onSelect((event) => {
+  console.log('Testo selezionato:', input.jdm_getValue());
 });
 // Aggiunge un listener per l'evento 'select' che stampa il valore del campo di input ogni volta che viene selezionato del testo.</code></pre>
 
@@ -4885,7 +4964,7 @@ in un campo del modulo.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line780">line 780</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line859">line 859</a>
     </li></ul></dd>
     
 
@@ -5020,11 +5099,16 @@ in un campo del modulo.
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const formElement = new Jdm(document.createElement('form'));
-formElement.jdm_onSubmit((event) => {
-  event.preventDefault(); // Previene l'invio del modulo
-  console.log('Modulo inviato');
-});
+    <pre class="prettyprint"><code>const formString = `
+ &lt;form>
+     &lt;input name="inputNumeric" type="number" min="1" max="10" required />
+     &lt;button type="submit"> Submit &lt;/button>
+ &lt;/form>`;
+ const form = JDM(formString, document.body)
+     .jdm_onSubmit((e)=> {
+         e.preventDefault();
+         console.log('submit');
+     })
 // Aggiunge un listener per l'evento 'submit' che esegue la funzione di callback ogni volta che il modulo viene inviato.</code></pre>
 
 </div>
@@ -5081,7 +5165,7 @@ Se viene fornito un singolo elemento, questo viene aggiunto come unico figlio.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line250">line 250</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line317">line 317</a>
     </li></ul></dd>
     
 
@@ -5197,13 +5281,14 @@ Se viene fornito un singolo elemento, questo viene aggiunto come unico figlio.
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const div = new Jdm(document.createElement('div'));
-const p1 = document.createElement('p');
-const p2 = document.createElement('p');
-div.jdm_append([p1, p2]); // Aggiunge entrambi i paragrafi come figli del div.
-
-const span = document.createElement('span');
-div.jdm_append(span); // Aggiunge il singolo elemento span come figlio del div.</code></pre>
+    <pre class="prettyprint"><code>const div = JDM('&lt;div>&lt;p>paragrafo&lt;/p>&lt;/div>', document.body);
+const span = JDM('&lt;span>foo&lt;/span>');
+div.jdm_prepend(span);
+// Risultato
+&lt;div>
+    &lt;span>foo&lt;/span>
+    &lt;p>paragrafo&lt;/p>
+&lt;/div></code></pre>
 
 </div>
 
@@ -5259,7 +5344,7 @@ Inoltre, viene generato un evento personalizzato chiamato "removeAttribute" con 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line431">line 431</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line500">line 500</a>
     </li></ul></dd>
     
 
@@ -5372,8 +5457,8 @@ Inoltre, viene generato un evento personalizzato chiamato "removeAttribute" con 
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const div = new Jdm(document.createElement('div'));
-div.jdm_removeAttribute('id'); // Rimuove l'attributo 'id' dall'elemento div.</code></pre>
+    <pre class="prettyprint"><code>JDM('&lt;div id="foo">lorem ipsum&lt;/div>', document.body)
+ .jdm_removeAttribute('id'); // Rimuove l'attributo 'id' dall'elemento div.</code></pre>
 
 </div>
 
@@ -5429,7 +5514,7 @@ Se viene fornita una singola classe, questa viene rimossa.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line317">line 317</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line385">line 385</a>
     </li></ul></dd>
     
 
@@ -5545,11 +5630,11 @@ Se viene fornita una singola classe, questa viene rimossa.
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const div = new Jdm(document.createElement('div'));
-div.jdm_removeClassList('myClass'); // Rimuove la classe "myClass" dall'elemento div.
+    <pre class="prettyprint"><code>JDM('&lt;div class="foo bar myClass">&lt;/div>', document.body)
+ .jdm_removeClassList('myClass'); // Rimuove la classe "myClass" dall'elemento.
 
-const div2 = new Jdm(document.createElement('div'));
-div2.jdm_removeClassList(['class1', 'class2']); // Rimuove "class1" e "class2" dall'elemento div2.</code></pre>
+JDM('&lt;div class="foo bar myClass">&lt;/div>', document.body)
+ .jdm_removeClassList(['foo', 'bar']); // Rimuove "foo" e "bar" dall'elemento.</code></pre>
 
 </div>
 
@@ -5605,7 +5690,7 @@ quando l'evento si verifica.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line1016">line 1016</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line1116">line 1116</a>
     </li></ul></dd>
     
 
@@ -5777,7 +5862,7 @@ quando l'evento si verifica.
 <h5>Example</h5>
 
     <pre class="prettyprint"><code>// Rimuovi un listener per l'evento 'click' su un elemento
-const element = new Jdm(document.createElement('div'));
+const element = JDM('&lt;div>lorem ipsum&lt;/div>', document.body);
 const clickHandler = () => { console.log('Elemento cliccato!'); };
 element.jdm_addEventListener('click', clickHandler);
 // Dopo un certo punto, rimuoviamo il listener
@@ -5838,7 +5923,7 @@ element.jdm_removeEventListener('input');</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line184">line 184</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line250">line 250</a>
     </li></ul></dd>
     
 
@@ -6012,9 +6097,10 @@ element.jdm_removeEventListener('input');</code></pre>
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const div = new Jdm(document.createElement('div'));
-div.jdm_setAttribute('id', 'myDiv');
-// Imposta l'attributo "id" su "myDiv" per l'elemento div.</code></pre>
+    <pre class="prettyprint"><code>const div = JDM('&lt;div>lorem ipsum&lt;/div>', document.body)
+  .jdm_setAttribute('id', 'myDiv')
+  .jdm_setAttribute('data-test', 'foo')
+  .jdm_setAttribute('counter', 1);</code></pre>
 
 </div>
 
@@ -6069,7 +6155,7 @@ Questo metodo applica una dichiarazione di stile CSS all'elemento DOM rappresent
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line448">line 448</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line517">line 517</a>
     </li></ul></dd>
     
 
@@ -6208,8 +6294,8 @@ Questo metodo applica una dichiarazione di stile CSS all'elemento DOM rappresent
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const div = new Jdm(document.createElement('div'));
-div.jdm_setStyle('color', 'red'); // Imposta il colore del testo dell'elemento div su rosso.</code></pre>
+    <pre class="prettyprint"><code>const div = JDM('&lt;div>lorem ipsum&lt;/div>', document.body)
+.jdm_setStyle('color', 'red'); // Imposta il colore del testo dell'elemento div su rosso.</code></pre>
 
 </div>
 
@@ -6266,7 +6352,7 @@ Inoltre, è possibile forzare il valore a essere trattato come booleano tramite 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line810">line 810</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line899">line 899</a>
     </li></ul></dd>
     
 
@@ -6439,17 +6525,25 @@ Inoltre, è possibile forzare il valore a essere trattato come booleano tramite 
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const checkboxElement = new Jdm(document.createElement('input'));
-checkboxElement.jdm_setValue(true);
+    <pre class="prettyprint"><code>const checkboxElement = JDM('&lt;input type="checkbox">', document.body)
+ .jdm_setValue(true);
 // Imposta il valore di una checkbox su 'true', facendo in modo che sia selezionata.
 
-const formElement = new Jdm(document.createElement('form'));
-const formData = {
-  username: 'user1',
-  password: 'password123',
-  terms: true
-};
-formElement.jdm_setValue(formData);
+const data = {
+ inputNumeric: 1,
+ name: 'foo',
+ surname : 'bar'
+ }
+
+const formString = `
+ &lt;form>
+     &lt;input name="inputNumeric" type="number" min="1" max="10"/>
+     &lt;input name="name" type="text"/>
+     &lt;input name="surname" type="text"/>
+     &lt;button type="submit"> Submit &lt;/button>
+ &lt;/form>`;
+ const form = JDM(formString, document.body)
+     .jdm_setValue(data);
 // Imposta i valori del modulo, inclusi i checkbox e altri input.</code></pre>
 
 </div>
@@ -6506,7 +6600,7 @@ Se viene fornita una singola classe, questa verrà alternata.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line342">line 342</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line410">line 410</a>
     </li></ul></dd>
     
 
@@ -6622,11 +6716,11 @@ Se viene fornita una singola classe, questa verrà alternata.
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const div = new Jdm(document.createElement('div'));
-div.jdm_toggleClassList('active'); // Alterna la classe "active" sull'elemento div.
+    <pre class="prettyprint"><code>const div = JDM('&lt;div>lorem ipsum&lt;/div>', document.body)
+.jdm_toggleClassList('active'); // Alterna la classe "active" sull'elemento div.
 
-const div2 = new Jdm(document.createElement('div'));
-div2.jdm_toggleClassList(['class1', 'class2']); // Alterna le classi "class1" e "class2" sull'elemento div2.</code></pre>
+const div2 = JDM('&lt;div>lorem ipsum&lt;/div>', document.body)
+.jdm_toggleClassList(['class1', 'class2']); // Alterna le classi "class1" e "class2" sull'elemento div2.</code></pre>
 
 </div>
 
@@ -6645,8 +6739,7 @@ div2.jdm_toggleClassList(['class1', 'class2']); // Alterna le classi "class1" e 
 
 <div class="description">
     Verifica la validità dell'elemento `input` o `form` secondo le regole di validazione HTML.
-Se l'elemento è valido, il metodo restituisce `true`; altrimenti, restituisce `false` e attiva un evento di validazione.
-Dopo la verifica, viene generato un evento personalizzato chiamato "validate".
+Dopo la verifica, viene generato un evento personalizzato chiamato "validate", che segnala il risultato della validazione.
 </div>
 
 
@@ -6682,7 +6775,7 @@ Dopo la verifica, viene generato un evento personalizzato chiamato "validate".
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line414">line 414</a>
+        <a href="jdm.js.html">jdm.js</a>, <a href="jdm.js.html#line482">line 482</a>
     </li></ul></dd>
     
 
@@ -6732,7 +6825,7 @@ Dopo la verifica, viene generato un evento personalizzato chiamato "validate".
 
 
 <div class="param-desc">
-    - Restituisce l'elemento DOM su cui è stata effettuata la validazione, consentendo il chaining dei metodi.
+    L'elemento DOM su cui è stata effettuata la validazione, consentendo il chaining dei metodi.
 </div>
 
     
@@ -6743,9 +6836,9 @@ Dopo la verifica, viene generato un evento personalizzato chiamato "validate".
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>const input = new Jdm(document.createElement('input'));
-input.node.setAttribute('required', 'true');
-input.jdm_validate(); // Verifica la validità dell'input e genera l'evento "validate".</code></pre>
+    <pre class="prettyprint"><code>JDM('input', document.body)
+ .jdm_setAttribute('required', 'true')
+ .jdm_validate(); // Verifica la validità dell'input e genera l'evento "validate".</code></pre>
 
 </div>
 
@@ -6768,7 +6861,7 @@ input.jdm_validate(); // Verifica la validità dell'input e genera l'evento "val
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Wed Mar 26 2025 16:35:59 GMT+0100 (Central European Standard Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Sat Mar 29 2025 19:03:13 GMT+0100 (Central European Standard Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
