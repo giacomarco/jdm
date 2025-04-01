@@ -13,7 +13,7 @@ npm install jdm_javascript_dom_manipulator
 ```
 Esempio di utilizzo di un modulo ES6:
 ```javascript
-import './yourPath/dist/jdm.js";
+import './yourPath/dist/jdm.js';
 ```
 
 # USO
