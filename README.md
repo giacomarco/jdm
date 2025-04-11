@@ -202,6 +202,7 @@ const div = JDM(domString, document.body);
     * [.jdm_removeEventListener(name, [fn])](#Jdm+jdm_removeEventListener) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_extendChildNode()](#Jdm+jdm_extendChildNode) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_fadeIn([option], [callback])](#Jdm+jdm_fadeIn) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeOut([option], [callback])](#Jdm+jdm_fadeOut) ⇒ [<code>Jdm</code>](#Jdm)
 
 <a name="new_Jdm_new"></a>
 
@@ -1015,12 +1016,24 @@ Applica un'animazione di fade-in sul nodo.
 
 **Example**  
 ```js
-const domString = `
- <div class="foo">
-     <div data-name="element1"> Element 1</div>
-     <div data-name="element2"> Element 2</div>
-     <div data-name="element3"> Element 3</div>
- </div>`;
-JDM(domString, document.body)
-     .jdm_fadeIn({duration: 2000, direction: 'alternate', iterations:'Infinity'}, ()=> {console.log(myInput)})
+JDM(`<div class="foo"> FadeIn </div>`, document.body)
+     .jdm_fadeIn({duration: 2000, direction: 'alternate', iterations:'Infinity'}, ()=> {console.log('test)})
+```
+<a name="Jdm+jdm_fadeOut"></a>
+
+### jdm.jdm\_fadeOut([option], [callback]) ⇒ [<code>Jdm</code>](#Jdm)
+Applica un'animazione di fade-out sul nodo.
+
+**Kind**: instance method of [<code>Jdm</code>](#Jdm)  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [option] | <code>object</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
+| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+
+**Example**  
+```js
+JDM(`<div class="foo"> FadeOut </div>`, document.body)
+     .jdm_fadeOut({duration: 2000, direction: 'alternate', iterations:'Infinity'}, ()=> {console.log('test')})
 ```

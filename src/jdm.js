@@ -1193,18 +1193,36 @@ class Jdm extends HTMLElement {
      * @param {function(): void} [callback] - Funzione da eseguire al termine dell'animazione.
      * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
      * @example
-     * const domString = `
-     *  <div class="foo">
-     *      <div data-name="element1"> Element 1</div>
-     *      <div data-name="element2"> Element 2</div>
-     *      <div data-name="element3"> Element 3</div>
-     *  </div>`;
-     * JDM(domString, document.body)
-     *      .jdm_fadeIn({duration: 2000, direction: 'alternate', iterations:'Infinity'}, ()=> {console.log(myInput)})
+     *
+     * JDM(`<div class="foo"> FadeIn </div>`, document.body)
+     *      .jdm_fadeIn({duration: 2000, direction: 'alternate', iterations:'Infinity'}, ()=> {console.log('test)})
      */
     jdm_fadeIn(option = new AnimationOption(), callback) {
-        option = { ...AnimationOption, ...option };
+        option = { ...new AnimationOption(), ...option };
         const animation = this.node.animate([{ opacity: 0 }, { opacity: 1 }], option);
+        animation.onfinish = () => {
+            if (typeof callback === "function") {
+                callback();
+            }
+        };
+        return this.node;
+    }
+
+    /**
+     * Applica un'animazione di fade-out sul nodo.
+     *
+     * @param {object} [option=new AnimationOption()] - Opzioni dell'animazione.
+     * @param {function(): void} [callback] - Funzione da eseguire al termine dell'animazione.
+     * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
+     * @example
+     *
+     * JDM(`<div class="foo"> FadeOut </div>`, document.body)
+     *      .jdm_fadeOut({duration: 2000, direction: 'alternate', iterations:'Infinity'}, ()=> {console.log('test')})
+     */
+    jdm_fadeOut(option = new AnimationOption(), callback) {
+        option = { ...new AnimationOption(), ...option };
+        console.log(option);
+        const animation = this.node.animate([{ opacity: 1 }, { opacity: 0 }], option);
         animation.onfinish = () => {
             if (typeof callback === "function") {
                 callback();

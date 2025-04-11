@@ -39,7 +39,7 @@
      <div data-name="element3"> Element 3</div>
  </div>`;
  const test =   JDM(domString, document.body)
-        .jdm_fadeIn({duration: 2000, direction: 'alternate', iterations:'Infinity'}, ()=> {console.log(myInput)})
+        .jdm_fadeOut(null, ()=> {console.log(myInput)})
 
 
 
