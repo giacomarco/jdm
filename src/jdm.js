@@ -1221,7 +1221,6 @@ class Jdm extends HTMLElement {
      */
     jdm_fadeOut(option = new AnimationOption(), callback) {
         option = { ...new AnimationOption(), ...option };
-        console.log(option);
         const animation = this.node.animate([{ opacity: 1 }, { opacity: 0 }], option);
         animation.onfinish = () => {
             if (typeof callback === "function") {
