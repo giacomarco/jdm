@@ -1,3 +1,95 @@
+## Classes
+
+<dl>
+<dt><a href="#AnimationOption">AnimationOption</a></dt>
+<dd><p>Opzioni per l&#39;animazione.</p>
+</dd>
+<dt><a href="#Jdm">Jdm</a></dt>
+<dd><p>Classe Jdm che fornisce un framework per la manipolazione del DOM.
+Permette di creare un elemento DOM, aggiungerlo a un genitore, assegnargli delle classi
+e manipolarlo in modo ricorsivo, se richiesto.
+I metodi della classe sono concatenabili per facilitare le operazioni sul DOM.</p>
+<h1 id="installazione">INSTALLAZIONE:</h1>
+<p>NPM</p>
+<pre><code class="language-bash">npm install jdm_javascript_dom_manipulator
+</code></pre>
+<p>Esempio di utilizzo di un modulo ES6:</p>
+<pre><code class="language-javascript">import &#39;./yourPath/dist/jdm.js&#39;;
+</code></pre>
+<h1 id="uso">USO</h1>
+<pre><code class="language-javascript">JDM(&#39;div&#39;, container, [&#39;fooClass&#39;,&#39;barClass&#39;])
+</code></pre>
+<h1 id="comparazione">COMPARAZIONE:</h1>
+<h2 id="jquery">jQuery:</h2>
+<pre><code class="language-javascript">const $div = $(&#39;&lt;div&gt;&#39;, { class: &#39;foo bar&#39; });
+const $ul = $(&#39;&lt;ul&gt;&#39;);
+const $li1 = $(&#39;&lt;li&gt;&#39;).text(&#39;Elemento 1&#39;);
+const $li2 = $(&#39;&lt;li&gt;&#39;).text(&#39;Elemento 2&#39;);
+const $li3 = $(&#39;&lt;li&gt;&#39;).text(&#39;Elemento 3&#39;);
+const $li4 = $(&#39;&lt;li&gt;&#39;).text(&#39;Elemento 4&#39;);
+const $li5 = $(&#39;&lt;li&gt;&#39;).text(&#39;Elemento 5&#39;);
+$ul.append($li1, $li2, $li3, $li4, $li5);
+$div.append($ul);
+$(&#39;body&#39;).append($div);
+</code></pre>
+<h2 id="javascript-puro">JavaScript puro:</h2>
+<pre><code class="language-javascript">const div = &#39;div&#39;;
+div.classList.add(&#39;foo&#39;, &#39;bar&#39;);
+const ul = document.createElement(&#39;ul&#39;);
+const li1 = document.createElement(&#39;li&#39;);
+li1.textContent = &#39;Elemento 1&#39;;
+const li2 = document.createElement(&#39;li&#39;);
+li2.textContent = &#39;Elemento 2&#39;;
+const li3 = document.createElement(&#39;li&#39;);
+li3.textContent = &#39;Elemento 3&#39;;
+const li4 = document.createElement(&#39;li&#39;);
+li4.textContent = &#39;Elemento 4&#39;;
+const li5 = document.createElement(&#39;li&#39;);
+li5.textContent = &#39;Elemento 5&#39;;
+ul.append(li1, li2, li3, li4, li5);
+div.appendChild(ul);
+document.body.appendChild(div);
+</code></pre>
+<h2 id="jdm">Jdm:</h2>
+<pre><code class="language-javascript">const domString = `
+&lt;div class=&quot;foo bar&quot;&gt;
+    &lt;ul&gt;
+        &lt;li&gt; Elemento 1 &lt;/li&gt;
+        &lt;li&gt; Elemento 2 &lt;/li&gt;
+        &lt;li&gt; Elemento 3 &lt;/li&gt;
+        &lt;li&gt; Elemento 4 &lt;/li&gt;
+        &lt;li&gt; Elemento 5 &lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/div&gt;`;
+const div = JDM(domString, document.body);
+</code></pre>
+</dd>
+<dt><a href="#Proto">Proto</a></dt>
+<dd><p>Classe che contiene una lista di prototype.</p>
+</dd>
+</dl>
+
+<a name="AnimationOption"></a>
+
+## AnimationOption
+Opzioni per l'animazione.
+
+**Kind**: global class  
+**Default**: <code>1</code>  
+<a name="new_AnimationOption_new"></a>
+
+### new AnimationOption(duration, easing, fill, delay, composite, direction, iterations)
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| duration | <code>number</code> | <code>250</code> | Durata dell'animazione in millisecondi. |
+| easing | <code>&#x27;linear&#x27;</code> \| <code>&#x27;ease&#x27;</code> \| <code>&#x27;ease-in&#x27;</code> \| <code>&#x27;ease-out&#x27;</code> \| <code>&#x27;ease-in-out&#x27;</code> | <code>ease-in-out</code> | Funzione di easing dell'animazione. |
+| fill | <code>&#x27;none&#x27;</code> \| <code>&#x27;forwards&#x27;</code> \| <code>&#x27;backwards&#x27;</code> \| <code>&#x27;both&#x27;</code> \| <code>&#x27;auto&#x27;</code> | <code>forwards</code> | Stile applicato fuori dall'intervallo dell'animazione. |
+| delay | <code>number</code> | <code>0</code> | Ritardo dell'inizio dell'animazione in millisecondi. |
+| composite | <code>&#x27;replace&#x27;</code> \| <code>&#x27;add&#x27;</code> \| <code>&#x27;accumulate&#x27;</code> | <code>replace</code> | Modalità di composizione dell’animazione. |
+| direction | <code>&#x27;normal&#x27;</code> \| <code>&#x27;reverse&#x27;</code> \| <code>&#x27;alternate&#x27;</code> \| <code>&#x27;alternate-reverse&#x27;</code> | <code>normal</code> | Direzione di riproduzione dell'animazione. |
+| iterations | <code>number</code> | <code>1</code> | Numero di volte che l'animazione verrà ripetuta. |
+
 <a name="Jdm"></a>
 
 ## Jdm
@@ -76,46 +168,47 @@ const div = JDM(domString, document.body);
 
 * [Jdm](#Jdm)
     * [new Jdm([element], [parent], [classList], [deep], [...args])](#new_Jdm_new)
-    * [.jdm_setAttribute(attribute, [value])](#Jdm+jdm_setAttribute) ⇒ <code>HTMLElement</code>
+    * [.jdm_setAttribute(attribute, [value])](#Jdm+jdm_setAttribute) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_getAttribute(attribute)](#Jdm+jdm_getAttribute) ⇒ <code>string</code> \| <code>null</code>
-    * [.jdm_append(elementList)](#Jdm+jdm_append) ⇒ <code>HTMLElement</code>
-    * [.jdm_prepend(elementList)](#Jdm+jdm_prepend) ⇒ <code>HTMLElement</code>
-    * [.jdm_addId(id)](#Jdm+jdm_addId) ⇒ <code>HTMLElement</code>
-    * [.jdm_addClassList(classList)](#Jdm+jdm_addClassList) ⇒ <code>HTMLElement</code>
-    * [.jdm_removeClassList(classList)](#Jdm+jdm_removeClassList) ⇒ <code>HTMLElement</code>
-    * [.jdm_toggleClassList(classList)](#Jdm+jdm_toggleClassList) ⇒ <code>HTMLElement</code>
-    * [.jdm_empty()](#Jdm+jdm_empty) ⇒ <code>HTMLElement</code>
-    * [.jdm_destroy()](#Jdm+jdm_destroy) ⇒ <code>HTMLElement</code>
-    * [.jdm_validate()](#Jdm+jdm_validate) ⇒ <code>HTMLElement</code>
-    * [.jdm_removeAttribute(attribute)](#Jdm+jdm_removeAttribute) ⇒ <code>HTMLElement</code>
-    * [.jdm_setStyle(style, value)](#Jdm+jdm_setStyle) ⇒ <code>HTMLElement</code>
-    * [.jdm_extendNode(name, [object])](#Jdm+jdm_extendNode) ⇒ <code>HTMLElement</code>
-    * [.jdm_innerHTML(value)](#Jdm+jdm_innerHTML) ⇒ <code>HTMLElement</code>
-    * [.jdm_binding(el, [event], [twoWayDataBinding])](#Jdm+jdm_binding) ⇒ <code>HTMLElement</code>
-    * [.jdm_onInput([fn])](#Jdm+jdm_onInput) ⇒ <code>HTMLElement</code>
-    * [.jdm_onChange([fn])](#Jdm+jdm_onChange) ⇒ <code>HTMLElement</code>
-    * [.jdm_onSelect([fn])](#Jdm+jdm_onSelect) ⇒ <code>HTMLElement</code>
-    * [.jdm_onDebounce([fn], [timeout])](#Jdm+jdm_onDebounce) ⇒ <code>HTMLElement</code>
-    * [.jdm_onClick([fn])](#Jdm+jdm_onClick) ⇒ <code>HTMLElement</code>
-    * [.jdm_onRightClick([fn])](#Jdm+jdm_onRightClick) ⇒ <code>HTMLElement</code>
-    * [.jdm_onDoubleClick([fn])](#Jdm+jdm_onDoubleClick) ⇒ <code>HTMLElement</code>
-    * [.jdm_onInvalid([fn])](#Jdm+jdm_onInvalid) ⇒ <code>HTMLElement</code>
-    * [.jdm_onLoad([fn])](#Jdm+jdm_onLoad) ⇒ <code>HTMLElement</code>
-    * [.jdm_onError([fn])](#Jdm+jdm_onError) ⇒ <code>HTMLElement</code>
-    * [.jdm_onSubmit([fn])](#Jdm+jdm_onSubmit) ⇒ <code>HTMLElement</code>
-    * [.jdm_setValue(value, [tooBoolean])](#Jdm+jdm_setValue) ⇒ <code>HTMLElement</code>
+    * [.jdm_append(elementList)](#Jdm+jdm_append) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_prepend(elementList)](#Jdm+jdm_prepend) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_addId(id)](#Jdm+jdm_addId) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_addClassList(classList)](#Jdm+jdm_addClassList) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_removeClassList(classList)](#Jdm+jdm_removeClassList) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_toggleClassList(classList)](#Jdm+jdm_toggleClassList) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_empty()](#Jdm+jdm_empty) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_destroy()](#Jdm+jdm_destroy) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_validate()](#Jdm+jdm_validate) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_removeAttribute(attribute)](#Jdm+jdm_removeAttribute) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_setStyle(style, value)](#Jdm+jdm_setStyle) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_extendNode(name, [object])](#Jdm+jdm_extendNode) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_innerHTML(value)](#Jdm+jdm_innerHTML) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_binding(el, [event], [twoWayDataBinding])](#Jdm+jdm_binding) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_onInput([fn])](#Jdm+jdm_onInput) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_onChange([fn])](#Jdm+jdm_onChange) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_onSelect([fn])](#Jdm+jdm_onSelect) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_onDebounce([fn], [timeout])](#Jdm+jdm_onDebounce) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_onClick([fn])](#Jdm+jdm_onClick) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_onRightClick([fn])](#Jdm+jdm_onRightClick) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_onDoubleClick([fn])](#Jdm+jdm_onDoubleClick) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_onInvalid([fn])](#Jdm+jdm_onInvalid) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_onLoad([fn])](#Jdm+jdm_onLoad) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_onError([fn])](#Jdm+jdm_onError) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_onSubmit([fn])](#Jdm+jdm_onSubmit) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_setValue(value, [tooBoolean])](#Jdm+jdm_setValue) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_getValue()](#Jdm+jdm_getValue) ⇒ <code>any</code>
-    * [.jdm_genEvent(name, [data], [propagateToParents])](#Jdm+jdm_genEvent) ⇒ <code>Node</code>
-    * [.jdm_addEventListener(name, [fn])](#Jdm+jdm_addEventListener) ⇒ <code>Node</code>
-    * [.jdm_removeEventListener(name, [fn])](#Jdm+jdm_removeEventListener) ⇒ <code>Node</code>
-    * [.jdm_extendChildNode()](#Jdm+jdm_extendChildNode) ⇒ <code>Node</code>
+    * [.jdm_genEvent(name, [data], [propagateToParents])](#Jdm+jdm_genEvent) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_addEventListener(name, [fn])](#Jdm+jdm_addEventListener) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_removeEventListener(name, [fn])](#Jdm+jdm_removeEventListener) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_extendChildNode()](#Jdm+jdm_extendChildNode) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeIn([option], [callback])](#Jdm+jdm_fadeIn) ⇒ [<code>Jdm</code>](#Jdm)
 
 <a name="new_Jdm_new"></a>
 
 ### new Jdm([element], [parent], [classList], [deep], [...args])
 Crea una nuova istanza della classe Jdm e manipola l'elemento DOM.
 
-**Returns**: <code>HTMLElement</code> - - Restituisce il nodo appena creato o manipolato.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce il nodo appena creato o manipolato.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -141,12 +234,12 @@ JDM(domString, document.body)
 ```
 <a name="Jdm+jdm_setAttribute"></a>
 
-### jdm.jdm\_setAttribute(attribute, [value]) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_setAttribute(attribute, [value]) ⇒ [<code>Jdm</code>](#Jdm)
 Imposta un attributo su un elemento DOM e genera un evento personalizzato per il cambiamento.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
 **Chainable**  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui l'attributo è stato impostato, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui l'attributo è stato impostato, consentendo il chaining dei metodi.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -180,12 +273,12 @@ const dataTest = div.jdm_getAttribute('data-test')
 ```
 <a name="Jdm+jdm_append"></a>
 
-### jdm.jdm\_append(elementList) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_append(elementList) ⇒ [<code>Jdm</code>](#Jdm)
 Aggiunge uno o più elementi figli a un elemento DOM.
 Se viene fornita una lista di elementi, tutti gli elementi vengono aggiunti all'elemento DOM.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui gli elementi sono stati aggiunti, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui gli elementi sono stati aggiunti, consentendo il chaining dei metodi.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -203,13 +296,13 @@ div.jdm_append(span); // Aggiunge il singolo elemento span come figlio del div.
 ```
 <a name="Jdm+jdm_prepend"></a>
 
-### jdm.jdm\_prepend(elementList) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_prepend(elementList) ⇒ [<code>Jdm</code>](#Jdm)
 Aggiunge uno o più elementi figli a un elemento DOM.
 Se viene fornita una lista di elementi, tutti gli elementi vengono aggiunti come figli dell'elemento.
 Se viene fornito un singolo elemento, questo viene aggiunto come unico figlio.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui gli elementi sono stati aggiunti, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui gli elementi sono stati aggiunti, consentendo il chaining dei metodi.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -228,11 +321,11 @@ div.jdm_prepend(span);
 ```
 <a name="Jdm+jdm_addId"></a>
 
-### jdm.jdm\_addId(id) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_addId(id) ⇒ [<code>Jdm</code>](#Jdm)
 Aggiunge un attributo `id` all'elemento DOM specificato.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui è stato impostato l'attributo `id`, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui è stato impostato l'attributo `id`, consentendo il chaining dei metodi.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -245,13 +338,13 @@ const div = JDM('<div>lorem ipsum</div>', document.body)
 ```
 <a name="Jdm+jdm_addClassList"></a>
 
-### jdm.jdm\_addClassList(classList) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_addClassList(classList) ⇒ [<code>Jdm</code>](#Jdm)
 Aggiunge una o più classi CSS all'elemento DOM.
 Se viene fornito un array di classi, tutte le classi vengono aggiunte all'elemento.
 Se viene fornita una singola classe, questa viene aggiunta come unica classe.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui le classi sono state aggiunte, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui le classi sono state aggiunte, consentendo il chaining dei metodi.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -267,13 +360,13 @@ const div2 = JDM('<div>lorem ipsum</div>', document.body)
 ```
 <a name="Jdm+jdm_removeClassList"></a>
 
-### jdm.jdm\_removeClassList(classList) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_removeClassList(classList) ⇒ [<code>Jdm</code>](#Jdm)
 Rimuove una o più classi CSS dall'elemento DOM.
 Se viene fornito un array di classi, tutte le classi vengono rimosse dall'elemento.
 Se viene fornita una singola classe, questa viene rimossa.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui le classi sono state rimosse, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui le classi sono state rimosse, consentendo il chaining dei metodi.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -289,13 +382,13 @@ JDM('<div class="foo bar myClass"></div>', document.body)
 ```
 <a name="Jdm+jdm_toggleClassList"></a>
 
-### jdm.jdm\_toggleClassList(classList) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_toggleClassList(classList) ⇒ [<code>Jdm</code>](#Jdm)
 Attiva o disattiva una o più classi CSS su un elemento DOM.
 Se viene fornito un array di classi, ciascuna classe verrà alternata (aggiunta se non presente, rimossa se presente).
 Se viene fornita una singola classe, questa verrà alternata.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui le classi sono state alternate, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui le classi sono state alternate, consentendo il chaining dei metodi.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -311,7 +404,7 @@ const div2 = JDM('<div>lorem ipsum</div>', document.body)
 ```
 <a name="Jdm+jdm_empty"></a>
 
-### jdm.jdm\_empty() ⇒ <code>HTMLElement</code>
+### jdm.jdm\_empty() ⇒ [<code>Jdm</code>](#Jdm)
 Svuota il contenuto dell'elemento DOM.
 A seconda del tipo di elemento, il comportamento di "svuotamento" varia:
 - Per gli elementi `input` di tipo `checkbox` o `radio`, deseleziona l'elemento (imposta `checked` a `false`).
@@ -320,7 +413,7 @@ A seconda del tipo di elemento, il comportamento di "svuotamento" varia:
 - Per altri tipi di elementi, rimuove il contenuto HTML dell'elemento (imposta `innerHTML` a una stringa vuota).
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui è stato effettuato lo svuotamento, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui è stato effettuato lo svuotamento, consentendo il chaining dei metodi.  
 **Example**  
 ```js
 const inputText = JDM('input', document.body)
@@ -334,13 +427,13 @@ const form = JDM('form').jdm_empty(); // Esegue il reset del modulo.
 ```
 <a name="Jdm+jdm_destroy"></a>
 
-### jdm.jdm\_destroy() ⇒ <code>HTMLElement</code>
+### jdm.jdm\_destroy() ⇒ [<code>Jdm</code>](#Jdm)
 Rimuove l'elemento DOM dal documento e genera un evento di distruzione.
 Questo metodo elimina l'elemento DOM rappresentato da `this.node` dalla struttura del documento.
 Inoltre, viene generato un evento personalizzato chiamato "destroy".
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM che è stato rimosso, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM che è stato rimosso, consentendo il chaining dei metodi.  
 **Example**  
 ```js
 const div = JDM('<div>lorem ipsum</div>', document.body)
@@ -348,12 +441,12 @@ const div = JDM('<div>lorem ipsum</div>', document.body)
 ```
 <a name="Jdm+jdm_validate"></a>
 
-### jdm.jdm\_validate() ⇒ <code>HTMLElement</code>
+### jdm.jdm\_validate() ⇒ [<code>Jdm</code>](#Jdm)
 Verifica la validità dell'elemento `input` o `form` secondo le regole di validazione HTML.
 Dopo la verifica, viene generato un evento personalizzato chiamato "validate", che segnala il risultato della validazione.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - L'elemento DOM su cui è stata effettuata la validazione, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - L'elemento DOM su cui è stata effettuata la validazione, consentendo il chaining dei metodi.  
 **Example**  
 ```js
 JDM('input', document.body)
@@ -362,13 +455,13 @@ JDM('input', document.body)
 ```
 <a name="Jdm+jdm_removeAttribute"></a>
 
-### jdm.jdm\_removeAttribute(attribute) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_removeAttribute(attribute) ⇒ [<code>Jdm</code>](#Jdm)
 Rimuove un attributo dall'elemento DOM e genera un evento di rimozione dell'attributo.
 Questo metodo rimuove l'attributo specificato dall'elemento DOM rappresentato da `this.node`.
 Inoltre, viene generato un evento personalizzato chiamato "removeAttribute" con il nome dell'attributo rimosso.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui l'attributo è stato rimosso, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui l'attributo è stato rimosso, consentendo il chaining dei metodi.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -381,12 +474,12 @@ JDM('<div id="foo">lorem ipsum</div>', document.body)
 ```
 <a name="Jdm+jdm_setStyle"></a>
 
-### jdm.jdm\_setStyle(style, value) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_setStyle(style, value) ⇒ [<code>Jdm</code>](#Jdm)
 Imposta un valore per una proprietà di stile CSS su un elemento DOM.
 Questo metodo applica una dichiarazione di stile CSS all'elemento DOM rappresentato da `this.node`.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui è stato applicato lo stile, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui è stato applicato lo stile, consentendo il chaining dei metodi.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -400,12 +493,12 @@ const div = JDM('<div>lorem ipsum</div>', document.body)
 ```
 <a name="Jdm+jdm_extendNode"></a>
 
-### jdm.jdm\_extendNode(name, [object]) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_extendNode(name, [object]) ⇒ [<code>Jdm</code>](#Jdm)
 Estende l'elemento DOM aggiungendo una proprietà personalizzata.
 Questo metodo assegna un oggetto o un valore alla proprietà `name` dell'elemento DOM rappresentato da `this.node`.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui è stata aggiunta la proprietà personalizzata, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui è stata aggiunta la proprietà personalizzata, consentendo il chaining dei metodi.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -421,13 +514,13 @@ console.log(div.customData); // { id: 123, name: 'My Div' }
 ```
 <a name="Jdm+jdm_innerHTML"></a>
 
-### jdm.jdm\_innerHTML(value) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_innerHTML(value) ⇒ [<code>Jdm</code>](#Jdm)
 Imposta o restituisce il contenuto HTML interno dell'elemento DOM.
 Questo metodo imposta il valore di `innerHTML` dell'elemento DOM rappresentato da `this.node`.
 Se il parametro `value` viene fornito, aggiorna il contenuto HTML; altrimenti, restituisce il contenuto HTML attuale.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM con il nuovo contenuto HTML impostato, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM con il nuovo contenuto HTML impostato, consentendo il chaining dei metodi.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -441,14 +534,14 @@ JDM('<div>lorem ipsum</div>', document.body)
 ```
 <a name="Jdm+jdm_binding"></a>
 
-### jdm.jdm\_binding(el, [event], [twoWayDataBinding]) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_binding(el, [event], [twoWayDataBinding]) ⇒ [<code>Jdm</code>](#Jdm)
 Imposta un binding di dati tra l'elemento corrente e un altro o più elementi.
 Questo metodo consente di sincronizzare i valori tra gli elementi DOM, abilitando il data binding unidirezionale o bidirezionale.
 Se un valore cambia nell'elemento sorgente (ad esempio un `input`), il valore dell'elemento di destinazione (ad esempio un altro `input` o `div`) viene aggiornato.
 Se il binding bidirezionale è abilitato, i cambiamenti sono sincronizzati in entrambe le direzioni.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui è stato applicato il binding, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui è stato applicato il binding, consentendo il chaining dei metodi.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -465,12 +558,12 @@ const input = JDM('input', document.body);
 ```
 <a name="Jdm+jdm_onInput"></a>
 
-### jdm.jdm\_onInput([fn]) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_onInput([fn]) ⇒ [<code>Jdm</code>](#Jdm)
 Aggiunge un listener per l'evento `input` all'elemento DOM.
 Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `input` sull'elemento.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -486,13 +579,13 @@ const input = JDM('input', document.body)
 ```
 <a name="Jdm+jdm_onChange"></a>
 
-### jdm.jdm\_onChange([fn]) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_onChange([fn]) ⇒ [<code>Jdm</code>](#Jdm)
 Aggiunge un listener per l'evento `change` all'elemento DOM.
 Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `change` sull'elemento.
 L'evento `change` viene attivato quando il valore di un elemento, come un campo di input, viene modificato e l'elemento perde il focus.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -508,13 +601,13 @@ const input = JDM('input', document.body)
 ```
 <a name="Jdm+jdm_onSelect"></a>
 
-### jdm.jdm\_onSelect([fn]) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_onSelect([fn]) ⇒ [<code>Jdm</code>](#Jdm)
 Aggiunge un listener per l'evento `select` all'elemento DOM.
 Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `select` sull'elemento.
 L'evento `select` viene attivato quando una parte del testo all'interno di un elemento, come un campo di input o una textarea, viene selezionata dall'utente.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -530,13 +623,13 @@ const input = JDM('<input>', document.body)
 ```
 <a name="Jdm+jdm_onDebounce"></a>
 
-### jdm.jdm\_onDebounce([fn], [timeout]) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_onDebounce([fn], [timeout]) ⇒ [<code>Jdm</code>](#Jdm)
 Aggiunge un listener per l'evento `input` all'elemento DOM con un meccanismo di debounce.
 Questo metodo permette di eseguire una funzione di callback solo dopo che l'utente ha smesso di digitare per un determinato periodo di tempo.
 È utile per evitare l'esecuzione ripetitiva di funzioni (come una ricerca o un aggiornamento) mentre l'utente sta digitando, migliorando le prestazioni.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -554,13 +647,13 @@ const input = JDM('input', document.body)
 ```
 <a name="Jdm+jdm_onClick"></a>
 
-### jdm.jdm\_onClick([fn]) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_onClick([fn]) ⇒ [<code>Jdm</code>](#Jdm)
 Aggiunge un listener per l'evento `click` all'elemento DOM.
 Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `click` sull'elemento.
 L'evento `click` viene attivato quando l'utente clicca su un elemento, come un pulsante o un link.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -576,14 +669,14 @@ const button = JDM('<button>CLICK</button>', document.body)
 ```
 <a name="Jdm+jdm_onRightClick"></a>
 
-### jdm.jdm\_onRightClick([fn]) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_onRightClick([fn]) ⇒ [<code>Jdm</code>](#Jdm)
 Aggiunge un listener per l'evento `contextmenu` (clic destro) all'elemento DOM.
 Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `contextmenu` sull'elemento,
 che viene attivato dal clic destro del mouse (o equivalente, come il tocco prolungato su dispositivi mobili).
 L'evento `contextmenu` è tipicamente usato per visualizzare il menu contestuale di un elemento.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -599,14 +692,14 @@ const element = JDM('<div> RIGHT CLICK </div>', document.body).jdm_onRightClick(
 ```
 <a name="Jdm+jdm_onDoubleClick"></a>
 
-### jdm.jdm\_onDoubleClick([fn]) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_onDoubleClick([fn]) ⇒ [<code>Jdm</code>](#Jdm)
 Aggiunge un listener per l'evento `dblclick` (doppio clic) all'elemento DOM.
 Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `dblclick` sull'elemento,
 che viene attivato quando l'utente fa doppio clic su un elemento.
 L'evento `dblclick` è comunemente utilizzato per azioni che richiedono un'interazione più rapida dell'utente, come l'apertura di un file o l'attivazione di una funzionalità.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -622,14 +715,14 @@ const element = JDM('<div>Double click</div>', document.body)
 ```
 <a name="Jdm+jdm_onInvalid"></a>
 
-### jdm.jdm\_onInvalid([fn]) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_onInvalid([fn]) ⇒ [<code>Jdm</code>](#Jdm)
 Aggiunge un listener per l'evento `invalid` all'elemento DOM.
 Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `invalid` sull'elemento,
 che viene attivato quando un elemento di modulo non soddisfa i suoi vincoli di validazione.
 L'evento `invalid` viene in genere generato automaticamente dal browser quando un utente invia un modulo con campi non validi.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -651,7 +744,7 @@ const formString = `
 ```
 <a name="Jdm+jdm_onLoad"></a>
 
-### jdm.jdm\_onLoad([fn]) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_onLoad([fn]) ⇒ [<code>Jdm</code>](#Jdm)
 Aggiunge un listener per l'evento `load` all'elemento DOM.
 Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `load` sull'elemento,
 che viene attivato quando l'elemento o le risorse a esso associate sono completamente caricate.
@@ -659,7 +752,7 @@ L'evento `load` viene comunemente utilizzato per monitorare il caricamento di im
 ma può essere attivato anche quando una pagina o un elemento è stato completamente caricato nel DOM.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -675,7 +768,7 @@ const image = JDM('<img src="https://picsum.photos/200/300" alt="test">', docume
 ```
 <a name="Jdm+jdm_onError"></a>
 
-### jdm.jdm\_onError([fn]) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_onError([fn]) ⇒ [<code>Jdm</code>](#Jdm)
 Aggiunge un listener per l'evento `error` all'elemento DOM.
 Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `error` sull'elemento,
 che viene attivato quando si verifica un errore durante il caricamento di risorse o altre operazioni.
@@ -683,7 +776,7 @@ L'evento `error` viene comunemente utilizzato per gestire errori di caricamento,
 o quando un file JavaScript o CSS non può essere caricato correttamente.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -699,7 +792,7 @@ const imgElement = JDM('<img src="invalidUrl" alt="invalid url">', document.body
 ```
 <a name="Jdm+jdm_onSubmit"></a>
 
-### jdm.jdm\_onSubmit([fn]) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_onSubmit([fn]) ⇒ [<code>Jdm</code>](#Jdm)
 Aggiunge un listener per l'evento `submit` all'elemento DOM.
 Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `submit` sull'elemento,
 che viene attivato quando un modulo viene inviato.
@@ -707,7 +800,7 @@ L'evento `submit` viene generato quando un utente invia un modulo, sia tramite i
 in un campo del modulo.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -729,14 +822,14 @@ const formString = `
 ```
 <a name="Jdm+jdm_setValue"></a>
 
-### jdm.jdm\_setValue(value, [tooBoolean]) ⇒ <code>HTMLElement</code>
+### jdm.jdm\_setValue(value, [tooBoolean]) ⇒ [<code>Jdm</code>](#Jdm)
 Imposta il valore di un elemento DOM. Se l'elemento è una checkbox, un radio button o un modulo,
 il valore verrà impostato di conseguenza. Se l'elemento è un modulo (`<form>`), verranno impostati
 i valori di tutti i campi del modulo, compresi i checkbox e i radio buttons.
 Inoltre, è possibile forzare il valore a essere trattato come booleano tramite il parametro `tooBoolean`.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>HTMLElement</code> - - Restituisce l'elemento DOM su cui è stato impostato il valore, consentendo il chaining dei metodi.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM su cui è stato impostato il valore, consentendo il chaining dei metodi.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -812,12 +905,12 @@ console.log(select.jdm_getValue()); // log 'bar'
 ```
 <a name="Jdm+jdm_genEvent"></a>
 
-### jdm.jdm\_genEvent(name, [data], [propagateToParents]) ⇒ <code>Node</code>
+### jdm.jdm\_genEvent(name, [data], [propagateToParents]) ⇒ [<code>Jdm</code>](#Jdm)
 Genera un evento personalizzato per l'elemento DOM associato, utilizzando il metodo di generazione evento definito nella libreria `_common`.
 L'evento può essere propagato ai genitori, se necessario.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>Node</code> - - Restituisce il nodo dell'elemento su cui è stato generato l'evento, per consentire il chaining.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce il nodo dell'elemento su cui è stato generato l'evento, per consentire il chaining.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -835,12 +928,12 @@ element.jdm_genEvent('customEvent', { message: 'Evento generato!' });
 ```
 <a name="Jdm+jdm_addEventListener"></a>
 
-### jdm.jdm\_addEventListener(name, [fn]) ⇒ <code>Node</code>
+### jdm.jdm\_addEventListener(name, [fn]) ⇒ [<code>Jdm</code>](#Jdm)
 Aggiunge un listener per un evento specificato sull'elemento DOM associato.
 Consente di eseguire una funzione di callback quando l'evento si verifica.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>Node</code> - - Restituisce il nodo dell'elemento a cui è stato aggiunto l'evento, per consentire il chaining.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce il nodo dell'elemento a cui è stato aggiunto l'evento, per consentire il chaining.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -859,13 +952,13 @@ const element = JDM('<div>Click me</div>', document.body)
 ```
 <a name="Jdm+jdm_removeEventListener"></a>
 
-### jdm.jdm\_removeEventListener(name, [fn]) ⇒ <code>Node</code>
+### jdm.jdm\_removeEventListener(name, [fn]) ⇒ [<code>Jdm</code>](#Jdm)
 Rimuove un listener per un evento specificato sull'elemento DOM associato.
 Questo metodo permette di interrompere l'esecuzione della funzione di callback
 quando l'evento si verifica.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>Node</code> - - Restituisce il nodo dell'elemento da cui è stato rimosso l'evento, per consentire il chaining.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce il nodo dell'elemento da cui è stato rimosso l'evento, per consentire il chaining.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -886,13 +979,13 @@ element.jdm_removeEventListener('input');
 ```
 <a name="Jdm+jdm_extendChildNode"></a>
 
-### jdm.jdm\_extendChildNode() ⇒ <code>Node</code>
+### jdm.jdm\_extendChildNode() ⇒ [<code>Jdm</code>](#Jdm)
 Estende l'elemento corrente con i nodi figli definiti in `jdm_childNode`.
 Se l'elemento ha nodi figli associati a `jdm_childNode`, questi vengono aggiunti come proprietà dell'elemento stesso.
 ### NB:questo metodo NON funziona sui form
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
-**Returns**: <code>Node</code> - - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.  
 **Example**  
 ```js
 const domString = `
@@ -906,4 +999,28 @@ const domString = `
   console.log(div.element1);
   console.log(div.element2);
   console.log(div.element3);
+```
+<a name="Jdm+jdm_fadeIn"></a>
+
+### jdm.jdm\_fadeIn([option], [callback]) ⇒ [<code>Jdm</code>](#Jdm)
+Applica un'animazione di fade-in sul nodo.
+
+**Kind**: instance method of [<code>Jdm</code>](#Jdm)  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [option] | <code>object</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
+| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+
+**Example**  
+```js
+const domString = `
+ <div class="foo">
+     <div data-name="element1"> Element 1</div>
+     <div data-name="element2"> Element 2</div>
+     <div data-name="element3"> Element 3</div>
+ </div>`;
+JDM(domString, document.body)
+     .jdm_fadeIn({duration: 2000, direction: 'alternate', iterations:'Infinity'}, ()=> {console.log(myInput)})
 ```

@@ -8,20 +8,38 @@
 <h1>CREAZIONE DOM</h1>
 <hr>
 
+<style>
+    #test {
+        opacity: 0;
+    }
+</style>
+
 </body>
 <script type="module">
     import "../dist/jdm.js";
 
     // Crea un nuovo div, aggiunge classi e lo appende al body
-    const myDiv = JDM('<div> lorem ipsum</div>', document.body, ['my-class', 'another-class']);
+    const myDiv = JDM('<div id="test"> lorem ipsum</div>', document.body, ['my-class', 'another-class'])
 
     // Crea un nuovo elemento con un tag personalizzato
-    const customElement = JDM('<custom>custom <br></custom>', document.body);
+    const customElement = JDM('<custom>custom <br></custom>', document.body)
+
 
     // Aggiunge un input a un elemento esistente e imposta il valore
-    const myInput = JDM('input', document.body);
-    myInput.jdm_setValue('Test');
+    const myInput = JDM('input', document.body)
+        .jdm_addClassList('my-class')
+        .jdm_addId('id')
+        .jdm_setValue('Test')
+        .jdm_empty()
 
+    const domString = `
+ <div class="foo">
+     <div data-name="element1"> Element 1</div>
+     <div data-name="element2"> Element 2</div>
+     <div data-name="element3"> Element 3</div>
+ </div>`;
+ const test =   JDM(domString, document.body)
+        .jdm_fadeIn({duration: 2000, direction: 'alternate', iterations:'Infinity'}, ()=> {console.log(myInput)})
 
 
 
