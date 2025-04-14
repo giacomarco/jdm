@@ -1,95 +1,3 @@
-## Classes
-
-<dl>
-<dt><a href="#AnimationOption">AnimationOption</a></dt>
-<dd><p>Opzioni per l&#39;animazione.</p>
-</dd>
-<dt><a href="#Jdm">Jdm</a></dt>
-<dd><p>Classe Jdm che fornisce un framework per la manipolazione del DOM.
-Permette di creare un elemento DOM, aggiungerlo a un genitore, assegnargli delle classi
-e manipolarlo in modo ricorsivo, se richiesto.
-I metodi della classe sono concatenabili per facilitare le operazioni sul DOM.</p>
-<h1 id="installazione">INSTALLAZIONE:</h1>
-<p>NPM</p>
-<pre><code class="language-bash">npm install jdm_javascript_dom_manipulator
-</code></pre>
-<p>Esempio di utilizzo di un modulo ES6:</p>
-<pre><code class="language-javascript">import &#39;./yourPath/dist/jdm.js&#39;;
-</code></pre>
-<h1 id="uso">USO</h1>
-<pre><code class="language-javascript">JDM(&#39;div&#39;, container, [&#39;fooClass&#39;,&#39;barClass&#39;])
-</code></pre>
-<h1 id="comparazione">COMPARAZIONE:</h1>
-<h2 id="jquery">jQuery:</h2>
-<pre><code class="language-javascript">const $div = $(&#39;&lt;div&gt;&#39;, { class: &#39;foo bar&#39; });
-const $ul = $(&#39;&lt;ul&gt;&#39;);
-const $li1 = $(&#39;&lt;li&gt;&#39;).text(&#39;Elemento 1&#39;);
-const $li2 = $(&#39;&lt;li&gt;&#39;).text(&#39;Elemento 2&#39;);
-const $li3 = $(&#39;&lt;li&gt;&#39;).text(&#39;Elemento 3&#39;);
-const $li4 = $(&#39;&lt;li&gt;&#39;).text(&#39;Elemento 4&#39;);
-const $li5 = $(&#39;&lt;li&gt;&#39;).text(&#39;Elemento 5&#39;);
-$ul.append($li1, $li2, $li3, $li4, $li5);
-$div.append($ul);
-$(&#39;body&#39;).append($div);
-</code></pre>
-<h2 id="javascript-puro">JavaScript puro:</h2>
-<pre><code class="language-javascript">const div = &#39;div&#39;;
-div.classList.add(&#39;foo&#39;, &#39;bar&#39;);
-const ul = document.createElement(&#39;ul&#39;);
-const li1 = document.createElement(&#39;li&#39;);
-li1.textContent = &#39;Elemento 1&#39;;
-const li2 = document.createElement(&#39;li&#39;);
-li2.textContent = &#39;Elemento 2&#39;;
-const li3 = document.createElement(&#39;li&#39;);
-li3.textContent = &#39;Elemento 3&#39;;
-const li4 = document.createElement(&#39;li&#39;);
-li4.textContent = &#39;Elemento 4&#39;;
-const li5 = document.createElement(&#39;li&#39;);
-li5.textContent = &#39;Elemento 5&#39;;
-ul.append(li1, li2, li3, li4, li5);
-div.appendChild(ul);
-document.body.appendChild(div);
-</code></pre>
-<h2 id="jdm">Jdm:</h2>
-<pre><code class="language-javascript">const domString = `
-&lt;div class=&quot;foo bar&quot;&gt;
-    &lt;ul&gt;
-        &lt;li&gt; Elemento 1 &lt;/li&gt;
-        &lt;li&gt; Elemento 2 &lt;/li&gt;
-        &lt;li&gt; Elemento 3 &lt;/li&gt;
-        &lt;li&gt; Elemento 4 &lt;/li&gt;
-        &lt;li&gt; Elemento 5 &lt;/li&gt;
-    &lt;/ul&gt;
-&lt;/div&gt;`;
-const div = JDM(domString, document.body);
-</code></pre>
-</dd>
-<dt><a href="#Proto">Proto</a></dt>
-<dd><p>Classe che contiene una lista di prototype.</p>
-</dd>
-</dl>
-
-<a name="AnimationOption"></a>
-
-## AnimationOption
-Opzioni per l'animazione.
-
-**Kind**: global class  
-**Default**: <code>1</code>  
-<a name="new_AnimationOption_new"></a>
-
-### new AnimationOption(duration, easing, fill, delay, composite, direction, iterations)
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| duration | <code>number</code> | <code>250</code> | Durata dell'animazione in millisecondi. |
-| easing | <code>&#x27;linear&#x27;</code> \| <code>&#x27;ease&#x27;</code> \| <code>&#x27;ease-in&#x27;</code> \| <code>&#x27;ease-out&#x27;</code> \| <code>&#x27;ease-in-out&#x27;</code> | <code>ease-in-out</code> | Funzione di easing dell'animazione. |
-| fill | <code>&#x27;none&#x27;</code> \| <code>&#x27;forwards&#x27;</code> \| <code>&#x27;backwards&#x27;</code> \| <code>&#x27;both&#x27;</code> \| <code>&#x27;auto&#x27;</code> | <code>forwards</code> | Stile applicato fuori dall'intervallo dell'animazione. |
-| delay | <code>number</code> | <code>0</code> | Ritardo dell'inizio dell'animazione in millisecondi. |
-| composite | <code>&#x27;replace&#x27;</code> \| <code>&#x27;add&#x27;</code> \| <code>&#x27;accumulate&#x27;</code> | <code>replace</code> | Modalità di composizione dell’animazione. |
-| direction | <code>&#x27;normal&#x27;</code> \| <code>&#x27;reverse&#x27;</code> \| <code>&#x27;alternate&#x27;</code> \| <code>&#x27;alternate-reverse&#x27;</code> | <code>normal</code> | Direzione di riproduzione dell'animazione. |
-| iterations | <code>number</code> | <code>1</code> | Numero di volte che l'animazione verrà ripetuta. |
-
 <a name="Jdm"></a>
 
 ## Jdm
@@ -202,7 +110,18 @@ const div = JDM(domString, document.body);
     * [.jdm_removeEventListener(name, [fn])](#Jdm+jdm_removeEventListener) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_extendChildNode()](#Jdm+jdm_extendChildNode) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_fadeIn([option], [callback])](#Jdm+jdm_fadeIn) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeOut([option], [callback])](#Jdm+jdm_fadeOut) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeInDown([callback], [option])](#Jdm+jdm_fadeInDown) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeInUp([callback], [option])](#Jdm+jdm_fadeInUp) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeInLeft([callback], [option])](#Jdm+jdm_fadeInLeft) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeInRight([callback], [option])](#Jdm+jdm_fadeInRight) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeOut([callback], [option])](#Jdm+jdm_fadeOut) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeOutRight([callback], [option])](#Jdm+jdm_fadeOutRight) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeOutUp([callback], [option])](#Jdm+jdm_fadeOutUp) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeOutDown([callback], [option])](#Jdm+jdm_fadeOutDown) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeOutLeft([callback], [option])](#Jdm+jdm_fadeOutLeft) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_bounce([callback], [option])](#Jdm+jdm_bounce) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_tada([callbackFn], [option])](#Jdm+jdm_tada) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_zoomIn([callbackFn], [option])](#Jdm+jdm_zoomIn) ⇒ [<code>Jdm</code>](#Jdm)
 
 <a name="new_Jdm_new"></a>
 
@@ -1017,11 +936,83 @@ Applica un'animazione di fade-in sul nodo.
 **Example**  
 ```js
 JDM(`<div class="foo"> FadeIn </div>`, document.body)
-     .jdm_fadeIn({duration: 2000, direction: 'alternate', iterations:'Infinity'}, ()=> {console.log('test)})
+     .jdm_fadeIn(()=> {console.log('test')}, {duration: 2000, direction: 'alternate', iterations:'Infinity'})
+```
+<a name="Jdm+jdm_fadeInDown"></a>
+
+### jdm.jdm\_fadeInDown([callback], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+Applica un'animazione tipo fadeInDown al nodo .
+
+**Kind**: instance method of [<code>Jdm</code>](#Jdm)  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
+
+**Example**  
+```js
+JDM(`<div class="foo"> FadeInDown </div>`, document.body)
+     .jdm_fadeInDown(() => console.log('done'), { duration: 1000, easing: 'ease-out' });
+```
+<a name="Jdm+jdm_fadeInUp"></a>
+
+### jdm.jdm\_fadeInUp([callback], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+Applica un'animazione tipo fadeInUp al nodo .
+
+**Kind**: instance method of [<code>Jdm</code>](#Jdm)  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
+
+**Example**  
+```js
+JDM(`<div class="foo"> FadeInUp </div>`, document.body)
+     .jdm_fadeInUp(() => console.log('Fade in up concluso'), { duration: 800 });
+```
+<a name="Jdm+jdm_fadeInLeft"></a>
+
+### jdm.jdm\_fadeInLeft([callback], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+Applica un'animazione tipo fadeInLeft al nodo .
+
+**Kind**: instance method of [<code>Jdm</code>](#Jdm)  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
+
+**Example**  
+```js
+JDM(`<div class="foo"> FadeInLeft </div>`, document.body)
+     .jdm_fadeInLeft(() => console.log('Fade in left concluso'), { duration: 800 });
+```
+<a name="Jdm+jdm_fadeInRight"></a>
+
+### jdm.jdm\_fadeInRight([callback], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+Applica un'animazione tipo fadeInRight al nodo .
+
+**Kind**: instance method of [<code>Jdm</code>](#Jdm)  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
+
+**Example**  
+```js
+JDM(`<div class="foo"> FadeInRight </div>`, document.body)
+     .jdm_fadeInRight(() => console.log('Fade in right concluso'), { duration: 800 });
 ```
 <a name="Jdm+jdm_fadeOut"></a>
 
-### jdm.jdm\_fadeOut([option], [callback]) ⇒ [<code>Jdm</code>](#Jdm)
+### jdm.jdm\_fadeOut([callback], [option]) ⇒ [<code>Jdm</code>](#Jdm)
 Applica un'animazione di fade-out sul nodo.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
@@ -1029,11 +1020,137 @@ Applica un'animazione di fade-out sul nodo.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| [option] | <code>object</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
 | [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
 
 **Example**  
 ```js
 JDM(`<div class="foo"> FadeOut </div>`, document.body)
-     .jdm_fadeOut({duration: 2000, direction: 'alternate', iterations:'Infinity'}, ()=> {console.log('test')})
+     .jdm_fadeOut(()=> {console.log('test')}, {duration: 2000, direction: 'alternate', iterations:'Infinity'})
+```
+<a name="Jdm+jdm_fadeOutRight"></a>
+
+### jdm.jdm\_fadeOutRight([callback], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+Applica un'animazione di fade out right sul nodo.
+
+**Kind**: instance method of [<code>Jdm</code>](#Jdm)  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
+
+**Example**  
+```js
+JDM(`<div class="foo"> FadeOutRight </div>`, document.body)
+     .jdm_fadeOutRight(()=> {console.log('test')}, {duration: 2000, direction: 'alternate', iterations:'Infinity'})
+```
+<a name="Jdm+jdm_fadeOutUp"></a>
+
+### jdm.jdm\_fadeOutUp([callback], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+Applica un'animazione di fade out up sul nodo.
+
+**Kind**: instance method of [<code>Jdm</code>](#Jdm)  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
+
+**Example**  
+```js
+JDM(`<div class="foo"> FadeOutUp </div>`, document.body)
+     .jdm_fadeOutUp(()=> {console.log('test')}, {duration: 2000, direction: 'alternate', iterations:'Infinity'})
+```
+<a name="Jdm+jdm_fadeOutDown"></a>
+
+### jdm.jdm\_fadeOutDown([callback], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+Applica un'animazione di fade out down sul nodo.
+
+**Kind**: instance method of [<code>Jdm</code>](#Jdm)  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
+
+**Example**  
+```js
+JDM(`<div class="foo"> FadeOutDown </div>`, document.body)
+     .jdm_fadeOutDown(()=> {console.log('test')}, {duration: 2000, direction: 'alternate', iterations:'Infinity'})
+```
+<a name="Jdm+jdm_fadeOutLeft"></a>
+
+### jdm.jdm\_fadeOutLeft([callback], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+Applica un'animazione di fade out left sul nodo.
+
+**Kind**: instance method of [<code>Jdm</code>](#Jdm)  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
+
+**Example**  
+```js
+JDM(`<div class="foo"> FadeOutLeft </div>`, document.body)
+     .jdm_fadeOutLeft(()=> {console.log('test')}, {duration: 2000, direction: 'alternate', iterations:'Infinity'})
+```
+<a name="Jdm+jdm_bounce"></a>
+
+### jdm.jdm\_bounce([callback], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+Applica un'animazione tipo bounce al nodo (come in animate.css).
+
+**Kind**: instance method of [<code>Jdm</code>](#Jdm)  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
+
+**Example**  
+```js
+JDM(`<div class="foo"> Bounce </div>`, document.body)
+     .jdm_bounce(() => console.log('Bounce completato!'), { duration: 1000 });
+```
+<a name="Jdm+jdm_tada"></a>
+
+### jdm.jdm\_tada([callbackFn], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+Applica un'animazione tipo tada al nodo (come in animate.css).
+
+**Kind**: instance method of [<code>Jdm</code>](#Jdm)  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [callbackFn] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
+
+**Example**  
+```js
+JDM(`<div class="foo"> Tada </div>`, document.body)
+     .jdm_tada(() => console.log('Tada completato!'), { duration: 1000 });
+```
+<a name="Jdm+jdm_zoomIn"></a>
+
+### jdm.jdm\_zoomIn([callbackFn], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+Applica un'animazione di zoom-in e fade-in al nodo.
+
+**Kind**: instance method of [<code>Jdm</code>](#Jdm)  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [callbackFn] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
+
+**Example**  
+```js
+JDM(`<div class="foo"> ZoomIn + FadeIn </div>`, document.body)
+     .jdm_zoomIn(() => console.log('ZoomIn + FadeIn completato!'), { duration: 1000 });
 ```

@@ -4,45 +4,49 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body>
-<h1>CREAZIONE DOM</h1>
+<body style="overflow: hidden;">
+<h1>ANIMATION</h1>
 <hr>
 
-<style>
-    #test {
-        opacity: 0;
-    }
-</style>
 
 </body>
 <script type="module">
-    import "../dist/jdm.js";
+    import "../src/jdm.js";
 
-    // Crea un nuovo div, aggiunge classi e lo appende al body
-    const myDiv = JDM('<div id="test"> lorem ipsum</div>', document.body, ['my-class', 'another-class'])
+    JDM(`<div class="foo"> FadeIn </div>`, document.body)
+        .jdm_fadeIn(()=> {console.log('FadeIn completato!')}, {duration: 1000, direction: 'alternate', iterations:'5'})
+    JDM(`<div class="foo"> FadeInUp </div>`, document.body)
+        .jdm_fadeInUp(() => console.log('FadeInUp completato!'),{duration: 1000, direction: 'alternate', iterations:'5'})
+    JDM(`<div class="foo"> FadeInDown </div>`, document.body)
+        .jdm_fadeInDown(() => console.log('FadeInDown completato!'), {duration: 1000, direction: 'alternate', iterations:'5'})
+    JDM(`<div class="foo"> FadeInLeft </div>`, document.body)
+        .jdm_fadeInLeft(() => console.log('FadeInLeft completato!'),{duration: 1000, direction: 'alternate', iterations:'5'})
+    JDM(`<div class="foo"> FadeInRight </div>`, document.body)
+        .jdm_fadeInRight(() => console.log('FadeInRight completato!'), {duration: 1000, direction: 'alternate', iterations:'5'})
 
-    // Crea un nuovo elemento con un tag personalizzato
-    const customElement = JDM('<custom>custom <br></custom>', document.body)
+    JDM(`<div class="foo"> FadeOut </div>`, document.body)
+        .jdm_fadeOut(()=> {console.log('FadeOut completato!')}, {duration: 1000, direction: 'alternate', iterations:'5'})
+    JDM(`<div class="foo"> FadeOutUp </div>`, document.body)
+        .jdm_fadeOutUp(()=> {console.log('FadeOutUp completato!')}, {duration: 1000, direction: 'alternate', iterations:'5'})
+    JDM(`<div class="foo"> FadeOutDown </div>`, document.body)
+        .jdm_fadeOutDown(()=> {console.log('FadeOutDown completato!')}, {duration: 1000, direction: 'alternate', iterations:'5'})
+    JDM(`<div class="foo"> FadeOutLeft </div>`, document.body)
+        .jdm_fadeOutLeft(()=> {console.log('FadeOutLeft completato!')}, {duration: 1000, direction: 'alternate', iterations:'5'})
+    JDM(`<div class="foo"> FadeOutRight </div>`, document.body)
+        .jdm_fadeOutRight(()=> {console.log('FadeOutRight completato!')}, {duration: 1000, direction: 'alternate', iterations:'5'})
 
+    JDM(`<div class="foo"> Bounce </div>`, document.body)
+        .jdm_bounce(() => {console.log('Bounce completato!')}, {duration: 1000, iterations:'5'})
+    JDM(`<div class="foo" style="width: fit-content"> Tada </div>`, document.body)
+        .jdm_tada(() => console.log('Tada completato!'), {duration: 1000, iterations:'5'})
 
-    // Aggiunge un input a un elemento esistente e imposta il valore
-    const myInput = JDM('input', document.body)
-        .jdm_addClassList('my-class')
-        .jdm_addId('id')
-        .jdm_setValue('Test')
-        .jdm_empty()
+    JDM(`<div class="foo" style="width: fit-content">  ZoomIn </div>`, document.body)
+        .jdm_zoomIn(() => console.log('ZoomIn completato!'), {duration: 1000, direction: 'alternate', iterations:'5'})
+    JDM(`<div class="foo" style="width: fit-content">  ZoomOut </div>`, document.body)
+        .jdm_zoomOut(() => console.log('ZoomOut completato!'), {duration: 1000, direction: 'alternate', iterations:'5'})
 
-    const domString = `
- <div class="foo">
-     <div data-name="element1"> Element 1</div>
-     <div data-name="element2"> Element 2</div>
-     <div data-name="element3"> Element 3</div>
- </div>`;
- const test =   JDM(domString, document.body)
-        .jdm_fadeOut(null, ()=> {console.log(myInput)})
-
-
-
+    JDM(`<div class="foo" style="width: fit-content"> Rotate </div>`, document.body)
+        .jdm_rotation(() => console.log('Rotation completato!'), 360,  {duration: 1000, iterations:'5'})
 
 </script>
 </html>

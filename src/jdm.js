@@ -1,42 +1,7 @@
 import { _common } from "./_common.js";
 import { Proto } from "./proto.js";
-
-/**
- * Opzioni per l'animazione.
- */
-class AnimationOption {
-    /**
-     * @param {number} duration - Durata dell'animazione in millisecondi.
-     * @default 250
-     *
-     * @param {'linear'|'ease'|'ease-in'|'ease-out'|'ease-in-out'} easing - Funzione di easing dell'animazione.
-     * @default 'easeInOut'
-     *
-     * @param {'none'|'forwards'|'backwards'|'both'|'auto'} fill - Stile applicato fuori dall'intervallo dell'animazione.
-     * @default 'forwards'
-     *
-     * @param {number} delay - Ritardo dell'inizio dell'animazione in millisecondi.
-     * @default 0
-     *
-     * @param {'replace'|'add'|'accumulate'} composite - Modalità di composizione dell’animazione.
-     * @default 'replace'
-     *
-     * @param {'normal'|'reverse'|'alternate'|'alternate-reverse'} direction - Direzione di riproduzione dell'animazione.
-     * @default 'normal'
-     *
-     * @param {number} iterations - Numero di volte che l'animazione verrà ripetuta.
-     * @default 1
-     */
-    constructor(duration = 250, easing = "ease-in-out", fill = "forwards", delay = 0, composite = "replace", direction = "normal", iterations = 1) {
-        this.duration = duration;
-        this.easing = easing;
-        this.fill = fill;
-        this.delay = delay;
-        this.composite = composite;
-        this.direction = direction;
-        this.iterations = iterations;
-    }
-}
+import { _animation, AnimationOption } from "./_animation.js";
+import { _core } from "./_core.js";
 
 new Proto();
 
@@ -139,10 +104,12 @@ class Jdm extends HTMLElement {
      * JDM(domString, document.body)
      * // Crea un nuovo div con la classe 'my-class', un paragrafo child e lo aggiunge tutto al body
      */
+
     constructor(element = null, parent = null, classList = null, deep = true, ...args) {
         super();
         const data = { element: element, parent: parent, classList: classList, deep: deep, args: args };
         this.node = this.init(data);
+        this.jdm_childNode = [];
         this.tag = this.node.tagName.toLowerCase();
         if (data.classList) this.jdm_addClassList(data.classList);
         if (data.parent) data.parent.appendChild(this.node);
@@ -272,6 +239,19 @@ class Jdm extends HTMLElement {
         }
     }
 
+    animation(keyframe, option, callbackFn) {
+        option = { ...new AnimationOption(), ...option };
+        const animation = this.node.animate(keyframe, option);
+        animation.onfinish = () => {
+            if (typeof callbackFn === "function") {
+                callbackFn();
+            }
+        };
+        return animation;
+    }
+
+    /** CORE **/
+
     /**
      * Imposta un attributo su un elemento DOM e genera un evento personalizzato per il cambiamento.
      *
@@ -287,9 +267,7 @@ class Jdm extends HTMLElement {
      *   .jdm_setAttribute('counter', 1);
      */
     jdm_setAttribute(attribute, value = null) {
-        this.node.setAttribute(attribute, value);
-        this.jdm_genEvent("setAttribute", { attribute: attribute, value: value });
-        return this.node;
+        return _core.jdm_setAttribute.call(this, attribute, value);
     }
 
     /**
@@ -304,7 +282,7 @@ class Jdm extends HTMLElement {
      * const dataTest = div.jdm_getAttribute('data-test')
      */
     jdm_getAttribute(attribute) {
-        return this.node.getAttribute(attribute);
+        return _core.jdm_getAttribute.call(this, attribute);
     }
 
     /**
@@ -324,14 +302,7 @@ class Jdm extends HTMLElement {
      * div.jdm_append(span); // Aggiunge il singolo elemento span come figlio del div.
      */
     jdm_append(elementList) {
-        if (Array.isArray(elementList)) {
-            for (const element of elementList) {
-                this.node.appendChild(element);
-            }
-        } else if (elementList) {
-            this.node.appendChild(elementList);
-        }
-        return this.node;
+        return _core.jdm_append.call(this, elementList);
     }
 
     /**
@@ -354,16 +325,7 @@ class Jdm extends HTMLElement {
 
      */
     jdm_prepend(elementList) {
-        const firstChild = this.node.firstElementChild;
-
-        if (Array.isArray(elementList)) {
-            for (const element of elementList) {
-                this.node.prepend(element);
-            }
-        } else if (elementList) {
-            this.node.prepend(elementList);
-        }
-        return this.node;
+        return _core.jdm_append.call(this, elementList);
     }
 
     /**
@@ -377,9 +339,9 @@ class Jdm extends HTMLElement {
      *  .jdm_addId('myDiv'); // Imposta l'attributo id="myDiv" sull'elemento div.
      */
     jdm_addId(id) {
-        this.node.setAttribute("id", id);
-        return this.node;
+        return _core.jdm_addId.call(this, id);
     }
+
     /**
      * Aggiunge una o più classi CSS all'elemento DOM.
      * Se viene fornito un array di classi, tutte le classi vengono aggiunte all'elemento.
@@ -396,14 +358,7 @@ class Jdm extends HTMLElement {
      *  .jdm_addClassList(['class1', 'class2']); // Aggiunge "class1" e "class2" all'elemento div2.
      */
     jdm_addClassList(classList) {
-        if (Array.isArray(classList)) {
-            for (const cls of classList) {
-                this.node.classList.add(cls);
-            }
-        } else if (classList) {
-            this.node.classList.add(classList);
-        }
-        return this.node;
+        return _core.jdm_addClassList.call(this, classList);
     }
 
     /**
@@ -422,15 +377,9 @@ class Jdm extends HTMLElement {
      *  .jdm_removeClassList(['foo', 'bar']); // Rimuove "foo" e "bar" dall'elemento.
      */
     jdm_removeClassList(classList) {
-        if (Array.isArray(classList)) {
-            for (const cls of classList) {
-                this.node.classList.remove(cls);
-            }
-        } else if (classList) {
-            this.node.classList.remove(classList);
-        }
-        return this.node;
+        return _core.jdm_removeClassList.call(this, classList);
     }
+
     /**
      * Attiva o disattiva una o più classi CSS su un elemento DOM.
      * Se viene fornito un array di classi, ciascuna classe verrà alternata (aggiunta se non presente, rimossa se presente).
@@ -447,15 +396,9 @@ class Jdm extends HTMLElement {
      * .jdm_toggleClassList(['class1', 'class2']); // Alterna le classi "class1" e "class2" sull'elemento div2.
      */
     jdm_toggleClassList(classList) {
-        if (Array.isArray(classList)) {
-            for (const cls of classList) {
-                this.node.classList.toggle(cls);
-            }
-        } else if (classList) {
-            this.node.classList.toggle(classList);
-        }
-        return this.node;
+        return _core.jdm_toggleClassList.call(this, classList);
     }
+
     /**
      * Svuota il contenuto dell'elemento DOM.
      * A seconda del tipo di elemento, il comportamento di "svuotamento" varia:
@@ -477,17 +420,7 @@ class Jdm extends HTMLElement {
      * const form = JDM('form').jdm_empty(); // Esegue il reset del modulo.
      */
     jdm_empty() {
-        if (this.tag === "input" && (this.node.element === "checkbox" || this.node.element === "radio")) {
-            this.node.checked = false;
-        } else if (this.tag === "input" || this.tag === "textarea") {
-            this.node.value = null;
-        } else if (this.tag === "form") {
-            this.node.reset();
-        } else {
-            this.node.innerHTML = "";
-        }
-
-        return this.node;
+        return _core.jdm_empty.call(this);
     }
 
     /**
@@ -502,9 +435,7 @@ class Jdm extends HTMLElement {
      *  .jdm_destroy(); // Rimuove l'elemento div dal documento e genera un evento "destroy".
      */
     jdm_destroy() {
-        this.node.remove();
-        this.jdm_genEvent("destroy");
-        return this.node;
+        return _core.jdm_destroy.call(this);
     }
 
     /**
@@ -519,9 +450,7 @@ class Jdm extends HTMLElement {
      *  .jdm_validate(); // Verifica la validità dell'input e genera l'evento "validate".
      */
     jdm_validate() {
-        const validity = this.node.checkValidity();
-        this.jdm_genEvent("validate", validity);
-        return this.node;
+        return _core.jdm_validate.call(this);
     }
 
     /**
@@ -537,10 +466,9 @@ class Jdm extends HTMLElement {
      *  .jdm_removeAttribute('id'); // Rimuove l'attributo 'id' dall'elemento div.
      */
     jdm_removeAttribute(attribute) {
-        this.node.removeAttribute(attribute);
-        this.jdm_genEvent("removeAttribute", { attribute: attribute });
-        return this.node;
+        return _core.jdm_removeAttribute.call(this, attribute);
     }
+
     /**
      * Imposta un valore per una proprietà di stile CSS su un elemento DOM.
      * Questo metodo applica una dichiarazione di stile CSS all'elemento DOM rappresentato da `this.node`.
@@ -554,9 +482,9 @@ class Jdm extends HTMLElement {
      * .jdm_setStyle('color', 'red'); // Imposta il colore del testo dell'elemento div su rosso.
      */
     jdm_setStyle(style, value) {
-        this.node.style[style] = value;
-        return this.node;
+        return _core.jdm_setStyle.call(this, style, value);
     }
+
     /**
      * Estende l'elemento DOM aggiungendo una proprietà personalizzata.
      * Questo metodo assegna un oggetto o un valore alla proprietà `name` dell'elemento DOM rappresentato da `this.node`.
@@ -572,9 +500,9 @@ class Jdm extends HTMLElement {
      * console.log(div.customData); // { id: 123, name: 'My Div' }
      */
     jdm_extendNode(name, object = null) {
-        this.node[name] = object;
-        return this.node;
+        return _core.jdm_extendNode.call(this, name, object);
     }
+
     /**
      * Imposta o restituisce il contenuto HTML interno dell'elemento DOM.
      * Questo metodo imposta il valore di `innerHTML` dell'elemento DOM rappresentato da `this.node`.
@@ -590,8 +518,7 @@ class Jdm extends HTMLElement {
      * // Imposta il contenuto HTML del div con un nuovo paragrafo.
      */
     jdm_innerHTML(value) {
-        this.node.innerHTML = value;
-        return this.node;
+        return _core.jdm_innerHTML.call(this, value);
     }
     /**
      * Imposta un binding di dati tra l'elemento corrente e un altro o più elementi.
@@ -611,40 +538,9 @@ class Jdm extends HTMLElement {
      * // Crea un binding unidirezionale tra l'input e l'output, che si attiva sull'evento 'change'.
      */
     jdm_binding(el, event = "input", twoWayDataBinding = true) {
-        let elementList = [];
-
-        if (Array.isArray(el)) {
-            elementList = elementList.concat(el);
-        } else {
-            elementList.push(el);
-        }
-
-        for (const element of elementList) {
-            if (
-                element.tagName.toLowerCase() === "input" ||
-                element.tagName.toLowerCase() === "select" ||
-                element.tagName.toLowerCase() === "textarea"
-            ) {
-                this.node.addEventListener(event, () => {
-                    element.jdm_setValue(this.jdm_getValue());
-                });
-            } else {
-                this.node.addEventListener(event, () => {
-                    element.jdm_innerHTML(this.jdm_getValue());
-                });
-            }
-
-            if (twoWayDataBinding) {
-                const elementListTmp = elementList.filter(elementTmp => elementTmp !== element);
-                elementListTmp.push(this.node);
-                for (const elementTmp of elementListTmp) {
-                    element.jdm_binding(elementListTmp, event, false);
-                }
-            }
-        }
-
-        return this.node;
+        return _core.jdm_innerHTML.call(this, el, event, twoWayDataBinding);
     }
+
     /**
      * Aggiunge un listener per l'evento `input` all'elemento DOM.
      * Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `input` sull'elemento.
@@ -661,9 +557,7 @@ class Jdm extends HTMLElement {
      * // Aggiunge un listener per l'evento 'input' che stampa il valore dell'input ogni volta che cambia.
      */
     jdm_onInput(fn = () => {}) {
-        this.node.addEventListener("input", fn);
-
-        return this.node;
+        return _core.jdm_onInput.call(this, fn);
     }
 
     /**
@@ -683,9 +577,9 @@ class Jdm extends HTMLElement {
      * // Aggiunge un listener per l'evento 'change' che stampa il valore dell'input ogni volta che cambia.
      */
     jdm_onChange(fn = () => {}) {
-        this.node.addEventListener("change", fn);
-        return this.node;
+        return _core.jdm_onChange.call(this, fn);
     }
+
     /**
      * Aggiunge un listener per l'evento `select` all'elemento DOM.
      * Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `select` sull'elemento.
@@ -703,8 +597,7 @@ class Jdm extends HTMLElement {
      * // Aggiunge un listener per l'evento 'select' che stampa il valore del campo di input ogni volta che viene selezionato del testo.
      */
     jdm_onSelect(fn = () => {}) {
-        this.node.addEventListener("select", fn);
-        return this.node;
+        return _core.jdm_onSelect.call(this, fn);
     }
 
     /**
@@ -726,10 +619,10 @@ class Jdm extends HTMLElement {
      * // Aggiunge un listener per l'evento 'input' con un debounce di 500 millisecondi,
      * // evitando chiamate troppo frequenti alla funzione di callback mentre l'utente sta digitando.
      */
-    jdm_onDebounce(fn = () => {}, timeout = 300) {
-        this.node.addEventListener("input", _common.debounce(fn, timeout));
-        return this.node;
+    jdm_onDebounce(fn = () => {}, timeout = 300, method = "input") {
+        return _core.jdm_onDebounce.call(this, fn, timeout, method);
     }
+
     /**
      * Aggiunge un listener per l'evento `click` all'elemento DOM.
      * Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `click` sull'elemento.
@@ -747,9 +640,7 @@ class Jdm extends HTMLElement {
      * // Aggiunge un listener per l'evento 'click' che stampa un messaggio ogni volta che il pulsante viene cliccato.
      */
     jdm_onClick(fn = () => {}) {
-        this.node.addEventListener("click", fn);
-
-        return this.node;
+        return _core.jdm_onClick.call(this, fn);
     }
 
     /**
@@ -770,8 +661,7 @@ class Jdm extends HTMLElement {
      * // Aggiunge un listener per l'evento 'contextmenu' che esegue la funzione di callback ogni volta che si fa clic destro sull'elemento.
      */
     jdm_onRightClick(fn = () => {}) {
-        this.node.addEventListener("contextmenu", fn);
-        return this.node;
+        return _core.jdm_onRightClick.call(this, fn);
     }
 
     /**
@@ -792,9 +682,7 @@ class Jdm extends HTMLElement {
      * // Aggiunge un listener per l'evento 'dblclick' che esegue la funzione di callback ogni volta che l'utente fa doppio clic sull'elemento.
      */
     jdm_onDoubleClick(fn = () => {}) {
-        console.log("ìqweqwe");
-        this.node.addEventListener("dblclick", fn);
-        return this.node;
+        return _core.jdm_onDoubleClick.call(this, fn);
     }
 
     /**
@@ -821,10 +709,9 @@ class Jdm extends HTMLElement {
      * // Aggiunge un listener per l'evento 'invalid' che esegue la funzione di callback quando l'input non è valido.
      */
     jdm_onInvalid(fn = () => {}) {
-        console.log("invalid");
-        this.node.addEventListener("invalid", fn);
-        return this.node;
+        return _core.jdm_onInvalid.call(this, fn);
     }
+
     /**
      * Aggiunge un listener per l'evento `load` all'elemento DOM.
      * Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `load` sull'elemento,
@@ -844,9 +731,9 @@ class Jdm extends HTMLElement {
      * // Aggiunge un listener per l'evento 'load' che esegue la funzione di callback ogni volta che l'immagine è completamente caricata.
      */
     jdm_onLoad(fn = () => {}) {
-        this.node.addEventListener("load", fn);
-        return this.node;
+        return _core.jdm_onLoad.call(this, fn);
     }
+
     /**
      * Aggiunge un listener per l'evento `error` all'elemento DOM.
      * Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `error` sull'elemento,
@@ -866,8 +753,7 @@ class Jdm extends HTMLElement {
      * // Aggiunge un listener per l'evento 'error' che esegue la funzione di callback ogni volta che si verifica un errore nel caricamento dell'immagine.
      */
     jdm_onError(fn = () => {}) {
-        this.node.addEventListener("error", fn);
-        return this.node;
+        return _core.jdm_onError.call(this, fn);
     }
 
     /**
@@ -896,9 +782,7 @@ class Jdm extends HTMLElement {
      * // Aggiunge un listener per l'evento 'submit' che esegue la funzione di callback ogni volta che il modulo viene inviato.
      */
     jdm_onSubmit(fn = e => {}) {
-        console.log(e);
-        this.node.addEventListener("submit", fn);
-        return this.node;
+        return _core.jdm_onSubmit.call(this, fn);
     }
 
     /**
@@ -936,62 +820,7 @@ class Jdm extends HTMLElement {
      * // Imposta i valori del modulo, inclusi i checkbox e altri input.
      */
     jdm_setValue(value, tooBoolean = true) {
-        if (tooBoolean) {
-            try {
-                value = value.toBoolean();
-            } catch (e) {
-                value = value;
-            }
-        }
-
-        if (this.node.type === "checkbox" || this.node.type === "radio") {
-            this.node.checked = value;
-        } else if (this.tag === "form") {
-            const setValue = (el, value) => {
-                if (el.type === "checkbox" || el.type === "radio") {
-                    el.checked = value;
-                } else {
-                    el.value = value;
-                }
-            };
-
-            const findElement = (form, name) => {
-                return form.querySelectorAll(`[name="${name}"]`);
-            };
-
-            const populateForm = (form, data, prefix = "") => {
-                for (const key in data) {
-                    const value = data[key];
-                    const name = prefix ? `${prefix}[${key}]` : key;
-                    const elementList = findElement(form, Array.isArray(value) ? `${name}[]` : name);
-                    if (elementList?.length > 0) {
-                        for (const element of elementList) {
-                            if (Array.isArray(value)) {
-                                const checkboxes = form.querySelectorAll(`[name="${name}[]"]`);
-                                checkboxes.forEach(checkbox => {
-                                    setValue(checkbox, value.includes(checkbox.value));
-                                });
-                            } else if (typeof value === "object") {
-                                populateForm(form, value, name);
-                            } else {
-                                setValue(element, value);
-                            }
-                        }
-                    } else if (typeof value === "object") {
-                        populateForm(form, value, name);
-                    }
-                }
-            };
-            populateForm(this.node, value);
-        } else {
-            if (this.node.jdm_getAttribute("type") === "number" || this.node.jdm_getAttribute("type") === "range") {
-                this.node.value = value * 1;
-            } else {
-                this.node.value = value;
-            }
-        }
-
-        return this.node;
+        return _core.jdm_setValue.call(this, value, tooBoolean);
     }
 
     /**
@@ -1036,53 +865,7 @@ class Jdm extends HTMLElement {
      * console.log(select.jdm_getValue()); // log 'bar'
      */
     jdm_getValue() {
-        if (this.tag === "input" && (this.node.type === "checkbox" || this.node.type === "radio")) {
-            return this.node.checked;
-        } else if (this.tag === "form") {
-            const formData = new FormData(this.node);
-            const json = {};
-
-            for (let [key, value] of formData.entries()) {
-                value = value === "" ? null : value;
-                value = value === "null" ? null : value;
-                let currentObj = json;
-                const keys = key.split(/\[|\]\[|\]/).filter(Boolean);
-                const lastKey = keys.pop();
-
-                for (let i = 0; i < keys.length; i++) {
-                    const currentKey = keys[i];
-                    if (!currentObj[currentKey]) {
-                        currentObj[currentKey] = isNaN(keys[i + 1]) ? {} : [];
-                    }
-                    currentObj = currentObj[currentKey];
-                }
-
-                if (lastKey === "") {
-                    if (!currentObj.length) {
-                        currentObj.length = 0;
-                    }
-                    currentObj[currentObj.length++] = value;
-                } else if (Array.isArray(currentObj[lastKey])) {
-                    currentObj[lastKey].push(value);
-                } else if (currentObj[lastKey]) {
-                    currentObj[lastKey] = [currentObj[lastKey], value];
-                } else {
-                    if (key.endsWith("[]")) {
-                        if (value) {
-                            currentObj[lastKey] = new Array();
-                            currentObj[lastKey].push(value);
-                        }
-                    } else {
-                        currentObj[lastKey] = value;
-                    }
-                }
-            }
-            return json;
-        } else if (this.tag === "select") {
-            return this.node.value;
-        } else {
-            return this.node.value;
-        }
+        return _core.jdm_getValue.call(this);
     }
 
     /**
@@ -1103,8 +886,7 @@ class Jdm extends HTMLElement {
      * element.jdm_genEvent('customEvent', { message: 'Evento generato!' });
      */
     jdm_genEvent(name, data = null, propagateToParents = true) {
-        _common.genEvent(this.node, name, data, propagateToParents);
-        return this.node;
+        return _core.jdm_getValue.call(this, name, data, propagateToParents);
     }
 
     /**
@@ -1126,9 +908,7 @@ class Jdm extends HTMLElement {
      *  })
      */
     jdm_addEventListener(name, fn = () => {}) {
-        this.node.addEventListener(name, fn);
-
-        return this.node;
+        return _core.jdm_getValue.call(this, name, fn);
     }
 
     /**
@@ -1153,8 +933,7 @@ class Jdm extends HTMLElement {
      * element.jdm_removeEventListener('input');
      */
     jdm_removeEventListener(name, fn = () => {}) {
-        this.node.removeEventListener(name, fn);
-        return this.node;
+        return _core.jdm_getValue.call(this, name, fn);
     }
 
     /**
@@ -1177,83 +956,223 @@ class Jdm extends HTMLElement {
      *   console.log(div.element3);
      */
     jdm_extendChildNode() {
-        if (this.node?.jdm_childNode && Object.entries(this.node.jdm_childNode).length > 0) {
-            for (const [key, value] of Object.entries(this.node.jdm_childNode)) {
-                this.node.jdm_extendNode(key, value);
-            }
-        }
-
-        return this.node;
+        return _core.jdm_extendChildNode.call(this);
     }
+
+    /** ANIMATION **/
 
     /**
      * Applica un'animazione di fade-in sul nodo.
      *
      * @param {object} [option=new AnimationOption()] - Opzioni dell'animazione.
-     * @param {function(): void} [callback] - Funzione da eseguire al termine dell'animazione.
+     * @param {function(): void} [callbackFn] - Funzione da eseguire al termine dell'animazione.
      * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
      * @example
-     *
      * JDM(`<div class="foo"> FadeIn </div>`, document.body)
-     *      .jdm_fadeIn({duration: 2000, direction: 'alternate', iterations:'Infinity'}, ()=> {console.log('test)})
+     *      .jdm_fadeIn(()=> {console.log('test')}, {duration: 2000, direction: 'alternate', iterations:'Infinity'})
      */
-    jdm_fadeIn(option = new AnimationOption(), callback) {
-        option = { ...new AnimationOption(), ...option };
-        const animation = this.node.animate([{ opacity: 0 }, { opacity: 1 }], option);
-        animation.onfinish = () => {
-            if (typeof callback === "function") {
-                callback();
-            }
-        };
-        return this.node;
+    jdm_fadeIn(callbackFn, option = new AnimationOption()) {
+        return _animation.jdm_fadeIn.call(this, callbackFn, option);
+    }
+
+    /**
+     * Applica un'animazione tipo fadeInDown al nodo .
+     *
+     * @param {function(): void} [callbackFn] - Funzione da eseguire al termine dell'animazione.
+     * @param {Partial<AnimationOption>} [option=new AnimationOption()] - Opzioni dell'animazione.
+     * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
+     * @example
+     * JDM(`<div class="foo"> FadeInDown </div>`, document.body)
+     *      .jdm_fadeInDown(() => console.log('done'), { duration: 1000, easing: 'ease-out' });
+     */
+    jdm_fadeInDown(callbackFn, option = new AnimationOption()) {
+        return _animation.jdm_fadeInDown.call(this, callbackFn, option);
+    }
+
+    /**
+     * Applica un'animazione tipo fadeInUp al nodo .
+     *
+     * @param {function(): void} [callbackFn] - Funzione da eseguire al termine dell'animazione.
+     * @param {Partial<AnimationOption>} [option=new AnimationOption()] - Opzioni dell'animazione.
+     * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
+     * @example
+     * JDM(`<div class="foo"> FadeInUp </div>`, document.body)
+     *      .jdm_fadeInUp(() => console.log('Fade in up concluso'), { duration: 800 });
+     */
+    jdm_fadeInUp(callbackFn, option = new AnimationOption()) {
+        return _animation.jdm_fadeInUp.call(this, callbackFn, option);
+    }
+
+    /**
+     * Applica un'animazione tipo fadeInLeft al nodo .
+     *
+     * @param {function(): void} [callbackFn] - Funzione da eseguire al termine dell'animazione.
+     * @param {Partial<AnimationOption>} [option=new AnimationOption()] - Opzioni dell'animazione.
+     * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
+     * @example
+     * JDM(`<div class="foo"> FadeInLeft </div>`, document.body)
+     *      .jdm_fadeInLeft(() => console.log('Fade in left concluso'), { duration: 800 });
+     */
+    jdm_fadeInLeft(callbackFn, option = new AnimationOption()) {
+        return _animation.jdm_fadeInLeft.call(this, callbackFn, option);
+    }
+    /**
+     * Applica un'animazione tipo fadeInRight al nodo .
+     *
+     * @param {function(): void} [callbackFn] - Funzione da eseguire al termine dell'animazione.
+     * @param {Partial<AnimationOption>} [option=new AnimationOption()] - Opzioni dell'animazione.
+     * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
+     * @example
+     * JDM(`<div class="foo"> FadeInRight </div>`, document.body)
+     *      .jdm_fadeInRight(() => console.log('Fade in right concluso'), { duration: 800 });
+     */
+    jdm_fadeInRight(callbackFn, option = new AnimationOption()) {
+        return _animation.jdm_fadeInRight.call(this, callbackFn, option);
     }
 
     /**
      * Applica un'animazione di fade-out sul nodo.
      *
-     * @param {object} [option=new AnimationOption()] - Opzioni dell'animazione.
-     * @param {function(): void} [callback] - Funzione da eseguire al termine dell'animazione.
+
+     * @param {function(): void} [callbackFn] - Funzione da eseguire al termine dell'animazione.
+     * @param {Partial<AnimationOption>} [option=new AnimationOption()] - Opzioni dell'animazione.
      * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
      * @example
      *
      * JDM(`<div class="foo"> FadeOut </div>`, document.body)
-     *      .jdm_fadeOut({duration: 2000, direction: 'alternate', iterations:'Infinity'}, ()=> {console.log('test')})
+     *      .jdm_fadeOut(()=> {console.log('test')}, {duration: 2000, direction: 'alternate', iterations:'Infinity'})
      */
-    jdm_fadeOut(option = new AnimationOption(), callback) {
-        option = { ...new AnimationOption(), ...option };
-        const animation = this.node.animate([{ opacity: 1 }, { opacity: 0 }], option);
-        animation.onfinish = () => {
-            if (typeof callback === "function") {
-                callback();
-            }
-        };
+    jdm_fadeOut(callbackFn, option = new AnimationOption()) {
+        return _animation.jdm_fadeOut.call(this, callbackFn, option);
+    }
+
+    /**
+     * Applica un'animazione di fade out right sul nodo.
+     *
+
+     * @param {function(): void} [callbackFn] - Funzione da eseguire al termine dell'animazione.
+     * @param {Partial<AnimationOption>} [option=new AnimationOption()] - Opzioni dell'animazione.
+     * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
+     * @example
+     *
+     * JDM(`<div class="foo"> FadeOutRight </div>`, document.body)
+     *      .jdm_fadeOutRight(()=> {console.log('test')}, {duration: 2000, direction: 'alternate', iterations:'Infinity'})
+     */
+    jdm_fadeOutRight(callbackFn, option = new AnimationOption()) {
+        return _animation.jdm_fadeOutRight.call(this, callbackFn, option);
+    }
+
+    /**
+     * Applica un'animazione di fade out up sul nodo.
+     *
+     * @param {function(): void} [callbackFn] - Funzione da eseguire al termine dell'animazione.
+     * @param {Partial<AnimationOption>} [option=new AnimationOption()] - Opzioni dell'animazione.
+     * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
+     * @example
+     *
+     * JDM(`<div class="foo"> FadeOutUp </div>`, document.body)
+     *      .jdm_fadeOutUp(()=> {console.log('test')}, {duration: 2000, direction: 'alternate', iterations:'Infinity'})
+     */
+    jdm_fadeOutUp(callbackFn, option = new AnimationOption()) {
+        return _animation.jdm_fadeOutUp.call(this, callbackFn, option);
+    }
+
+    /**
+     * Applica un'animazione di fade out down sul nodo.
+     *
+     * @param {function(): void} [callbackFn] - Funzione da eseguire al termine dell'animazione.
+     * @param {Partial<AnimationOption>} [option=new AnimationOption()] - Opzioni dell'animazione.
+     * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
+     * @example
+     *
+     * JDM(`<div class="foo"> FadeOutDown </div>`, document.body)
+     *      .jdm_fadeOutDown(()=> {console.log('test')}, {duration: 2000, direction: 'alternate', iterations:'Infinity'})
+     */
+    jdm_fadeOutDown(callbackFn, option = new AnimationOption()) {
+        return _animation.jdm_fadeOutDown.call(this, callbackFn, option);
+    }
+
+    /**
+     * Applica un'animazione di fade out left sul nodo.
+     *
+     * @param {function(): void} [callbackFn] - Funzione da eseguire al termine dell'animazione.
+     * @param {Partial<AnimationOption>} [option=new AnimationOption()] - Opzioni dell'animazione.
+     * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
+     * @example
+     *
+     * JDM(`<div class="foo"> FadeOutLeft </div>`, document.body)
+     *      .jdm_fadeOutLeft(()=> {console.log('test')}, {duration: 2000, direction: 'alternate', iterations:'Infinity'})
+     */
+    jdm_fadeOutLeft(callbackFn, option = new AnimationOption()) {
+        return _animation.jdm_fadeOutLeft.call(this, callbackFn, option);
+    }
+
+    /**
+     * Applica un'animazione tipo bounce al nodo (come in animate.css).
+     *
+     * @param {function(): void} [callbackFn] - Funzione da eseguire al termine dell'animazione.
+     * @param {Partial<AnimationOption>} [option=new AnimationOption()] - Opzioni dell'animazione.
+     * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
+     * @example
+     * JDM(`<div class="foo"> Bounce </div>`, document.body)
+     *      .jdm_bounce(() => console.log('Bounce completato!'), { duration: 1000 });
+     */
+    jdm_bounce(callbackFn, option = new AnimationOption()) {
+        return _animation.jdm_bounce.call(this, callbackFn, option);
+        return this.node;
+    }
+
+    /**
+     * Applica un'animazione tipo tada al nodo (come in animate.css).
+     *
+     * @param {function(): void} [callbackFn] - Funzione da eseguire al termine dell'animazione.
+     * @param {Partial<AnimationOption>} [option=new AnimationOption()] - Opzioni dell'animazione.
+     * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
+     * @example
+     * JDM(`<div class="foo"> Tada </div>`, document.body)
+     *      .jdm_tada(() => console.log('Tada completato!'), { duration: 1000 });
+     */
+    jdm_tada(callbackFn, option = new AnimationOption()) {
+        return _animation.jdm_tada.call(this, callbackFn, option);
+        return this.node;
+    }
+
+    /**
+     * Applica un'animazione di zoom-in e fade-in al nodo.
+     *
+     * @param {function(): void} [callbackFn] - Funzione da eseguire al termine dell'animazione.
+     * @param {Partial<AnimationOption>} [option=new AnimationOption()] - Opzioni dell'animazione.
+     * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
+     * @example
+     * JDM(`<div class="foo"> ZoomIn </div>`, document.body)
+     *      .jdm_zoomIn(() => console.log('ZoomIn completato!'), { duration: 1000 });
+     */
+    jdm_zoomIn(callbackFn, option = new AnimationOption()) {
+        return _animation.jdm_zoomIn.call(this, callbackFn, option);
+        return this.node;
+    }
+
+    /**
+     * Applica un'animazione di zoom-out e fade-out al nodo.
+     *
+     * @param {function(): void} [callbackFn] - Funzione da eseguire al termine dell'animazione.
+     * @param {Partial<AnimationOption>} [option=new AnimationOption()] - Opzioni dell'animazione.
+     * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
+     * @example
+     * JDM(`<div class="foo"> ZoomOut </div>`, document.body)
+     *      .jdm_zoomOut(() => console.log('ZoomOut!'), { duration: 1000 });
+     */
+    jdm_zoomOut(callbackFn, option = new AnimationOption()) {
+        return _animation.jdm_zoomOut.call(this, callbackFn, option);
+        return this.node;
+    }
+
+    jdm_rotation(callbackFn, deg = 360, option = new AnimationOption()) {
+        return _animation.jdm_rotation.call(this, callbackFn, deg, option);
         return this.node;
     }
 }
 
-/**
- * Crea e restituisce un'istanza della classe `Jdm`, che rappresenta un elemento DOM con metodi per manipolarlo.
- * Questa funzione è una scorciatoia per facilitare l'uso della classe `Jdm`, permettendo la creazione e la manipolazione di nodi DOM in modo semplice e intuitivo.
- *
- * @param {Element|string|null} [element=null] - L'elemento DOM da manipolare. Può essere un elemento esistente, una stringa che rappresenta un tag HTML, o `null` per creare un nuovo elemento.
- * @param {Element|null} [parent=null] - L'elemento genitore a cui aggiungere l'elemento creato. Se non fornito, l'elemento non viene aggiunto al DOM.
- * @param {string|string[]|null} [classList=null] - Una stringa o un array di stringhe che rappresentano le classi CSS da aggiungere all'elemento. Se non fornito, nessuna classe viene aggiunta.
- * @param {boolean} [deep=true] - Un valore booleano che indica se eseguire una ricerca ricorsiva sui nodi figli dell'elemento.
- * @param {...*} [args] - Argomenti aggiuntivi che possono essere utilizzati per altre configurazioni interne della classe `Jdm`.
- *
- * @returns {Jdm} - Restituisce l'istanza di un nodo DOM creato o manipolato.
- *
- * @example
- * // Crea un nuovo div, aggiunge classi e lo appende al body
- * const myDiv = JDM('<div> lorem ipsum</div>', document.body, ['my-class', 'another-class']);
- *
- * // Crea un nuovo elemento con un tag personalizzato
- * const customElement = JDM('<custom>custom <br></custom>', document.body);
- *
- * // Aggiunge un input a un elemento esistente e imposta il valore
- * JDM('input', document.body)
- * .jdm_setValue('Test');
- */
 window.JDM = (element = null, parent = null, classList = null, deep = true, ...args) => {
     return new Jdm(element, parent, classList, deep, ...args);
 };

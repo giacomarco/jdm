@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>animation.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="AnimationOption.html">AnimationOption</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Jdm.html">Jdm</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_addClassList">jdm_addClassList</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_addEventListener">jdm_addEventListener</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_addId">jdm_addId</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_append">jdm_append</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_binding">jdm_binding</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_destroy">jdm_destroy</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_empty">jdm_empty</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_extendChildNode">jdm_extendChildNode</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_extendNode">jdm_extendNode</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_genEvent">jdm_genEvent</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_getAttribute">jdm_getAttribute</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_getValue">jdm_getValue</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_innerHTML">jdm_innerHTML</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_onChange">jdm_onChange</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_onClick">jdm_onClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_onDebounce">jdm_onDebounce</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_onDoubleClick">jdm_onDoubleClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_onError">jdm_onError</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_onInput">jdm_onInput</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_onInvalid">jdm_onInvalid</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_onLoad">jdm_onLoad</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_onRightClick">jdm_onRightClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_onSelect">jdm_onSelect</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_onSubmit">jdm_onSubmit</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_prepend">jdm_prepend</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_removeAttribute">jdm_removeAttribute</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_removeClassList">jdm_removeClassList</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_removeEventListener">jdm_removeEventListener</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_setAttribute">jdm_setAttribute</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_setStyle">jdm_setStyle</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_setValue">jdm_setValue</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_toggleClassList">jdm_toggleClassList</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Jdm.html#jdm_validate">jdm_validate</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Proto.html">Proto</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">animation.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Opzioni per l'animazione.
+ */
+export class AnimationOption {
+    /**
+     * @param {number} duration - Durata dell'animazione in millisecondi.
+     * @default 250
+     *
+     * @param {'linear'|'ease'|'ease-in'|'ease-out'|'ease-in-out'} easing - Funzione di easing dell'animazione.
+     * @default 'easeInOut'
+     *
+     * @param {'none'|'forwards'|'backwards'|'both'|'auto'} fill - Stile applicato fuori dall'intervallo dell'animazione.
+     * @default 'forwards'
+     *
+     * @param {number} delay - Ritardo dell'inizio dell'animazione in millisecondi.
+     * @default 0
+     *
+     * @param {'replace'|'add'|'accumulate'} composite - Modalità di composizione dell’animazione.
+     * @default 'replace'
+     *
+     * @param {'normal'|'reverse'|'alternate'|'alternate-reverse'} direction - Direzione di riproduzione dell'animazione.
+     * @default 'normal'
+     *
+     * @param {number|string} iterations - Numero di volte che l'animazione verrà ripetuta.
+     * @default 1
+     */
+    constructor(duration = 250, easing = "ease-in-out", fill = "forwards", delay = 0, composite = "replace", direction = "normal", iterations = 1) {
+        this.duration = duration;
+        this.easing = easing;
+        this.fill = fill;
+        this.delay = delay;
+        this.composite = composite;
+        this.direction = direction;
+        this.iterations = iterations;
+    }
+}
+
+/**
+ * @typedef {Object} AnimationMethods
+ * @property {function(): HTMLElement} jdm_fadeIn
+ * @property {function(): HTMLElement} jdm_fadeOut
+ * @property {function(): HTMLElement} jdm_fadeInDown
+ * @property {function(): HTMLElement} jdm_fadeInUp
+ * @property {function(): HTMLElement} jdm_fadeInLeft
+ * @property {function(): HTMLElement} jdm_fadeInRight
+ */
+export class Animation {
+    /**
+     * Applica un'animazione di fade-in sul nodo.
+     *
+     * @param {object} [option=new AnimationOption()] - Opzioni dell'animazione.
+     * @param {function(): void} [callback] - Funzione da eseguire al termine dell'animazione.
+     * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
+     * @example
+     * JDM(`&lt;div class="foo"> FadeIn &lt;/div>`, document.body)
+     *      .jdm_fadeIn(()=> {console.log('test')}, {duration: 2000, direction: 'alternate', iterations:'Infinity'})
+     */
+    static jdm_fadeIn(callback, option = new AnimationOption()) {
+        option = { ...new AnimationOption(), ...option };
+        const animation = this.node.animate([{ opacity: 0 }, { opacity: 1 }], option);
+        animation.onfinish = () => {
+            if (typeof callback === "function") {
+                callback();
+            }
+        };
+        return this.node;
+    }
+
+    /**
+     * Applica un'animazione tipo fadeInDown al nodo (come in animate.css).
+     *
+     * @param {function(): void} [callback] - Funzione da eseguire al termine dell'animazione.
+     * @param {Partial&lt;AnimationOption>} [option=new AnimationOption()] - Opzioni dell'animazione.
+     * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
+     * @example
+     * JDM(`&lt;div class="foo"> FadeInDown &lt;/div>`, document.body)
+     *      .jdm_fadeInDown(() => console.log('done'), { duration: 1000, easing: 'ease-out' });
+     */
+    static jdm_fadeInDown(callback, option = new AnimationOption()) {
+        option = { ...new AnimationOption(), ...option };
+
+        const keyframes = [
+            { opacity: 0, transform: "translate3d(0, -100%, 0)" },
+            { opacity: 1, transform: "translate3d(0, 0, 0)" },
+        ];
+
+        const animation = this.node.animate(keyframes, option);
+
+        animation.onfinish = () => {
+            if (typeof callback === "function") {
+                callback();
+            }
+        };
+
+        return this.node;
+    }
+
+    /**
+     * Applica un'animazione tipo fadeInUp al nodo (come in animate.css).
+     *
+     * @param {function(): void} [callback] - Funzione da eseguire al termine dell'animazione.
+     * @param {Partial&lt;AnimationOption>} [option=new AnimationOption()] - Opzioni dell'animazione.
+     * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
+     * @example
+     * JDM(`&lt;div class="foo"> FadeInUp &lt;/div>`, document.body)
+     *      .jdm_fadeInUp(() => console.log('Fade in up concluso'), { duration: 800 });
+     */
+    static jdm_fadeInUp(callback, option = new AnimationOption()) {
+        option = { ...new AnimationOption(), ...option };
+
+        const keyframes = [
+            { opacity: 0, transform: "translate3d(0, 100%, 0)" },
+            { opacity: 1, transform: "translate3d(0, 0, 0)" },
+        ];
+
+        const animation = this.node.animate(keyframes, option);
+
+        animation.onfinish = () => {
+            if (typeof callback === "function") {
+                callback();
+            }
+        };
+
+        return this.node;
+    }
+
+    /**
+     * Applica un'animazione tipo fadeInLeft al nodo (come in animate.css).
+     *
+     * @param {function(): void} [callback] - Funzione da eseguire al termine dell'animazione.
+     * @param {Partial&lt;AnimationOption>} [option=new AnimationOption()] - Opzioni dell'animazione.
+     * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
+     * @example
+     * JDM(`&lt;div class="foo"> FadeInLeft &lt;/div>`, document.body)
+     *      .jdm_fadeInLeft(() => console.log('Fade in left concluso'), { duration: 800 });
+     */
+    static jdm_fadeInLeft(callback, option = new AnimationOption()) {
+        option = { ...new AnimationOption(), ...option };
+
+        const keyframes = [
+            { opacity: 0, transform: "translate3d(-100%, 0, 0)" },
+            { opacity: 1, transform: "translate3d(0, 0, 0)" },
+        ];
+
+        const animation = this.node.animate(keyframes, option);
+
+        animation.onfinish = () => {
+            if (typeof callback === "function") {
+                callback();
+            }
+        };
+
+        return this.node;
+    }
+
+    /**
+     * Applica un'animazione tipo fadeInRight al nodo (come in animate.css).
+     *
+     * @param {function(): void} [callback] - Funzione da eseguire al termine dell'animazione.
+     * @param {Partial&lt;AnimationOption>} [option=new AnimationOption()] - Opzioni dell'animazione.
+     * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
+     * @example
+     * JDM(`&lt;div class="foo"> FadeInRight &lt;/div>`, document.body)
+     *      .jdm_fadeInRight(() => console.log('Fade in right concluso'), { duration: 800 });
+     */
+    static jdm_fadeInRight(callback, option = new AnimationOption()) {
+        option = { ...new AnimationOption(), ...option };
+
+        const keyframes = [
+            { opacity: 0, transform: "translate3d(100%, 0, 0)" },
+            { opacity: 1, transform: "translate3d(0, 0, 0)" },
+        ];
+
+        const animation = this.node.animate(keyframes, option);
+
+        animation.onfinish = () => {
+            if (typeof callback === "function") {
+                callback();
+            }
+        };
+
+        return this.node;
+    }
+
+    /**
+     * Applica un'animazione di fade-out sul nodo.
+     *
+
+     * @param {function(): void} [callback] - Funzione da eseguire al termine dell'animazione.
+     * @param {Partial&lt;AnimationOption>} [option=new AnimationOption()] - Opzioni dell'animazione.
+     * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
+     * @example
+     *
+     * JDM(`&lt;div class="foo"> FadeOut &lt;/div>`, document.body)
+     *      .jdm_fadeOut(()=> {console.log('test')}, {duration: 2000, direction: 'alternate', iterations:'Infinity'})
+     */
+    static jdm_fadeOut(callback, option = new AnimationOption()) {
+        console.log(callback, option);
+        const animation = this.node.animate([{ opacity: 1 }, { opacity: 0 }], option);
+        animation.onfinish = () => {
+            if (typeof callback === "function") {
+                callback();
+            }
+        };
+        return this.node;
+    }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Mon Apr 14 2025 13:36:34 GMT+0200 (Central European Summer Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

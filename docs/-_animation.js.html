@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Proto - Documentation</title>
+    <title>_animation.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,140 +29,223 @@
 
 <div id="main">
     
-    <h1 class="page-title">Proto</h1>
+    <h1 class="page-title">_animation.js</h1>
     
 
     
 
 
 
-
-<section>
-
-<header>
     
-        <h2>
-        Proto
-        </h2>
-        
-            <div class="class-description">Classe che contiene una lista di prototype.</div>
-        
-    
-</header>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Opzioni per l'animazione.
+ */
+export class AnimationOption {
+    /**
+     * @param {number} duration - Durata dell'animazione in millisecondi.
+     * @default 250
+     *
+     * @param {'linear'|'ease'|'ease-in'|'ease-out'|'ease-in-out'} easing - Funzione di easing dell'animazione.
+     * @default 'easeInOut'
+     *
+     * @param {'none'|'forwards'|'backwards'|'both'|'auto'} fill - Stile applicato fuori dall'intervallo dell'animazione.
+     * @default 'forwards'
+     *
+     * @param {number} delay - Ritardo dell'inizio dell'animazione in millisecondi.
+     * @default 0
+     *
+     * @param {'replace'|'add'|'accumulate'} composite - Modalità di composizione dell’animazione.
+     * @default 'replace'
+     *
+     * @param {'normal'|'reverse'|'alternate'|'alternate-reverse'} direction - Direzione di riproduzione dell'animazione.
+     * @default 'normal'
+     *
+     * @param {number|string} iterations - Numero di volte che l'animazione verrà ripetuta.
+     * @default 1
+     */
+    constructor(duration = 250, easing = "ease-in-out", fill = "forwards", delay = 0, composite = "replace", direction = "normal", iterations = 1) {
+        this.duration = duration;
+        this.easing = easing;
+        this.fill = fill;
+        this.delay = delay;
+        this.composite = composite;
+        this.direction = direction;
+        this.iterations = iterations;
+    }
+}
 
-<article>
-    <div class="container-overview">
-    
-        
-<div class="section-method">
+export class _animation {
+    /** @this {Jdm} */
+    static jdm_fadeIn(callbackFn, option = new AnimationOption()) {
+        const keyframe = [{ opacity: 0 }, { opacity: 1 }];
+        this.animation(keyframe, option, callbackFn);
+        return this.node;
+    }
 
-    
-    <h2>Constructor</h2>
-    
+    /** @this {Jdm} */
+    static jdm_fadeInDown(callbackFn, option = new AnimationOption()) {
+        const keyframe = [
+            { opacity: 0, transform: "translate3d(0, -100%, 0)" },
+            { opacity: 1, transform: "translate3d(0, 0, 0)" },
+        ];
+        this.animation(keyframe, option, callbackFn);
+        return this.node;
+    }
 
-    <h4 class="name" id="Proto"><span class="type-signature"></span>new Proto<span class="signature">()</span><span class="type-signature"></span></h4>
+    /** @this {Jdm} */
+    static jdm_fadeInUp(callbackFn, option = new AnimationOption()) {
+        const keyframe = [
+            { opacity: 0, transform: "translate3d(0, 100%, 0)" },
+            { opacity: 1, transform: "translate3d(0, 0, 0)" },
+        ];
+        this.animation(keyframe, option, callbackFn);
+        return this.node;
+    }
 
-    
+    /** @this {Jdm} */
+    static jdm_fadeInLeft(callbackFn, option = new AnimationOption()) {
+        const keyframe = [
+            { opacity: 0, transform: "translate3d(-100%, 0, 0)" },
+            { opacity: 1, transform: "translate3d(0, 0, 0)" },
+        ];
+        this.animation(keyframe, option, callbackFn);
+        return this.node;
+    }
 
+    /** @this {Jdm} */
+    static jdm_fadeInRight(callbackFn, option = new AnimationOption()) {
+        const keyframe = [
+            { opacity: 0, transform: "translate3d(100%, 0, 0)" },
+            { opacity: 1, transform: "translate3d(0, 0, 0)" },
+        ];
+        this.animation(keyframe, option, callbackFn);
+        return this.node;
+    }
 
+    /** @this {Jdm} */
+    static jdm_fadeOut(callbackFn, option = new AnimationOption()) {
+        const keyframe = [{ opacity: 1 }, { opacity: 0 }];
+        this.animation(keyframe, option, callbackFn);
+        return this.node;
+    }
 
+    /** @this {Jdm} */
+    static jdm_fadeOutDown(callbackFn, option = new AnimationOption()) {
+        const keyframe = [
+            { opacity: 1, transform: "translate3d(0, 0, 0)" },
+            { opacity: 0, transform: "translate3d(0, 100%, 0)" },
+        ];
+        this.animation(keyframe, option, callbackFn);
+        return this.node;
+    }
 
+    /** @this {Jdm} */
+    static jdm_fadeOutUp(callbackFn, option = new AnimationOption()) {
+        const keyframe = [
+            { opacity: 1, transform: "translate3d(0, 0, 0)" },
+            { opacity: 0, transform: "translate3d(0, -100%, 0)" },
+        ];
+        this.animation(keyframe, option, callbackFn);
+        return this.node;
+    }
 
+    /** @this {Jdm} */
+    static jdm_fadeOutLeft(callbackFn, option = new AnimationOption()) {
+        const keyframe = [
+            { opacity: 1, transform: "translate3d(0, 0, 0)" },
+            { opacity: 0, transform: "translate3d(-100%, 0, 0)" },
+        ];
+        this.animation(keyframe, option, callbackFn);
+        return this.node;
+    }
 
+    /** @this {Jdm} */
+    static jdm_fadeOutRight(callbackFn, option = new AnimationOption()) {
+        const keyframe = [
+            { opacity: 1, transform: "translate3d(0, 0, 0)" },
+            { opacity: 0, transform: "translate3d(100%, 0, 0)" },
+        ];
+        this.animation(keyframe, option, callbackFn);
+        return this.node;
+    }
 
-<dl class="details">
+    /** @this {Jdm} */
+    static jdm_bounce(callbackFn, option = new AnimationOption()) {
+        const keyframe = [
+            { transform: "translateY(0)", easing: "ease" },
+            { transform: "translateY(-30px)", easing: "ease-in" },
+            { transform: "translateY(15px)", easing: "ease-out" },
+            { transform: "translateY(-10px)", easing: "ease-in-out" },
+            { transform: "translateY(0)", easing: "ease-out" },
+        ];
+        this.animation(keyframe, option, callbackFn);
+        return this.node;
+    }
 
-    
+    /** @this {Jdm} */
+    static jdm_tada(callbackFn, option = new AnimationOption()) {
+        const keyframe = [
+            {
+                transform: "scale(1) rotate(0) translateX(0)",
+                transformOrigin: "center center",
+                easing: "ease",
+            },
+            {
+                transform: "scale(1.1) rotate(-3deg) translateX(-0.1%)",
+                transformOrigin: "center center",
+                easing: "ease-in-out",
+            },
+            {
+                transform: "scale(1.1) rotate(3deg) translateX(-0.1%)",
+                transformOrigin: "center center",
+                easing: "ease-in-out",
+            },
+            {
+                transform: "scale(1.1) rotate(-3deg) translateX(-0.1%)",
+                transformOrigin: "center center",
+                easing: "ease-in-out",
+            },
+            {
+                transform: "scale(1.1) rotate(3deg) translateX(-0.1%)",
+                transformOrigin: "center center",
+                easing: "ease-in-out",
+            },
+            {
+                transform: "scale(1) rotate(0) translateX(0)",
+                transformOrigin: "center center",
+                easing: "ease-out",
+            },
+        ];
 
-    
+        this.animation(keyframe, option, callbackFn);
+        return this.node;
+    }
 
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="proto.js.html">proto.js</a>, <a href="proto.js.html#line5">line 5</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-    
-    </div>
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="Proto.html">Proto</a></dt>
-            <dd></dd>
-        </dl>
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    /** @this {Jdm} */
+    static jdm_zoomIn(callbackFn, option = new AnimationOption()) {
+        const keyframe = [
+            {
+                transform: "scale(0)",
+                opacity: 0,
+                transformOrigin: "center center",
+                easing: "ease",
+            },
+            {
+                transform: "scale(1)",
+                opacity: 1,
+                transformOrigin: "center center",
+                easing: "ease-out",
+            },
+        ];
+        this.animation(keyframe, option, callbackFn);
+        return this.node;
+    }
+}
+</code></pre>
+        </article>
+    </section>
 
 
 

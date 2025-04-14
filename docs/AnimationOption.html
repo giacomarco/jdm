@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Proto - Documentation</title>
+    <title>AnimationOption - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Proto</h1>
+    <h1 class="page-title">AnimationOption</h1>
     
 
     
@@ -42,10 +42,10 @@
 <header>
     
         <h2>
-        Proto
+        AnimationOption
         </h2>
         
-            <div class="class-description">Classe che contiene una lista di prototype.</div>
+            <div class="class-description">Opzioni per l'animazione.</div>
         
     
 </header>
@@ -60,7 +60,7 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="Proto"><span class="type-signature"></span>new Proto<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="AnimationOption"><span class="type-signature"></span>new AnimationOption<span class="signature">(duration, easing, fill, delay, composite, direction, iterations)</span><span class="type-signature"></span></h4>
 
     
 
@@ -95,11 +95,16 @@
     
 
     
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>1</li>
+        </ul></dd>
+    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="proto.js.html">proto.js</a>, <a href="proto.js.html#line5">line 5</a>
+        <a href="-_animation.js.html">_animation.js</a>, <a href="-_animation.js.html#line4">line 4</a>
     </li></ul></dd>
     
 
@@ -116,6 +121,300 @@
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>duration</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>number</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    250
+                
+                </td>
+            
+
+            <td class="description last">
+                Durata dell'animazione in millisecondi.
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>easing</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>'linear'</code></span>
+|
+
+<span class="param-type"><code>'ease'</code></span>
+|
+
+<span class="param-type"><code>'ease-in'</code></span>
+|
+
+<span class="param-type"><code>'ease-out'</code></span>
+|
+
+<span class="param-type"><code>'ease-in-out'</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    ease-in-out
+                
+                </td>
+            
+
+            <td class="description last">
+                Funzione di easing dell'animazione.
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fill</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>'none'</code></span>
+|
+
+<span class="param-type"><code>'forwards'</code></span>
+|
+
+<span class="param-type"><code>'backwards'</code></span>
+|
+
+<span class="param-type"><code>'both'</code></span>
+|
+
+<span class="param-type"><code>'auto'</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    forwards
+                
+                </td>
+            
+
+            <td class="description last">
+                Stile applicato fuori dall'intervallo dell'animazione.
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>delay</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>number</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last">
+                Ritardo dell'inizio dell'animazione in millisecondi.
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>composite</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>'replace'</code></span>
+|
+
+<span class="param-type"><code>'add'</code></span>
+|
+
+<span class="param-type"><code>'accumulate'</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    replace
+                
+                </td>
+            
+
+            <td class="description last">
+                Modalità di composizione dell’animazione.
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>direction</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>'normal'</code></span>
+|
+
+<span class="param-type"><code>'reverse'</code></span>
+|
+
+<span class="param-type"><code>'alternate'</code></span>
+|
+
+<span class="param-type"><code>'alternate-reverse'</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    normal
+                
+                </td>
+            
+
+            <td class="description last">
+                Direzione di riproduzione dell'animazione.
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>iterations</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>number</code></span>
+|
+
+<span class="param-type"><code>string</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    1
+                
+                </td>
+            
+
+            <td class="description last">
+                Numero di volte che l'animazione verrà ripetuta.
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -144,7 +443,7 @@
         <h3 class="subsection-title">Classes</h3>
 
         <dl>
-            <dt><a href="Proto.html">Proto</a></dt>
+            <dt><a href="AnimationOption.html">AnimationOption</a></dt>
             <dd></dd>
         </dl>
     
