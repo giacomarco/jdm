@@ -109,19 +109,21 @@ const div = JDM(domString, document.body);
     * [.jdm_addEventListener(name, [fn])](#Jdm+jdm_addEventListener) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_removeEventListener(name, [fn])](#Jdm+jdm_removeEventListener) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_extendChildNode()](#Jdm+jdm_extendChildNode) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeIn([option], [callback])](#Jdm+jdm_fadeIn) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeInDown([callback], [option])](#Jdm+jdm_fadeInDown) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeInUp([callback], [option])](#Jdm+jdm_fadeInUp) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeInLeft([callback], [option])](#Jdm+jdm_fadeInLeft) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeInRight([callback], [option])](#Jdm+jdm_fadeInRight) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeOut([callback], [option])](#Jdm+jdm_fadeOut) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeOutRight([callback], [option])](#Jdm+jdm_fadeOutRight) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeOutUp([callback], [option])](#Jdm+jdm_fadeOutUp) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeOutDown([callback], [option])](#Jdm+jdm_fadeOutDown) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeOutLeft([callback], [option])](#Jdm+jdm_fadeOutLeft) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_bounce([callback], [option])](#Jdm+jdm_bounce) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_clearAnimations()](#Jdm+jdm_clearAnimations) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeIn([option], [callbackFn])](#Jdm+jdm_fadeIn) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeInDown([callbackFn], [option])](#Jdm+jdm_fadeInDown) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeInUp([callbackFn], [option])](#Jdm+jdm_fadeInUp) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeInLeft([callbackFn], [option])](#Jdm+jdm_fadeInLeft) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeInRight([callbackFn], [option])](#Jdm+jdm_fadeInRight) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeOut([callbackFn], [option])](#Jdm+jdm_fadeOut) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeOutRight([callbackFn], [option])](#Jdm+jdm_fadeOutRight) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeOutUp([callbackFn], [option])](#Jdm+jdm_fadeOutUp) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeOutDown([callbackFn], [option])](#Jdm+jdm_fadeOutDown) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeOutLeft([callbackFn], [option])](#Jdm+jdm_fadeOutLeft) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_bounce([callbackFn], [option])](#Jdm+jdm_bounce) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_tada([callbackFn], [option])](#Jdm+jdm_tada) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_zoomIn([callbackFn], [option])](#Jdm+jdm_zoomIn) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_zoomOut([callbackFn], [option])](#Jdm+jdm_zoomOut) ⇒ [<code>Jdm</code>](#Jdm)
 
 <a name="new_Jdm_new"></a>
 
@@ -920,9 +922,21 @@ const domString = `
   console.log(div.element2);
   console.log(div.element3);
 ```
+<a name="Jdm+jdm_clearAnimations"></a>
+
+### jdm.jdm\_clearAnimations() ⇒ [<code>Jdm</code>](#Jdm)
+Rimuove tutte le animazioni attive sul nodo e ripristina lo stile iniziale.
+
+**Kind**: instance method of [<code>Jdm</code>](#Jdm)  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce il nodo per consentire il chaining.  
+**Example**  
+```js
+JDM(`<div class="foo animated"> Test </div>`, document.body)
+     .jdm_clearAnimations();
+```
 <a name="Jdm+jdm_fadeIn"></a>
 
-### jdm.jdm\_fadeIn([option], [callback]) ⇒ [<code>Jdm</code>](#Jdm)
+### jdm.jdm\_fadeIn([option], [callbackFn]) ⇒ [<code>Jdm</code>](#Jdm)
 Applica un'animazione di fade-in sul nodo.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
@@ -931,7 +945,7 @@ Applica un'animazione di fade-in sul nodo.
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | [option] | <code>object</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
-| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [callbackFn] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
 
 **Example**  
 ```js
@@ -940,7 +954,7 @@ JDM(`<div class="foo"> FadeIn </div>`, document.body)
 ```
 <a name="Jdm+jdm_fadeInDown"></a>
 
-### jdm.jdm\_fadeInDown([callback], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+### jdm.jdm\_fadeInDown([callbackFn], [option]) ⇒ [<code>Jdm</code>](#Jdm)
 Applica un'animazione tipo fadeInDown al nodo .
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
@@ -948,7 +962,7 @@ Applica un'animazione tipo fadeInDown al nodo .
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [callbackFn] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
 | [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
 
 **Example**  
@@ -958,7 +972,7 @@ JDM(`<div class="foo"> FadeInDown </div>`, document.body)
 ```
 <a name="Jdm+jdm_fadeInUp"></a>
 
-### jdm.jdm\_fadeInUp([callback], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+### jdm.jdm\_fadeInUp([callbackFn], [option]) ⇒ [<code>Jdm</code>](#Jdm)
 Applica un'animazione tipo fadeInUp al nodo .
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
@@ -966,7 +980,7 @@ Applica un'animazione tipo fadeInUp al nodo .
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [callbackFn] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
 | [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
 
 **Example**  
@@ -976,7 +990,7 @@ JDM(`<div class="foo"> FadeInUp </div>`, document.body)
 ```
 <a name="Jdm+jdm_fadeInLeft"></a>
 
-### jdm.jdm\_fadeInLeft([callback], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+### jdm.jdm\_fadeInLeft([callbackFn], [option]) ⇒ [<code>Jdm</code>](#Jdm)
 Applica un'animazione tipo fadeInLeft al nodo .
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
@@ -984,7 +998,7 @@ Applica un'animazione tipo fadeInLeft al nodo .
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [callbackFn] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
 | [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
 
 **Example**  
@@ -994,7 +1008,7 @@ JDM(`<div class="foo"> FadeInLeft </div>`, document.body)
 ```
 <a name="Jdm+jdm_fadeInRight"></a>
 
-### jdm.jdm\_fadeInRight([callback], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+### jdm.jdm\_fadeInRight([callbackFn], [option]) ⇒ [<code>Jdm</code>](#Jdm)
 Applica un'animazione tipo fadeInRight al nodo .
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
@@ -1002,7 +1016,7 @@ Applica un'animazione tipo fadeInRight al nodo .
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [callbackFn] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
 | [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
 
 **Example**  
@@ -1012,7 +1026,7 @@ JDM(`<div class="foo"> FadeInRight </div>`, document.body)
 ```
 <a name="Jdm+jdm_fadeOut"></a>
 
-### jdm.jdm\_fadeOut([callback], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+### jdm.jdm\_fadeOut([callbackFn], [option]) ⇒ [<code>Jdm</code>](#Jdm)
 Applica un'animazione di fade-out sul nodo.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
@@ -1020,7 +1034,7 @@ Applica un'animazione di fade-out sul nodo.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [callbackFn] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
 | [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
 
 **Example**  
@@ -1030,7 +1044,7 @@ JDM(`<div class="foo"> FadeOut </div>`, document.body)
 ```
 <a name="Jdm+jdm_fadeOutRight"></a>
 
-### jdm.jdm\_fadeOutRight([callback], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+### jdm.jdm\_fadeOutRight([callbackFn], [option]) ⇒ [<code>Jdm</code>](#Jdm)
 Applica un'animazione di fade out right sul nodo.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
@@ -1038,7 +1052,7 @@ Applica un'animazione di fade out right sul nodo.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [callbackFn] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
 | [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
 
 **Example**  
@@ -1048,7 +1062,7 @@ JDM(`<div class="foo"> FadeOutRight </div>`, document.body)
 ```
 <a name="Jdm+jdm_fadeOutUp"></a>
 
-### jdm.jdm\_fadeOutUp([callback], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+### jdm.jdm\_fadeOutUp([callbackFn], [option]) ⇒ [<code>Jdm</code>](#Jdm)
 Applica un'animazione di fade out up sul nodo.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
@@ -1056,7 +1070,7 @@ Applica un'animazione di fade out up sul nodo.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [callbackFn] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
 | [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
 
 **Example**  
@@ -1066,7 +1080,7 @@ JDM(`<div class="foo"> FadeOutUp </div>`, document.body)
 ```
 <a name="Jdm+jdm_fadeOutDown"></a>
 
-### jdm.jdm\_fadeOutDown([callback], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+### jdm.jdm\_fadeOutDown([callbackFn], [option]) ⇒ [<code>Jdm</code>](#Jdm)
 Applica un'animazione di fade out down sul nodo.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
@@ -1074,7 +1088,7 @@ Applica un'animazione di fade out down sul nodo.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [callbackFn] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
 | [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
 
 **Example**  
@@ -1084,7 +1098,7 @@ JDM(`<div class="foo"> FadeOutDown </div>`, document.body)
 ```
 <a name="Jdm+jdm_fadeOutLeft"></a>
 
-### jdm.jdm\_fadeOutLeft([callback], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+### jdm.jdm\_fadeOutLeft([callbackFn], [option]) ⇒ [<code>Jdm</code>](#Jdm)
 Applica un'animazione di fade out left sul nodo.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
@@ -1092,7 +1106,7 @@ Applica un'animazione di fade out left sul nodo.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [callbackFn] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
 | [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
 
 **Example**  
@@ -1102,7 +1116,7 @@ JDM(`<div class="foo"> FadeOutLeft </div>`, document.body)
 ```
 <a name="Jdm+jdm_bounce"></a>
 
-### jdm.jdm\_bounce([callback], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+### jdm.jdm\_bounce([callbackFn], [option]) ⇒ [<code>Jdm</code>](#Jdm)
 Applica un'animazione tipo bounce al nodo (come in animate.css).
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
@@ -1110,7 +1124,7 @@ Applica un'animazione tipo bounce al nodo (come in animate.css).
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| [callback] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [callbackFn] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
 | [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
 
 **Example**  
@@ -1151,6 +1165,24 @@ Applica un'animazione di zoom-in e fade-in al nodo.
 
 **Example**  
 ```js
-JDM(`<div class="foo"> ZoomIn + FadeIn </div>`, document.body)
-     .jdm_zoomIn(() => console.log('ZoomIn + FadeIn completato!'), { duration: 1000 });
+JDM(`<div class="foo"> ZoomIn </div>`, document.body)
+     .jdm_zoomIn(() => console.log('ZoomIn completato!'), { duration: 1000 });
+```
+<a name="Jdm+jdm_zoomOut"></a>
+
+### jdm.jdm\_zoomOut([callbackFn], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+Applica un'animazione di zoom-out e fade-out al nodo.
+
+**Kind**: instance method of [<code>Jdm</code>](#Jdm)  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [callbackFn] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
+
+**Example**  
+```js
+JDM(`<div class="foo"> ZoomOut </div>`, document.body)
+     .jdm_zoomOut(() => console.log('ZoomOut!'), { duration: 1000 });
 ```

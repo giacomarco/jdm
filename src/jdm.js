@@ -962,6 +962,18 @@ class Jdm extends HTMLElement {
     /** ANIMATION **/
 
     /**
+     * Rimuove tutte le animazioni attive sul nodo e ripristina lo stile iniziale.
+     *
+     * @returns {Jdm} - Restituisce il nodo per consentire il chaining.
+     * @example
+     * JDM(`<div class="foo animated"> Test </div>`, document.body)
+     *      .jdm_clearAnimations();
+     */
+    jdm_clearAnimations() {
+        return _animation.jdm_clearAnimations.call(this);
+    }
+
+    /**
      * Applica un'animazione di fade-in sul nodo.
      *
      * @param {object} [option=new AnimationOption()] - Opzioni dell'animazione.

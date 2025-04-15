@@ -37,6 +37,16 @@ export class AnimationOption {
 
 export class _animation {
     /** @this {Jdm} */
+    static jdm_clearAnimations() {
+        this.node.getAnimations().forEach(animation => animation.cancel());
+        this.node.style.animation = "none";
+        this.node.style.transition = "none";
+        this.node.style.transform = "";
+        this.node.style.opacity = "";
+        return this.node;
+    }
+
+    /** @this {Jdm} */
     static jdm_fadeIn(callbackFn, option = new AnimationOption()) {
         const keyframe = [{ opacity: 0 }, { opacity: 1 }];
         this.animation(keyframe, option, callbackFn);
