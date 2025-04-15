@@ -158,15 +158,9 @@
 
         if (typeof box[animationName] === "function") {
             if (animationName === "jdm_rotation") {
-                box[animationName]( () => {
-                        console.log(`${animationName} complete`);
-                    }, 360, options
-                );
+                box[animationName]( () => { console.log(`${animationName} complete`) }, 360, options );
             } else {
-                box[animationName]( () => {
-                        console.log(`${animationName} complete`);
-                    }, 360, options
-                );
+                box[animationName]( () => { console.log(`${animationName} complete`) }, options );
             }
         } else {
             console.warn(`Metodo ${animationName} non trovato su box`);

@@ -1179,6 +1179,17 @@ class Jdm extends HTMLElement {
         return this.node;
     }
 
+    /**
+     * Applica un'animazione di rotazione all'elemento.
+     *
+     * @param {function(): void} [callbackFn] - Funzione da eseguire al termine dell'animazione.
+     * @param {number} [deg=360] - Gradi di rotazione da applicare (positivi in senso orario, negativi in senso antiorario).
+     * @param {Partial<AnimationOption>} [option=new AnimationOption()] - Opzioni dell'animazione.
+     * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i metodi, per consentire il chaining.
+     * @example
+     * JDM(`<div class="foo"> Rotate </div>`, document.body)
+     *      .jdm_rotation(() => console.log('Rotazione completata'), 180, { duration: 1000 });
+     */
     jdm_rotation(callbackFn, deg = 360, option = new AnimationOption()) {
         return _animation.jdm_rotation.call(this, callbackFn, deg, option);
         return this.node;
