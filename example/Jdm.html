@@ -83,9 +83,7 @@
                             <pre data-name="code">${code}</pre>
                         </div>
                         <button class="btn btn-secondary" data-name="execute">Execute</button>
-                        <div class="demoContainer border rounded p-3 mt-3">
-                            <label>Result:</label>
-                        </div>
+                        <div data-name="resultContainer"></div>
                     </div>
                 </div>
             </div>
@@ -120,6 +118,7 @@
     const example = genExample('jdm_setAttribute', highlightKeywords(code));
 
     example.execute.jdm_onClick(()=>{
+        const container = JDM( `<div class="result border rounded mt-3 p-3"> Result</div>`, example.resultContainer);
         eval(example.code.innerText)
     });
 </script>
