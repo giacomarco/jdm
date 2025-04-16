@@ -108,16 +108,16 @@ class Jdm extends HTMLElement {
     constructor(element = null, parent = null, classList = null, deep = true, ...args) {
         super();
         const data = { element: element, parent: parent, classList: classList, deep: deep, args: args };
-        this.node = this.init(data);
+        this.node = this.#init(data);
         this.jdm_childNode = [];
         this.tag = this.node.tagName.toLowerCase();
         if (data.classList) this.jdm_addClassList(data.classList);
         if (data.parent) data.parent.appendChild(this.node);
         if (data.deep) {
             const mainNode = data.args?.length > 0 ? data.args[0]?.mainNode : null;
-            this.loopOverChild(this.node.childNodes, data.args[0]?.mainNode);
+            this.#loopOverChild(this.node.childNodes, data.args[0]?.mainNode);
         }
-        this.addJdmMethodToNode();
+        this.#addJdmMethodToNode();
         return this.node;
     }
 
@@ -133,8 +133,8 @@ class Jdm extends HTMLElement {
      *
      * @throws {Error} Se il tipo dell'elemento è sconosciuto o non supportato, viene registrato un errore nel console.
      */
-    init(data) {
-        switch (this.checkType(data.element)) {
+    #init(data) {
+        switch (this.#checkType(data.element)) {
             case "tagString":
                 return document.createElement(data.element);
             case "domFromString":
@@ -164,15 +164,8 @@ class Jdm extends HTMLElement {
      *                     - `"tagString"` se la variabile è una stringa che rappresenta un tag HTML.
      *                     - `"elementDom"` se la variabile è un nodo DOM.
      *                     - `"unknown"` se il tipo non è riconosciuto.
-     *
-     * @example
-     * checkType("<div></div>"); // Restituisce "domFromString"
-     * checkType("<p>Test</p>"); // Restituisce "domFromHtml"
-     * checkType("div"); // Restituisce "tagString"
-     * checkType('div'); // Restituisce "elementDom"
-     * checkType(123); // Restituisce "unknown"
      */
-    checkType(variable) {
+    #checkType(variable) {
         if (typeof variable === "string") {
             if (variable.charAt(0) === "<" && variable.charAt(variable.length - 1) === ">") {
                 return "domFromString";
@@ -199,7 +192,7 @@ class Jdm extends HTMLElement {
      * @returns {void} - Non restituisce alcun valore.
      *
      */
-    loopOverChild(childNodes, mainNode = null) {
+    #loopOverChild(childNodes, mainNode = null) {
         childNodes = Array.from(childNodes).filter(child => child.nodeType <= 2);
         mainNode = mainNode ? mainNode : this.node;
 
@@ -228,7 +221,7 @@ class Jdm extends HTMLElement {
      * @returns {void} - Non restituisce alcun valore, ma modifica l'oggetto `node` aggiungendo metodi ad esso.
      *
      */
-    addJdmMethodToNode() {
+    #addJdmMethodToNode() {
         const methodList = Object.getOwnPropertyNames(Jdm.prototype);
         const jdm_methodList = methodList.filter(elemento => {
             return elemento.startsWith("jdm_");
@@ -238,19 +231,6 @@ class Jdm extends HTMLElement {
             this.node[jdmMethod] = this[jdmMethod].bind(this);
         }
     }
-
-    animation(keyframe, option, callbackFn) {
-        option = { ...new AnimationOption(), ...option };
-        const animation = this.node.animate(keyframe, option);
-        animation.onfinish = () => {
-            if (typeof callbackFn === "function") {
-                callbackFn();
-            }
-        };
-        return animation;
-    }
-
-    /** CORE **/
 
     /**
      * Imposta un attributo su un elemento DOM e genera un evento personalizzato per il cambiamento.

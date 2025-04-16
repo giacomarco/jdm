@@ -37,6 +37,18 @@ export class AnimationOption {
 
 export class _animation {
     /** @this {Jdm} */
+    static #animate(keyframe, option, callbackFn) {
+        option = { ...new AnimationOption(), ...option };
+        const animation = this.node.animate(keyframe, option);
+        animation.onfinish = () => {
+            if (typeof callbackFn === "function") {
+                callbackFn();
+            }
+        };
+        return animation;
+    }
+
+    /** @this {Jdm} */
     static jdm_clearAnimations() {
         this.node.getAnimations().forEach(animation => animation.cancel());
         this.node.style.animation = "none";
@@ -49,7 +61,7 @@ export class _animation {
     /** @this {Jdm} */
     static jdm_fadeIn(callbackFn, option = new AnimationOption()) {
         const keyframe = [{ opacity: 0 }, { opacity: 1 }];
-        this.animation(keyframe, option, callbackFn);
+        _animation.#animate.apply(this, [keyframe, option, callbackFn]);
         return this.node;
     }
 
@@ -59,7 +71,7 @@ export class _animation {
             { opacity: 0, transform: "translate3d(0, -100%, 0)" },
             { opacity: 1, transform: "translate3d(0, 0, 0)" },
         ];
-        this.animation(keyframe, option, callbackFn);
+        _animation.#animate.apply(this, [keyframe, option, callbackFn]);
         return this.node;
     }
 
@@ -69,7 +81,7 @@ export class _animation {
             { opacity: 0, transform: "translate3d(0, 100%, 0)" },
             { opacity: 1, transform: "translate3d(0, 0, 0)" },
         ];
-        this.animation(keyframe, option, callbackFn);
+        _animation.#animate.apply(this, [keyframe, option, callbackFn]);
         return this.node;
     }
 
@@ -79,7 +91,7 @@ export class _animation {
             { opacity: 0, transform: "translate3d(-100%, 0, 0)" },
             { opacity: 1, transform: "translate3d(0, 0, 0)" },
         ];
-        this.animation(keyframe, option, callbackFn);
+        _animation.#animate.apply(this, [keyframe, option, callbackFn]);
         return this.node;
     }
 
@@ -89,14 +101,14 @@ export class _animation {
             { opacity: 0, transform: "translate3d(100%, 0, 0)" },
             { opacity: 1, transform: "translate3d(0, 0, 0)" },
         ];
-        this.animation(keyframe, option, callbackFn);
+        _animation.#animate.apply(this, [keyframe, option, callbackFn]);
         return this.node;
     }
 
     /** @this {Jdm} */
     static jdm_fadeOut(callbackFn, option = new AnimationOption()) {
         const keyframe = [{ opacity: 1 }, { opacity: 0 }];
-        this.animation(keyframe, option, callbackFn);
+        _animation.#animate.apply(this, [keyframe, option, callbackFn]);
         return this.node;
     }
 
@@ -106,7 +118,7 @@ export class _animation {
             { opacity: 1, transform: "translate3d(0, 0, 0)" },
             { opacity: 0, transform: "translate3d(0, 100%, 0)" },
         ];
-        this.animation(keyframe, option, callbackFn);
+        _animation.#animate.apply(this, [keyframe, option, callbackFn]);
         return this.node;
     }
 
@@ -116,7 +128,7 @@ export class _animation {
             { opacity: 1, transform: "translate3d(0, 0, 0)" },
             { opacity: 0, transform: "translate3d(0, -100%, 0)" },
         ];
-        this.animation(keyframe, option, callbackFn);
+        _animation.#animate.apply(this, [keyframe, option, callbackFn]);
         return this.node;
     }
 
@@ -126,7 +138,7 @@ export class _animation {
             { opacity: 1, transform: "translate3d(0, 0, 0)" },
             { opacity: 0, transform: "translate3d(-100%, 0, 0)" },
         ];
-        this.animation(keyframe, option, callbackFn);
+        _animation.#animate.apply(this, [keyframe, option, callbackFn]);
         return this.node;
     }
 
@@ -136,7 +148,7 @@ export class _animation {
             { opacity: 1, transform: "translate3d(0, 0, 0)" },
             { opacity: 0, transform: "translate3d(100%, 0, 0)" },
         ];
-        this.animation(keyframe, option, callbackFn);
+        _animation.#animate.apply(this, [keyframe, option, callbackFn]);
         return this.node;
     }
 
@@ -149,7 +161,7 @@ export class _animation {
             { transform: "translateY(-10px)", easing: "ease-in-out" },
             { transform: "translateY(0)", easing: "ease-out" },
         ];
-        this.animation(keyframe, option, callbackFn);
+        _animation.#animate.apply(this, [keyframe, option, callbackFn]);
         return this.node;
     }
 
@@ -187,8 +199,8 @@ export class _animation {
                 easing: "ease-out",
             },
         ];
-
-        this.animation(keyframe, option, callbackFn);
+        console.log("tada", keyframe);
+        _animation.#animate.apply(this, [keyframe, option, callbackFn]);
         return this.node;
     }
 
@@ -208,7 +220,7 @@ export class _animation {
                 easing: "ease-out",
             },
         ];
-        this.animation(keyframe, option, callbackFn);
+        _animation.#animate.apply(this, [keyframe, option, callbackFn]);
         return this.node;
     }
 
@@ -228,7 +240,7 @@ export class _animation {
                 easing: "ease",
             },
         ];
-        this.animation(keyframe, option, callbackFn);
+        _animation.#animate.apply(this, [keyframe, option, callbackFn]);
         return this.node;
     }
 
@@ -241,7 +253,7 @@ export class _animation {
                 easing: "linear",
             },
         ];
-        this.animation(keyframe, option, callbackFn);
+        _animation.#animate.apply(this, [keyframe, option, callbackFn]);
         return this.node;
     }
 }

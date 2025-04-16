@@ -71,6 +71,7 @@
         `, document.body).jdm_extendChildNode();
 
     const genExample = (title, code)=> {
+        //language=html
         const domString = `
             <div  class="box row overflow-hidden rounded">
                 <div class="col-12 p-0">
@@ -82,6 +83,9 @@
                             <pre data-name="code">${code}</pre>
                         </div>
                         <button class="btn btn-secondary" data-name="execute">Execute</button>
+                        <div class="demoContainer border rounded p-3 mt-3">
+                            <label>Result:</label>
+                        </div>
                     </div>
                 </div>
             </div>
