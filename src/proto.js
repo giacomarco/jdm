@@ -23,9 +23,9 @@ export class Proto {
             // Converti la stringa in caratteri minuscoli e rimuovi gli spazi bianchi.
             const lowerCaseString = this.toLowerCase().trim();
             // Confronta la stringa minuscola senza spazi bianchi con i valori booleani validi.
-            if (lowerCaseString === "true" || lowerCaseString === "1") {
+            if (lowerCaseString === "yes" || lowerCaseString === "true" || lowerCaseString === "1") {
                 return true;
-            } else if (lowerCaseString === "false" || lowerCaseString === "0") {
+            } else if (lowerCaseString === "no" || lowerCaseString === "false" || lowerCaseString === "0") {
                 return false;
             } else {
                 // Se la stringa non corrisponde a nessun valore booleano valido, genera un'eccezione.

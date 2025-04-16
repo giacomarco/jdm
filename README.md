@@ -124,6 +124,7 @@ const div = JDM(domString, document.body);
     * [.jdm_tada([callbackFn], [option])](#Jdm+jdm_tada) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_zoomIn([callbackFn], [option])](#Jdm+jdm_zoomIn) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_zoomOut([callbackFn], [option])](#Jdm+jdm_zoomOut) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_rotation([callbackFn], [deg], [option])](#Jdm+jdm_rotation) ⇒ [<code>Jdm</code>](#Jdm)
 
 <a name="new_Jdm_new"></a>
 
@@ -1185,4 +1186,23 @@ Applica un'animazione di zoom-out e fade-out al nodo.
 ```js
 JDM(`<div class="foo"> ZoomOut </div>`, document.body)
      .jdm_zoomOut(() => console.log('ZoomOut!'), { duration: 1000 });
+```
+<a name="Jdm+jdm_rotation"></a>
+
+### jdm.jdm\_rotation([callbackFn], [deg], [option]) ⇒ [<code>Jdm</code>](#Jdm)
+Applica un'animazione di rotazione all'elemento.
+
+**Kind**: instance method of [<code>Jdm</code>](#Jdm)  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce il nodo dell'elemento a cui sono stati estesi i metodi, per consentire il chaining.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [callbackFn] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [deg] | <code>number</code> | <code>360</code> | Gradi di rotazione da applicare (positivi in senso orario, negativi in senso antiorario). |
+| [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
+
+**Example**  
+```js
+JDM(`<div class="foo"> Rotate </div>`, document.body)
+     .jdm_rotation(() => console.log('Rotazione completata'), 180, { duration: 1000 });
 ```
