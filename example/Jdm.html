@@ -32,9 +32,12 @@
     </style>
 </head>
 <body>
-
+<jdm-element></jdm-element>
 <script type="module">
-    import "../src/jdm.js";
+    import "/dist/jdm.js";
+
+    const element = document.querySelector("jdm-element");
+    console.log(element);
 
     fetch('../README.md')  // Percorso relativo al file
         .then(response => {
@@ -44,7 +47,7 @@
             return response.text();  // Leggi il contenuto del file come testo
         })
         .then(data => {
-            console.log('Contenuto del file README.md:', data);
+            // console.log('Contenuto del file README.md:', data);
             processMarkdown(data);  // Processa il contenuto del file
         })
         .catch(error => {
@@ -53,7 +56,7 @@
 
     function processMarkdown(content) {
         // Qui puoi elaborare il contenuto del file .md
-        console.log(content);
+        // console.log(content);
     }
 
 

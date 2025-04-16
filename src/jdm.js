@@ -80,6 +80,7 @@ new Proto();
  * @class
  */
 class Jdm extends HTMLElement {
+    // class Jdm {
     /**
      * Crea una nuova istanza della classe Jdm e manipola l'elemento DOM.
      *
@@ -145,6 +146,8 @@ class Jdm extends HTMLElement {
             case "domFromHtml":
                 const parserHtml = new DOMParser();
                 return parserHtml.parseFromString(data.element, "text/html").getRootNode().body.firstChild;
+            case "tagInDom":
+                return this;
             case "unknown":
                 console.error("Element not supported by jdm:", data);
                 break;
@@ -166,17 +169,24 @@ class Jdm extends HTMLElement {
      *                     - `"unknown"` se il tipo non è riconosciuto.
      */
     #checkType(variable) {
-        if (typeof variable === "string") {
-            if (variable.charAt(0) === "<" && variable.charAt(variable.length - 1) === ">") {
-                return "domFromString";
-            } else if (/<[a-z][\s\S]*>/i.test(variable)) {
-                return "domFromHtml";
+        if (variable) {
+            if (typeof variable === "string") {
+                if (variable.charAt(0) === "<" && variable.charAt(variable.length - 1) === ">") {
+                    return "domFromString";
+                } else if (/<[a-z][\s\S]*>/i.test(variable)) {
+                    return "domFromHtml";
+                } else {
+                    return "tagString";
+                }
+            } else if (variable.nodeType && variable.nodeType === Node.ELEMENT_NODE) {
+                return "elementDom";
             } else {
-                return "tagString";
+                return "unknown";
             }
-        } else if (variable.nodeType && variable.nodeType === Node.ELEMENT_NODE) {
-            return "elementDom";
         } else {
+            if (this.localName === "jdm-element") {
+                return "tagInDom";
+            }
             return "unknown";
         }
     }
@@ -956,8 +966,8 @@ class Jdm extends HTMLElement {
     /**
      * Applica un'animazione di fade-in sul nodo.
      *
-     * @param {object} [option=new AnimationOption()] - Opzioni dell'animazione.
      * @param {function(): void} [callbackFn] - Funzione da eseguire al termine dell'animazione.
+     * @param {Partial<AnimationOption>} [option=new AnimationOption()] - Opzioni dell'animazione.
      * @returns {Jdm} - Restituisce il nodo dell'elemento a cui sono stati estesi i figli, per consentire il chaining.
      * @example
      * JDM(`<div class="foo"> FadeIn </div>`, document.body)
@@ -1180,6 +1190,6 @@ window.JDM = (element = null, parent = null, classList = null, deep = true, ...a
     return new Jdm(element, parent, classList, deep, ...args);
 };
 window.Jdm = Jdm;
-window.customElements.define("jdm-element", Jdm);
+customElements.define("jdm-element", Jdm);
 
 export { Jdm };
