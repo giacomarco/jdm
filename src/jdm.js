@@ -325,7 +325,7 @@ class Jdm extends HTMLElement {
 
      */
     jdm_prepend(elementList) {
-        return _core.jdm_append.call(this, elementList);
+        return _core.jdm_prepend.call(this, elementList);
     }
 
     /**
@@ -538,7 +538,7 @@ class Jdm extends HTMLElement {
      * // Crea un binding unidirezionale tra l'input e l'output, che si attiva sull'evento 'change'.
      */
     jdm_binding(el, event = "input", twoWayDataBinding = true) {
-        return _core.jdm_innerHTML.call(this, el, event, twoWayDataBinding);
+        return _core.jdm_binding.call(this, el, event, twoWayDataBinding);
     }
 
     /**
@@ -886,7 +886,7 @@ class Jdm extends HTMLElement {
      * element.jdm_genEvent('customEvent', { message: 'Evento generato!' });
      */
     jdm_genEvent(name, data = null, propagateToParents = true) {
-        return _core.jdm_getValue.call(this, name, data, propagateToParents);
+        return _core.jdm_genEvent.call(this, name, data, propagateToParents);
     }
 
     /**
@@ -908,7 +908,7 @@ class Jdm extends HTMLElement {
      *  })
      */
     jdm_addEventListener(name, fn = () => {}) {
-        return _core.jdm_getValue.call(this, name, fn);
+        return _core.jdm_addEventListener.call(this, name, fn);
     }
 
     /**
@@ -933,7 +933,7 @@ class Jdm extends HTMLElement {
      * element.jdm_removeEventListener('input');
      */
     jdm_removeEventListener(name, fn = () => {}) {
-        return _core.jdm_getValue.call(this, name, fn);
+        return _core.jdm_removeEventListener.call(this, name, fn);
     }
 
     /**
