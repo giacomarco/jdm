@@ -77,6 +77,11 @@ new Proto();
  * const div = JDM(domString, document.body);
  * ```
  *
+ * ## ESEMPI:
+ * Nella cartella example dentro un terminale:
+ * ```terminal
+ * node server.js
+ * ```
  * @class
  */
 class Jdm extends HTMLElement {

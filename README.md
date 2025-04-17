@@ -72,6 +72,12 @@ const domString = `
 const div = JDM(domString, document.body);
 ```
 
+## ESEMPI:
+Nella cartella example dentro un terminale:
+```terminal
+node server.js
+```
+
 **Kind**: global class  
 
 * [Jdm](#Jdm)
@@ -110,7 +116,7 @@ const div = JDM(domString, document.body);
     * [.jdm_removeEventListener(name, [fn])](#Jdm+jdm_removeEventListener) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_extendChildNode()](#Jdm+jdm_extendChildNode) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_clearAnimations()](#Jdm+jdm_clearAnimations) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeIn([option], [callbackFn])](#Jdm+jdm_fadeIn) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_fadeIn([callbackFn], [option])](#Jdm+jdm_fadeIn) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_fadeInDown([callbackFn], [option])](#Jdm+jdm_fadeInDown) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_fadeInUp([callbackFn], [option])](#Jdm+jdm_fadeInUp) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_fadeInLeft([callbackFn], [option])](#Jdm+jdm_fadeInLeft) ⇒ [<code>Jdm</code>](#Jdm)
@@ -937,7 +943,7 @@ JDM(`<div class="foo animated"> Test </div>`, document.body)
 ```
 <a name="Jdm+jdm_fadeIn"></a>
 
-### jdm.jdm\_fadeIn([option], [callbackFn]) ⇒ [<code>Jdm</code>](#Jdm)
+### jdm.jdm\_fadeIn([callbackFn], [option]) ⇒ [<code>Jdm</code>](#Jdm)
 Applica un'animazione di fade-in sul nodo.
 
 **Kind**: instance method of [<code>Jdm</code>](#Jdm)  
@@ -945,8 +951,8 @@ Applica un'animazione di fade-in sul nodo.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| [option] | <code>object</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
 | [callbackFn] | <code>function</code> |  | Funzione da eseguire al termine dell'animazione. |
+| [option] | <code>Partial.&lt;AnimationOption&gt;</code> | <code>new AnimationOption()</code> | Opzioni dell'animazione. |
 
 **Example**  
 ```js
