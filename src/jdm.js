@@ -260,6 +260,7 @@ class Jdm extends HTMLElement {
      *   .jdm_setAttribute('id', 'myDiv')
      *   .jdm_setAttribute('data-test', 'foo')
      *   .jdm_setAttribute('counter', 1);
+     *  @tested true
      */
     jdm_setAttribute(attribute, value = null) {
         return _core.jdm_setAttribute.call(this, attribute, value);
@@ -275,6 +276,7 @@ class Jdm extends HTMLElement {
      * const div = JDM('<div>lorem ipsum</div>', document.body)
      *  .jdm_setAttribute('data-test', 'foo');
      * const dataTest = div.jdm_getAttribute('data-test')
+     *  @tested true
      */
     jdm_getAttribute(attribute) {
         return _core.jdm_getAttribute.call(this, attribute);
@@ -295,6 +297,7 @@ class Jdm extends HTMLElement {
      *
      * const span = JDM('span');
      * div.jdm_append(span); // Aggiunge il singolo elemento span come figlio del div.
+     * @tested true
      */
     jdm_append(elementList) {
         return _core.jdm_append.call(this, elementList);
@@ -317,7 +320,7 @@ class Jdm extends HTMLElement {
      *     <span>foo</span>
      *     <p>paragrafo</p>
      * </div>
-
+     *  @tested true
      */
     jdm_prepend(elementList) {
         return _core.jdm_prepend.call(this, elementList);
@@ -331,7 +334,8 @@ class Jdm extends HTMLElement {
      *
      * @example
      * const div = JDM('<div>lorem ipsum</div>', document.body)
-     *  .jdm_addId('myDiv'); // Imposta l'attributo id="myDiv" sull'elemento div.
+     * .jdm_addId('myDiv'); // Imposta l'attributo id="myDiv" sull'elemento div.
+     * @tested true
      */
     jdm_addId(id) {
         return _core.jdm_addId.call(this, id);
@@ -351,6 +355,8 @@ class Jdm extends HTMLElement {
      *
      * const div2 = JDM('<div>lorem ipsum</div>', document.body)
      *  .jdm_addClassList(['class1', 'class2']); // Aggiunge "class1" e "class2" all'elemento div2.
+     *
+     * @tested true
      */
     jdm_addClassList(classList) {
         return _core.jdm_addClassList.call(this, classList);
@@ -370,6 +376,8 @@ class Jdm extends HTMLElement {
      *
      * JDM('<div class="foo bar myClass"></div>', document.body)
      *  .jdm_removeClassList(['foo', 'bar']); // Rimuove "foo" e "bar" dall'elemento.
+     *
+     * @tested true
      */
     jdm_removeClassList(classList) {
         return _core.jdm_removeClassList.call(this, classList);
@@ -389,6 +397,8 @@ class Jdm extends HTMLElement {
      *
      * const div2 = JDM('<div>lorem ipsum</div>', document.body)
      * .jdm_toggleClassList(['class1', 'class2']); // Alterna le classi "class1" e "class2" sull'elemento div2.
+     *
+     * @tested true
      */
     jdm_toggleClassList(classList) {
         return _core.jdm_toggleClassList.call(this, classList);
@@ -413,6 +423,8 @@ class Jdm extends HTMLElement {
      *  .jdm_empty(); // Deseleziona la checkbox.
      *
      * const form = JDM('form').jdm_empty(); // Esegue il reset del modulo.
+     *
+     * @tested true
      */
     jdm_empty() {
         return _core.jdm_empty.call(this);
@@ -428,6 +440,8 @@ class Jdm extends HTMLElement {
      * @example
      * const div = JDM('<div>lorem ipsum</div>', document.body)
      *  .jdm_destroy(); // Rimuove l'elemento div dal documento e genera un evento "destroy".
+     *
+     *  @tested true
      */
     jdm_destroy() {
         return _core.jdm_destroy.call(this);
@@ -443,6 +457,8 @@ class Jdm extends HTMLElement {
      * JDM('input', document.body)
      *  .jdm_setAttribute('required', 'true')
      *  .jdm_validate(); // Verifica la validità dell'input e genera l'evento "validate".
+     *
+     *  @tested true
      */
     jdm_validate() {
         return _core.jdm_validate.call(this);
@@ -459,6 +475,8 @@ class Jdm extends HTMLElement {
      * @example
      * JDM('<div id="foo">lorem ipsum</div>', document.body)
      *  .jdm_removeAttribute('id'); // Rimuove l'attributo 'id' dall'elemento div.
+     *
+     *  @tested true
      */
     jdm_removeAttribute(attribute) {
         return _core.jdm_removeAttribute.call(this, attribute);
@@ -475,6 +493,7 @@ class Jdm extends HTMLElement {
      * @example
      * const div = JDM('<div>lorem ipsum</div>', document.body)
      * .jdm_setStyle('color', 'red'); // Imposta il colore del testo dell'elemento div su rosso.
+     *  @tested true
      */
     jdm_setStyle(style, value) {
         return _core.jdm_setStyle.call(this, style, value);
@@ -493,6 +512,7 @@ class Jdm extends HTMLElement {
      *  .jdm_extendNode('customData', { id: 123, name: 'My Div' });
      * // Aggiunge la proprietà 'customData' all'elemento div con un oggetto come valore.
      * console.log(div.customData); // { id: 123, name: 'My Div' }
+     *  @tested true
      */
     jdm_extendNode(name, object = null) {
         return _core.jdm_extendNode.call(this, name, object);
@@ -511,10 +531,12 @@ class Jdm extends HTMLElement {
      * JDM('<div>lorem ipsum</div>', document.body)
      *  .jdm_innerHTML('<p>Dolor sit amet</p>');
      * // Imposta il contenuto HTML del div con un nuovo paragrafo.
+     *  @tested true
      */
     jdm_innerHTML(value) {
         return _core.jdm_innerHTML.call(this, value);
     }
+
     /**
      * Imposta un binding di dati tra l'elemento corrente e un altro o più elementi.
      * Questo metodo consente di sincronizzare i valori tra gli elementi DOM, abilitando il data binding unidirezionale o bidirezionale.
@@ -531,6 +553,7 @@ class Jdm extends HTMLElement {
      *  const output = JDM('input', document.body);
      *  input.jdm_binding(output, "input", true);
      * // Crea un binding unidirezionale tra l'input e l'output, che si attiva sull'evento 'change'.
+     *  @tested true
      */
     jdm_binding(el, event = "input", twoWayDataBinding = true) {
         return _core.jdm_binding.call(this, el, event, twoWayDataBinding);
