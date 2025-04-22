@@ -71,7 +71,6 @@ export class _core {
     /** @this {Jdm} */
     static jdm_setAttribute(attribute, value = null) {
         this.node.setAttribute(attribute, value);
-        this.jdm_genEvent("setAttribute", { attribute: attribute, value: value });
         return this.node;
     }
 
@@ -83,7 +82,6 @@ export class _core {
     /** @this {Jdm} */
     static jdm_removeAttribute(attribute) {
         this.node.removeAttribute(attribute);
-        this.jdm_genEvent("removeAttribute", { attribute: attribute });
         return this.node;
     }
 
@@ -131,12 +129,24 @@ export class _core {
 
     /** @this {Jdm} */
     static jdm_empty() {
-        if (this.tag === "input" &amp;&amp; (this.node.element === "checkbox" || this.node.element === "radio")) {
+        if (this.tag === "input" &amp;&amp; (this.node.type === "checkbox" || this.node.type === "radio")) {
             this.node.checked = false;
         } else if (this.tag === "input" || this.tag === "textarea") {
             this.node.value = null;
         } else if (this.tag === "form") {
-            this.node.reset();
+            if (this.node.elements?.length > 0) {
+                for (const element of this.node.elements) {
+                    if (element.type === "checkbox" || element.type === "radio") {
+                        element.checked = false;
+                    } else if (element.type === "select-multiple" || element.type === "select-one") {
+                        for (const option of element.options) {
+                            element.value = null;
+                        }
+                    } else {
+                        element.value = "";
+                    }
+                }
+            }
         } else {
             this.node.innerHTML = "";
         }
@@ -146,14 +156,6 @@ export class _core {
     /** @this {Jdm} */
     static jdm_destroy() {
         this.node.remove();
-        this.jdm_genEvent("destroy");
-        return this.node;
-    }
-
-    /** @this {Jdm} */
-    static jdm_validate() {
-        const validity = this.node.checkValidity();
-        this.jdm_genEvent("validate", validity);
         return this.node;
     }
 
@@ -216,73 +218,6 @@ export class _core {
             }
         }
 
-        return this.node;
-    }
-
-    /** @this {Jdm} */
-    static jdm_onInput(fn = () => {}) {
-        this.node.addEventListener("input", fn);
-        return this.node;
-    }
-
-    /** @this {Jdm} */
-    static jdm_onChange(fn = () => {}) {
-        this.node.addEventListener("change", fn);
-        return this.node;
-    }
-
-    /** @this {Jdm} */
-    static jdm_onSelect(fn = () => {}) {
-        this.node.addEventListener("select", fn);
-        return this.node;
-    }
-
-    /** @this {Jdm} */
-    static jdm_onDebounce(fn = () => {}, timeout = 300, method = "input") {
-        this.node.addEventListener(method, _common.debounce(fn, timeout));
-        return this.node;
-    }
-
-    /** @this {Jdm} */
-    static jdm_onClick(fn = () => {}) {
-        this.node.addEventListener("click", fn);
-
-        return this.node;
-    }
-
-    /** @this {Jdm} */
-    static jdm_onRightClick(fn = () => {}) {
-        this.node.addEventListener("contextmenu", fn);
-        return this.node;
-    }
-
-    /** @this {Jdm} */
-    static jdm_onDoubleClick(fn = () => {}) {
-        this.node.addEventListener("dblclick", fn);
-        return this.node;
-    }
-
-    /** @this {Jdm} */
-    static jdm_onInvalid(fn = () => {}) {
-        this.node.addEventListener("invalid", fn);
-        return this.node;
-    }
-
-    /** @this {Jdm} */
-    static jdm_onLoad(fn = () => {}) {
-        this.node.addEventListener("load", fn);
-        return this.node;
-    }
-
-    /** @this {Jdm} */
-    static jdm_onError(fn = () => {}) {
-        this.node.addEventListener("error", fn);
-        return this.node;
-    }
-
-    /** @this {Jdm} */
-    static jdm_onSubmit(fn = e => {}) {
-        this.node.addEventListener("submit", fn);
         return this.node;
     }
 
@@ -425,6 +360,73 @@ export class _core {
 
         return this.node;
     }
+
+    /** @this {Jdm} */
+    static jdm_onInput(fn = () => {}) {
+        this.node.addEventListener("input", fn);
+        return this.node;
+    }
+
+    /** @this {Jdm} */
+    static jdm_onChange(fn = () => {}) {
+        this.node.addEventListener("change", fn);
+        return this.node;
+    }
+
+    /** @this {Jdm} */
+    static jdm_onSelect(fn = () => {}) {
+        this.node.addEventListener("select", fn);
+        return this.node;
+    }
+
+    /** @this {Jdm} */
+    static jdm_onDebounce(fn = () => {}, timeout = 300, method = "input") {
+        this.node.addEventListener(method, _common.debounce(fn, timeout));
+        return this.node;
+    }
+
+    /** @this {Jdm} */
+    static jdm_onClick(fn = () => {}) {
+        this.node.addEventListener("click", fn);
+
+        return this.node;
+    }
+
+    /** @this {Jdm} */
+    static jdm_onRightClick(fn = () => {}) {
+        this.node.addEventListener("contextmenu", fn);
+        return this.node;
+    }
+
+    /** @this {Jdm} */
+    static jdm_onDoubleClick(fn = () => {}) {
+        this.node.addEventListener("dblclick", fn);
+        return this.node;
+    }
+
+    /** @this {Jdm} */
+    static jdm_onInvalid(fn = () => {}) {
+        this.node.addEventListener("invalid", fn);
+        return this.node;
+    }
+
+    /** @this {Jdm} */
+    static jdm_onLoad(fn = () => {}) {
+        this.node.addEventListener("load", fn);
+        return this.node;
+    }
+
+    /** @this {Jdm} */
+    static jdm_onError(fn = () => {}) {
+        this.node.addEventListener("error", fn);
+        return this.node;
+    }
+
+    /** @this {Jdm} */
+    static jdm_onSubmit(fn = e => {}) {
+        this.node.addEventListener("submit", fn);
+        return this.node;
+    }
 }
 </code></pre>
         </article>
@@ -438,7 +440,7 @@ export class _core {
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Thu Apr 17 2025 21:37:50 GMT+0200 (Central European Summer Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Tue Apr 22 2025 22:17:46 GMT+0200 (Central European Summer Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>

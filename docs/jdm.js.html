@@ -301,6 +301,7 @@ class Jdm extends HTMLElement {
      *   .jdm_setAttribute('id', 'myDiv')
      *   .jdm_setAttribute('data-test', 'foo')
      *   .jdm_setAttribute('counter', 1);
+     *
      */
     jdm_setAttribute(attribute, value = null) {
         return _core.jdm_setAttribute.call(this, attribute, value);
@@ -316,6 +317,7 @@ class Jdm extends HTMLElement {
      * const div = JDM('&lt;div>lorem ipsum&lt;/div>', document.body)
      *  .jdm_setAttribute('data-test', 'foo');
      * const dataTest = div.jdm_getAttribute('data-test')
+     *
      */
     jdm_getAttribute(attribute) {
         return _core.jdm_getAttribute.call(this, attribute);
@@ -336,6 +338,7 @@ class Jdm extends HTMLElement {
      *
      * const span = JDM('span');
      * div.jdm_append(span); // Aggiunge il singolo elemento span come figlio del div.
+     *
      */
     jdm_append(elementList) {
         return _core.jdm_append.call(this, elementList);
@@ -358,7 +361,7 @@ class Jdm extends HTMLElement {
      *     &lt;span>foo&lt;/span>
      *     &lt;p>paragrafo&lt;/p>
      * &lt;/div>
-
+     *
      */
     jdm_prepend(elementList) {
         return _core.jdm_prepend.call(this, elementList);
@@ -372,7 +375,8 @@ class Jdm extends HTMLElement {
      *
      * @example
      * const div = JDM('&lt;div>lorem ipsum&lt;/div>', document.body)
-     *  .jdm_addId('myDiv'); // Imposta l'attributo id="myDiv" sull'elemento div.
+     * .jdm_addId('myDiv'); // Imposta l'attributo id="myDiv" sull'elemento div.
+     *
      */
     jdm_addId(id) {
         return _core.jdm_addId.call(this, id);
@@ -392,6 +396,8 @@ class Jdm extends HTMLElement {
      *
      * const div2 = JDM('&lt;div>lorem ipsum&lt;/div>', document.body)
      *  .jdm_addClassList(['class1', 'class2']); // Aggiunge "class1" e "class2" all'elemento div2.
+     *
+     *
      */
     jdm_addClassList(classList) {
         return _core.jdm_addClassList.call(this, classList);
@@ -411,6 +417,8 @@ class Jdm extends HTMLElement {
      *
      * JDM('&lt;div class="foo bar myClass">&lt;/div>', document.body)
      *  .jdm_removeClassList(['foo', 'bar']); // Rimuove "foo" e "bar" dall'elemento.
+     *
+     *
      */
     jdm_removeClassList(classList) {
         return _core.jdm_removeClassList.call(this, classList);
@@ -430,6 +438,8 @@ class Jdm extends HTMLElement {
      *
      * const div2 = JDM('&lt;div>lorem ipsum&lt;/div>', document.body)
      * .jdm_toggleClassList(['class1', 'class2']); // Alterna le classi "class1" e "class2" sull'elemento div2.
+     *
+     *
      */
     jdm_toggleClassList(classList) {
         return _core.jdm_toggleClassList.call(this, classList);
@@ -454,6 +464,8 @@ class Jdm extends HTMLElement {
      *  .jdm_empty(); // Deseleziona la checkbox.
      *
      * const form = JDM('form').jdm_empty(); // Esegue il reset del modulo.
+     *
+     *
      */
     jdm_empty() {
         return _core.jdm_empty.call(this);
@@ -469,6 +481,8 @@ class Jdm extends HTMLElement {
      * @example
      * const div = JDM('&lt;div>lorem ipsum&lt;/div>', document.body)
      *  .jdm_destroy(); // Rimuove l'elemento div dal documento e genera un evento "destroy".
+     *
+     *
      */
     jdm_destroy() {
         return _core.jdm_destroy.call(this);
@@ -484,6 +498,8 @@ class Jdm extends HTMLElement {
      * JDM('input', document.body)
      *  .jdm_setAttribute('required', 'true')
      *  .jdm_validate(); // Verifica la validità dell'input e genera l'evento "validate".
+     *
+     *
      */
     jdm_validate() {
         return _core.jdm_validate.call(this);
@@ -500,6 +516,8 @@ class Jdm extends HTMLElement {
      * @example
      * JDM('&lt;div id="foo">lorem ipsum&lt;/div>', document.body)
      *  .jdm_removeAttribute('id'); // Rimuove l'attributo 'id' dall'elemento div.
+     *
+     *
      */
     jdm_removeAttribute(attribute) {
         return _core.jdm_removeAttribute.call(this, attribute);
@@ -516,6 +534,7 @@ class Jdm extends HTMLElement {
      * @example
      * const div = JDM('&lt;div>lorem ipsum&lt;/div>', document.body)
      * .jdm_setStyle('color', 'red'); // Imposta il colore del testo dell'elemento div su rosso.
+     *
      */
     jdm_setStyle(style, value) {
         return _core.jdm_setStyle.call(this, style, value);
@@ -534,6 +553,7 @@ class Jdm extends HTMLElement {
      *  .jdm_extendNode('customData', { id: 123, name: 'My Div' });
      * // Aggiunge la proprietà 'customData' all'elemento div con un oggetto come valore.
      * console.log(div.customData); // { id: 123, name: 'My Div' }
+     *
      */
     jdm_extendNode(name, object = null) {
         return _core.jdm_extendNode.call(this, name, object);
@@ -552,10 +572,12 @@ class Jdm extends HTMLElement {
      * JDM('&lt;div>lorem ipsum&lt;/div>', document.body)
      *  .jdm_innerHTML('&lt;p>Dolor sit amet&lt;/p>');
      * // Imposta il contenuto HTML del div con un nuovo paragrafo.
+     *
      */
     jdm_innerHTML(value) {
         return _core.jdm_innerHTML.call(this, value);
     }
+
     /**
      * Imposta un binding di dati tra l'elemento corrente e un altro o più elementi.
      * Questo metodo consente di sincronizzare i valori tra gli elementi DOM, abilitando il data binding unidirezionale o bidirezionale.
@@ -572,6 +594,7 @@ class Jdm extends HTMLElement {
      *  const output = JDM('input', document.body);
      *  input.jdm_binding(output, "input", true);
      * // Crea un binding unidirezionale tra l'input e l'output, che si attiva sull'evento 'change'.
+     *
      */
     jdm_binding(el, event = "input", twoWayDataBinding = true) {
         return _core.jdm_binding.call(this, el, event, twoWayDataBinding);
@@ -1251,7 +1274,7 @@ export { Jdm };
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Thu Apr 17 2025 21:37:50 GMT+0200 (Central European Summer Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Tue Apr 22 2025 22:17:46 GMT+0200 (Central European Summer Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>

@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.79% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>44/49</span>
+                <span class='fraction'>49/49</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/4</span>
+                <span class='fraction'>12/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/4</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.79% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>44/49</span>
+                <span class='fraction'>49/49</span>
             </div>
         
             
@@ -136,21 +136,21 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -160,8 +160,8 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -190,18 +190,18 @@ export class Proto {
             // Converti la stringa in caratteri minuscoli e rimuovi gli spazi bianchi.
             const lowerCaseString = this.toLowerCase().trim();
             // Confronta la stringa minuscola senza spazi bianchi con i valori booleani validi.
-            if (lowerCaseString === "yes" || lowerCaseString === "true" || lowerCaseString === "1") <span class="branch-0 cbranch-no" title="branch not covered" >{</span>
-<span class="cstat-no" title="statement not covered" >                return true;</span>
-            } else if (lowerCaseString === "no" || lowerCaseString === "false" || lowerCaseString === "0") <span class="branch-0 cbranch-no" title="branch not covered" >{</span>
-<span class="cstat-no" title="statement not covered" >                return false;</span>
+            if (lowerCaseString === "yes" || lowerCaseString === "true" || lowerCaseString === "1") {
+                return true;
+            } else if (lowerCaseString === "no" || lowerCaseString === "false" || lowerCaseString === "0") {
+                return false;
             } else {
                 // Se la stringa non corrisponde a nessun valore booleano valido, genera un'eccezione.
                 throw new Error(`Invalid boolean string: ${this}`);
             }
         };
 &nbsp;
-        String.prototype.toCapitalize = <span class="fstat-no" title="function not covered" >function () {</span>
-<span class="cstat-no" title="statement not covered" >            return this.charAt(0).toUpperCase() + this.slice(1);</span>
+        String.prototype.toCapitalize = function () {
+            return this.charAt(0).toUpperCase() + this.slice(1);
         };
 &nbsp;
         /**
@@ -210,9 +210,9 @@ export class Proto {
          * @returns {boolean} Il valore booleano corrispondente alla stringa convertita dal numero.
          * @throws {Error} Se la stringa non corrisponde a nessun valore booleano valido.
          */
-        Number.prototype.toBoolean = <span class="fstat-no" title="function not covered" >function () {</span>
-<span class="cstat-no" title="statement not covered" >            // Converti il numero in una stringa e applica la funzione toBoolean della stringa.</span>
-<span class="cstat-no" title="statement not covered" >            return String(this).toBoolean();</span>
+        Number.prototype.toBoolean = function () {
+            // Converti il numero in una stringa e applica la funzione toBoolean della stringa.
+            return String(this).toBoolean();
         };
     }
 }
@@ -223,7 +223,7 @@ export class Proto {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-04-22T16:41:06.123Z
+                at 2025-04-22T20:17:44.118Z
             </div>
         <script src="prettify.js"></script>
         <script>

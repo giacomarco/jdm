@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { Jdm } from "../src/jdm.js";
 import { _common } from "../src/_common.js";
 import { _animation, AnimationOption, keyframe } from "../src/_animation.js";
+import { Proto } from "../src/proto"; // aggiorna il path se necessario
 
 // Alias globale per compatibilità
 globalThis.JDM = (...args) => new Jdm(...args);
@@ -920,7 +921,6 @@ describe("JDM - Animation", () => {
         expect(animationOption.iterations).toBe(1); // Valore di default
     });
 
-    /****/
     it(" cancellare tutte le animazioni e resettare gli stili", () => {
         const fn = vi.fn();
         const node = JDM("<div>foo</div>", div).jdm_fadeIn();
@@ -950,6 +950,53 @@ describe("JDM - Animation", () => {
         animationMock.onfinish?.(); // Simula fine animazione
         expect(callbackFn).toHaveBeenCalledTimes(1);
     });
+});
 
-    /****/
+describe("JDM - Proto", () => {
+    describe("String.prototype.toBoolean", () => {
+        it("restituisce true per 'true', '1', 'yes'", () => {
+            expect("true".toBoolean()).toBe(true);
+            expect("1".toBoolean()).toBe(true);
+            expect("yes".toBoolean()).toBe(true);
+            expect("TrUe".toBoolean()).toBe(true); // case-insensitive
+            expect(" YES ".toBoolean()).toBe(true); // con spazi
+        });
+
+        it("restituisce false per 'false', '0', 'no'", () => {
+            expect("false".toBoolean()).toBe(false);
+            expect("0".toBoolean()).toBe(false);
+            expect("no".toBoolean()).toBe(false);
+            expect("FaLsE".toBoolean()).toBe(false);
+            expect(" NO ".toBoolean()).toBe(false);
+        });
+
+        it("genera un errore per stringhe non valide", () => {
+            expect(() => "maybe".toBoolean()).toThrow("Invalid boolean string: maybe");
+            expect(() => "".toBoolean()).toThrow("Invalid boolean string: ");
+        });
+    });
+
+    describe("String.prototype.toCapitalize", () => {
+        it("mette la prima lettera in maiuscolo", () => {
+            expect("ciao".toCapitalize()).toBe("Ciao");
+            expect("Ciao".toCapitalize()).toBe("Ciao");
+            expect("c".toCapitalize()).toBe("C");
+            expect("".toCapitalize()).toBe("");
+        });
+    });
+
+    describe("Number.prototype.toBoolean", () => {
+        it("restituisce true per 1", () => {
+            expect((1).toBoolean()).toBe(true);
+        });
+
+        it("restituisce false per 0", () => {
+            expect((0).toBoolean()).toBe(false);
+        });
+
+        it("genera un errore per altri numeri", () => {
+            expect(() => (2).toBoolean()).toThrow("Invalid boolean string: 2");
+            expect(() => (-1).toBoolean()).toThrow("Invalid boolean string: -1");
+        });
+    });
 });
