@@ -1149,7 +1149,6 @@ class Jdm extends HTMLElement {
      */
     jdm_bounce(callbackFn, option = new AnimationOption()) {
         return _animation.jdm_bounce.call(this, callbackFn, option);
-        return this.node;
     }
 
     /**
@@ -1164,7 +1163,6 @@ class Jdm extends HTMLElement {
      */
     jdm_tada(callbackFn, option = new AnimationOption()) {
         return _animation.jdm_tada.call(this, callbackFn, option);
-        return this.node;
     }
 
     /**
@@ -1179,7 +1177,6 @@ class Jdm extends HTMLElement {
      */
     jdm_zoomIn(callbackFn, option = new AnimationOption()) {
         return _animation.jdm_zoomIn.call(this, callbackFn, option);
-        return this.node;
     }
 
     /**
@@ -1194,7 +1191,6 @@ class Jdm extends HTMLElement {
      */
     jdm_zoomOut(callbackFn, option = new AnimationOption()) {
         return _animation.jdm_zoomOut.call(this, callbackFn, option);
-        return this.node;
     }
 
     /**
@@ -1210,7 +1206,6 @@ class Jdm extends HTMLElement {
      */
     jdm_rotation(callbackFn, deg = 360, option = new AnimationOption()) {
         return _animation.jdm_rotation.call(this, callbackFn, deg, option);
-        return this.node;
     }
 }
 

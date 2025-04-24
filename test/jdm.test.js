@@ -61,6 +61,21 @@ describe("JDM - Class", () => {
 });
 
 describe("JDM - Base", () => {
+    it("crea un elemento partendo da un selector", () => {
+        const el = document.createElement("div");
+        el.id = "foo";
+        div.appendChild(el);
+        const newEl = JDM(document.querySelector("#foo"));
+        expect(newEl.tagName).toBe("DIV");
+        expect(document.body.contains(div)).toBe(true);
+    });
+
+    it("crea un elemento jdm-element", () => {
+        const newEl = JDM(null, div);
+        expect(newEl.tagName).toBe("JDM-ELEMENT");
+        expect(document.body.contains(div)).toBe(true);
+    });
+
     it("crea un elemento e lo aggiunge al body", () => {
         expect(div.tagName).toBe("DIV");
         expect(document.body.contains(div)).toBe(true);
@@ -947,8 +962,22 @@ describe("JDM - Animation", () => {
 
         expect(div.animate).toHaveBeenCalledWith(frame, expect.any(Object));
 
-        animationMock.onfinish?.(); // Simula fine animazione
+        animationMock.onfinish?.();
         expect(callbackFn).toHaveBeenCalledTimes(1);
+    });
+
+    it.each(Object.entries(keyframe))(" %s ritorna un elemento HTMLElement", async (method, keyframeFn) => {
+        let response = null;
+        let frame = null;
+        if (method === "rotation") {
+            frame = keyframeFn(90);
+            response = div[`jdm_${method}`](vi.fn(), 90);
+        } else {
+            frame = keyframeFn;
+            response = div[`jdm_${method}`](vi.fn());
+        }
+        expect(response).toBe(div);
+        expect(response instanceof HTMLElement).toBe(true);
     });
 });
 

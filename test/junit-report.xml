@@ -1,201 +1,235 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites name="vitest tests" tests="98" failures="0" errors="0" time="1.722804167">
-    <testsuite name="test/jdm.test.js" timestamp="2025-04-22T20:17:44.102Z" hostname="MacBook-14.local" tests="98" failures="0" errors="0" skipped="0" time="1.722804167">
-        <testcase classname="test/jdm.test.js" name="JDM - Class &gt; aggiunge una singola classe" time="0.0052865">
+<testsuites name="vitest tests" tests="115" failures="0" errors="0" time="1.750519125">
+    <testsuite name="test/jdm.test.js" timestamp="2025-04-23T08:10:32.935Z" hostname="MacBook-14.local" tests="115" failures="0" errors="0" skipped="0" time="1.750519125">
+        <testcase classname="test/jdm.test.js" name="JDM - Class &gt; aggiunge una singola classe" time="0.004991916">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Class &gt; aggiunge un array di classi" time="0.000755417">
+        <testcase classname="test/jdm.test.js" name="JDM - Class &gt; aggiunge un array di classi" time="0.000672542">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Class &gt; rimuove una singola classe" time="0.000683666">
+        <testcase classname="test/jdm.test.js" name="JDM - Class &gt; rimuove una singola classe" time="0.000695792">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Class &gt; rimuove un array di classi" time="0.000567333">
+        <testcase classname="test/jdm.test.js" name="JDM - Class &gt; rimuove un array di classi" time="0.000520625">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Class &gt; toggle di una singola classe" time="0.00061825">
+        <testcase classname="test/jdm.test.js" name="JDM - Class &gt; toggle di una singola classe" time="0.000580083">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Class &gt; toggle di un array di classi" time="0.000625584">
+        <testcase classname="test/jdm.test.js" name="JDM - Class &gt; toggle di un array di classi" time="0.000594083">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; crea un elemento e lo aggiunge al body" time="0.000530875">
+        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; crea un elemento partendo da un selector" time="0.004331583">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; aggiunge un singolo elemento come figli" time="0.001442792">
+        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; crea un elemento jdm-element" time="0.000918125">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; aggiunge un array di elementi come figli" time="0.000846959">
+        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; crea un elemento e lo aggiunge al body" time="0.000789292">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; preprende un singolo elemento" time="0.00141275">
+        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; aggiunge un singolo elemento come figli" time="0.000736458">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; preprende una lista di elementi" time="0.001272625">
+        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; aggiunge un array di elementi come figli" time="0.000579958">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; svuota un div (o elemento)" time="0.000802">
+        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; preprende un singolo elemento" time="0.001230292">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; distrugge un elemento" time="0.001076792">
+        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; preprende una lista di elementi" time="0.001202375">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; imposta uno stile inline sull&apos;elemento" time="0.002766625">
+        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; svuota un div (o elemento)" time="0.000833291">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; estende il nodo con una proprietà personalizzata" time="0.001008291">
+        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; distrugge un elemento" time="0.001154542">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; imposta il contenuto HTML interno dell&apos;elemento" time="0.004625792">
+        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; imposta uno stile inline sull&apos;elemento" time="0.002513667">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; propaga innerHTML su elementi non form" time="0.002514334">
+        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; estende il nodo con una proprietà personalizzata" time="0.001083458">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; aggiunge un event listener all&apos;elemento" time="0.001440333">
+        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; imposta il contenuto HTML interno dell&apos;elemento" time="0.001520792">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; rimuove un event listener dall&apos;elemento" time="0.001041042">
+        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; propaga innerHTML su elementi non form" time="0.002629542">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; estende il nodo con i riferimenti presenti in jdm_childNode" time="0.000949">
+        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; aggiunge un event listener all&apos;elemento" time="0.001759375">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; non estende nulla se jdm_childNode è assente o vuoto" time="0.001131417">
+        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; rimuove un event listener dall&apos;elemento" time="0.00135475">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Attribute &gt; imposta  un attributo" time="0.000573291">
+        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; estende il nodo con i riferimenti presenti in jdm_childNode" time="0.000894959">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Attribute &gt; legge un attributo" time="0.00046125">
+        <testcase classname="test/jdm.test.js" name="JDM - Base &gt; non estende nulla se jdm_childNode è assente o vuoto" time="0.0012025">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Attribute &gt; imposta un id" time="0.000722292">
+        <testcase classname="test/jdm.test.js" name="JDM - Attribute &gt; imposta  un attributo" time="0.000655292">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Attribute &gt; rimuove un attributo da un elemento" time="0.001168834">
+        <testcase classname="test/jdm.test.js" name="JDM - Attribute &gt; legge un attributo" time="0.000493458">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; imposta il valore su diversi tipi di elementi, incluso un form complesso" time="0.00756175">
+        <testcase classname="test/jdm.test.js" name="JDM - Attribute &gt; imposta un id" time="0.000457916">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; restituisce correttamente il valore da input, checkbox, radio, select e form complesso" time="0.006395125">
+        <testcase classname="test/jdm.test.js" name="JDM - Attribute &gt; rimuove un attributo da un elemento" time="0.000899">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; gestisce array senza chiave e chiavi duplicate in jdm_getValue" time="0.001771583">
+        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; imposta il valore su diversi tipi di elementi, incluso un form complesso" time="0.007171959">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; invoca jdm_onSubmit" time="0.001760333">
+        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; restituisce correttamente il valore da input, checkbox, radio, select e form complesso" time="0.005795084">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; svuota un input" time="0.000726875">
+        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; gestisce array senza chiave e chiavi duplicate in jdm_getValue" time="0.0019015">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; svuota una textarea" time="0.001049042">
+        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; invoca jdm_onSubmit" time="0.001765917">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; svuota un checkbox" time="0.000922459">
+        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; svuota un input" time="0.000603084">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; svuota un radio" time="0.000931625">
+        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; svuota una textarea" time="0.000747958">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; svuota i campi del form" time="0.00269925">
+        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; svuota un checkbox" time="0.000751417">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; valida un input e genera evento &apos;validate&apos;" time="0.00197025">
+        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; svuota un radio" time="0.000716416">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; propaga il valore da un input all&apos;altro (binding unidirezionale)" time="0.001171416">
+        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; svuota i campi del form" time="0.002651583">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; propaga il valore in entrambe le direzioni (binding bidirezionale)" time="0.001038375">
+        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; valida un input e genera evento &apos;validate&apos;" time="0.001968625">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; registra un event listener per &apos;input&apos;" time="0.002259833">
+        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; propaga il valore da un input all&apos;altro (binding unidirezionale)" time="0.001042417">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; non lancia errore se la funzione non viene fornita" time="0.000706208">
+        <testcase classname="test/jdm.test.js" name="JDM - Form &gt; propaga il valore in entrambe le direzioni (binding bidirezionale)" time="0.000956625">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; registra un event listener per &apos;change&apos;" time="0.001338292">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; registra un event listener per &apos;input&apos;" time="0.002143083">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; non lancia errore se nessuna funzione viene passata" time="0.000920208">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; non lancia errore se la funzione non viene fornita" time="0.000669958">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; registra un event listener per &apos;select&apos;" time="0.00156875">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; registra un event listener per &apos;change&apos;" time="0.00114775">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; non lancia errore se nessuna funzione viene passata" time="0.000774917">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; non lancia errore se nessuna funzione viene passata" time="0.000682125">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; registra un event listener debounce per &apos;input&apos;" time="0.121470167">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; registra un event listener per &apos;select&apos;" time="0.00142475">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; usa il valore di timeout predefinito se non fornito" time="0.322908042">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; non lancia errore se nessuna funzione viene passata" time="0.000648625">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; usa &apos;input&apos; come metodo di default" time="0.323557625">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; registra un event listener debounce per &apos;input&apos;" time="0.122009625">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; non lancia errore se nessuna funzione viene passata" time="0.325123667">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; usa il valore di timeout predefinito se non fornito" time="0.323210625">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; registra un event listener per &apos;click&apos;" time="0.005589458">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; usa &apos;input&apos; come metodo di default" time="0.322624959">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; non lancia errore se nessuna funzione viene passata" time="0.002225167">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; non lancia errore se nessuna funzione viene passata" time="0.325045625">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; ritorna il nodo HTML" time="0.001552708">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; registra un event listener per &apos;click&apos;" time="0.005128334">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; registra un event listener per &apos;contextmenu&apos;" time="0.001095208">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; non lancia errore se nessuna funzione viene passata" time="0.001801959">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; non lancia errore se nessuna funzione viene passata" time="0.000982292">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; ritorna il nodo HTML" time="0.001041542">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; ritorna il nodo HTML" time="0.000849875">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; registra un event listener per &apos;contextmenu&apos;" time="0.001689625">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; registra un event listener per &apos;dblclick&apos;" time="0.001325417">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; non lancia errore se nessuna funzione viene passata" time="0.001984834">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; non lancia errore se nessuna funzione viene passata" time="0.001158667">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; ritorna il nodo HTML" time="0.001717833">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; ritorna il nodo HTML" time="0.000893833">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; registra un event listener per &apos;dblclick&apos;" time="0.001342417">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; registra un event listener per &apos;invalid&apos;" time="0.00141975">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; non lancia errore se nessuna funzione viene passata" time="0.001141125">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; non lancia errore se nessuna funzione viene passata" time="0.000916917">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; ritorna il nodo HTML" time="0.001420792">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; ritorna il nodo HTML" time="0.000794666">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; registra un event listener per &apos;invalid&apos;" time="0.001891916">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; registra un event listener per &apos;load&apos;" time="0.001186">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; non lancia errore se nessuna funzione viene passata" time="0.001285209">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; non lancia errore se nessuna funzione viene passata" time="0.000936959">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; ritorna il nodo HTML" time="0.001581125">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; ritorna il nodo HTML" time="0.000872541">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; registra un event listener per &apos;load&apos;" time="0.001510375">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; registra un event listener per &apos;error&apos;" time="0.000796583">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; non lancia errore se nessuna funzione viene passata" time="0.001133542">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; non lancia errore se nessuna funzione viene passata" time="0.000795791">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; ritorna il nodo HTML" time="0.001149542">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; ritorna il nodo HTML" time="0.000754875">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; registra un event listener per &apos;error&apos;" time="0.000940625">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Commons &gt; dovrebbe chiamare la funzione dopo il timeout" time="0.151007375">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; non lancia errore se nessuna funzione viene passata" time="0.000935458">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Commons &gt; dovrebbe usare il timeout di default se non fornito" time="0.3525665">
+        <testcase classname="test/jdm.test.js" name="JDM - Event &gt; ritorna il nodo HTML" time="0.000983959">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Commons &gt; dovrebbe creare un CustomEvent e dispatcharlo sul nodo" time="0.004221917">
+        <testcase classname="test/jdm.test.js" name="JDM - Commons &gt; dovrebbe chiamare la funzione dopo il timeout" time="0.153356208">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Commons &gt; dovrebbe far propagare l&apos;evento ai genitori se &apos;propagateToParents&apos; è true" time="0.002062917">
+        <testcase classname="test/jdm.test.js" name="JDM - Commons &gt; dovrebbe usare il timeout di default se non fornito" time="0.354249792">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Commons &gt; non fa propagare l&apos;evento ai genitori se &apos;propagateToParents&apos; è false" time="0.00140725">
+        <testcase classname="test/jdm.test.js" name="JDM - Commons &gt; dovrebbe creare un CustomEvent e dispatcharlo sul nodo" time="0.005956417">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Commons &gt; dovrebbe restituire il tag name in minuscolo" time="0.000686958">
+        <testcase classname="test/jdm.test.js" name="JDM - Commons &gt; dovrebbe far propagare l&apos;evento ai genitori se &apos;propagateToParents&apos; è true" time="0.001562042">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Commons &gt; dovrebbe restituire undefined per nodi senza tagName" time="0.000581375">
+        <testcase classname="test/jdm.test.js" name="JDM - Commons &gt; non fa propagare l&apos;evento ai genitori se &apos;propagateToParents&apos; è false" time="0.001449875">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; utilizzare i valori di default" time="0.00066975">
+        <testcase classname="test/jdm.test.js" name="JDM - Commons &gt; dovrebbe restituire il tag name in minuscolo" time="0.000981334">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; permettere di sovrascrivere i valori di default" time="0.00095675">
+        <testcase classname="test/jdm.test.js" name="JDM - Commons &gt; dovrebbe restituire undefined per nodi senza tagName" time="0.000716917">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; utilizzare il valore di default per i parametri non specificati" time="0.000634875">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; utilizzare i valori di default" time="0.000679917">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt;  cancellare tutte le animazioni e resettare gli stili" time="0.001022375">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; permettere di sovrascrivere i valori di default" time="0.000962667">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in fadeIn" time="0.001187209">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; utilizzare il valore di default per i parametri non specificati" time="0.000631834">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in fadeInDown" time="0.000675459">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt;  cancellare tutte le animazioni e resettare gli stili" time="0.001545">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in fadeInUp" time="0.000572917">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in fadeIn" time="0.002588417">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in fadeInLeft" time="0.000517">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in fadeInDown" time="0.000918792">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in fadeInRight" time="0.000617084">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in fadeInUp" time="0.000695833">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in fadeOut" time="0.000495">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in fadeInLeft" time="0.000845958">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in fadeOutDown" time="0.000499917">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in fadeInRight" time="0.001253625">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in fadeOutUp" time="0.000506208">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in fadeOut" time="0.000726541">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in fadeOutLeft" time="0.000500042">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in fadeOutDown" time="0.000686209">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in fadeOutRight" time="0.000482042">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in fadeOutUp" time="0.000631292">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in bounce" time="0.00073925">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in fadeOutLeft" time="0.000831875">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in tada" time="0.001131375">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in fadeOutRight" time="0.000949209">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in zoomIn" time="0.000752167">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in bounce" time="0.0008355">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in zoomOut" time="0.00076975">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in tada" time="0.000818875">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in rotation" time="0.000821583">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in zoomIn" time="0.000982792">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Proto &gt; String.prototype.toBoolean &gt; restituisce true per &apos;true&apos;, &apos;1&apos;, &apos;yes&apos;" time="0.000632">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in zoomOut" time="0.000759375">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Proto &gt; String.prototype.toBoolean &gt; restituisce false per &apos;false&apos;, &apos;0&apos;, &apos;no&apos;" time="0.000598625">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt; dovrebbe chiamare animate e callback in rotation" time="0.000708541">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Proto &gt; String.prototype.toBoolean &gt; genera un errore per stringhe non valide" time="0.00066">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt;  fadeIn ritorna un elemento HTMLElement" time="0.001033542">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Proto &gt; String.prototype.toCapitalize &gt; mette la prima lettera in maiuscolo" time="0.000482709">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt;  fadeInDown ritorna un elemento HTMLElement" time="0.000701542">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Proto &gt; Number.prototype.toBoolean &gt; restituisce true per 1" time="0.000473208">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt;  fadeInUp ritorna un elemento HTMLElement" time="0.000708875">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Proto &gt; Number.prototype.toBoolean &gt; restituisce false per 0" time="0.002582583">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt;  fadeInLeft ritorna un elemento HTMLElement" time="0.000689084">
         </testcase>
-        <testcase classname="test/jdm.test.js" name="JDM - Proto &gt; Number.prototype.toBoolean &gt; genera un errore per altri numeri" time="0.000587333">
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt;  fadeInRight ritorna un elemento HTMLElement" time="0.000662625">
+        </testcase>
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt;  fadeOut ritorna un elemento HTMLElement" time="0.000628083">
+        </testcase>
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt;  fadeOutDown ritorna un elemento HTMLElement" time="0.004353875">
+        </testcase>
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt;  fadeOutUp ritorna un elemento HTMLElement" time="0.000671791">
+        </testcase>
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt;  fadeOutLeft ritorna un elemento HTMLElement" time="0.000572542">
+        </testcase>
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt;  fadeOutRight ritorna un elemento HTMLElement" time="0.000666875">
+        </testcase>
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt;  bounce ritorna un elemento HTMLElement" time="0.000547958">
+        </testcase>
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt;  tada ritorna un elemento HTMLElement" time="0.000556292">
+        </testcase>
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt;  zoomIn ritorna un elemento HTMLElement" time="0.0005305">
+        </testcase>
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt;  zoomOut ritorna un elemento HTMLElement" time="0.000574583">
+        </testcase>
+        <testcase classname="test/jdm.test.js" name="JDM - Animation &gt;  rotation ritorna un elemento HTMLElement" time="0.000551709">
+        </testcase>
+        <testcase classname="test/jdm.test.js" name="JDM - Proto &gt; String.prototype.toBoolean &gt; restituisce true per &apos;true&apos;, &apos;1&apos;, &apos;yes&apos;" time="0.000905667">
+        </testcase>
+        <testcase classname="test/jdm.test.js" name="JDM - Proto &gt; String.prototype.toBoolean &gt; restituisce false per &apos;false&apos;, &apos;0&apos;, &apos;no&apos;" time="0.000787416">
+        </testcase>
+        <testcase classname="test/jdm.test.js" name="JDM - Proto &gt; String.prototype.toBoolean &gt; genera un errore per stringhe non valide" time="0.000692334">
+        </testcase>
+        <testcase classname="test/jdm.test.js" name="JDM - Proto &gt; String.prototype.toCapitalize &gt; mette la prima lettera in maiuscolo" time="0.000552791">
+        </testcase>
+        <testcase classname="test/jdm.test.js" name="JDM - Proto &gt; Number.prototype.toBoolean &gt; restituisce true per 1" time="0.000491959">
+        </testcase>
+        <testcase classname="test/jdm.test.js" name="JDM - Proto &gt; Number.prototype.toBoolean &gt; restituisce false per 0" time="0.000452333">
+        </testcase>
+        <testcase classname="test/jdm.test.js" name="JDM - Proto &gt; Number.prototype.toBoolean &gt; genera un errore per altri numeri" time="0.000690083">
         </testcase>
     </testsuite>
 </testsuites>
