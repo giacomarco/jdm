@@ -87,6 +87,12 @@ export class _core {
     }
 
     /** @this {Jdm} */
+    static jdm_findClassList(classList, some = false) {
+        classList = Array.isArray(classList) ? classList : [classList];
+        return some ? classList.some(cls => this.node.classList.contains(cls)) : classList.every(cls => this.node.classList.contains(cls));
+    }
+
+    /** @this {Jdm} */
     static jdm_empty() {
         if (this.tag === "input" && (this.node.type === "checkbox" || this.node.type === "radio")) {
             this.node.checked = false;

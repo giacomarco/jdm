@@ -52,11 +52,40 @@ describe("JDM - Class", () => {
         div.jdm_toggleClassList("bar");
         expect(div.classList.contains("bar")).toBe(false);
     });
+
     it("toggle di un array di classi", () => {
         div.jdm_toggleClassList(["bar", "foo"]);
         expect(div.classList.contains("foo") && div.classList.contains("bar")).toBe(true);
         div.jdm_toggleClassList(["bar", "foo"]);
         expect(div.classList.contains("foo") && div.classList.contains("bar")).toBe(false);
+    });
+
+    it("verifico se c'è una stringa nella classe", () => {
+        div.jdm_addClassList(["bar", "foo"]);
+        const resultFindTrue = div.jdm_findClassList("bar");
+        const resultFindFalse = div.jdm_findClassList("test");
+        expect(resultFindTrue).toBe(true);
+        expect(resultFindFalse).toBe(false);
+    });
+
+    it("verifico se c'è un array di stringhe in AND nella classe", () => {
+        div.jdm_addClassList(["bar", "foo"]);
+        const resultFindTrue = div.jdm_findClassList(["bar", "foo"]);
+        const resultFindFalse = div.jdm_findClassList(["bar", "test"]);
+        const resultFindFalse2 = div.jdm_findClassList(["alt", "test"]);
+        expect(resultFindTrue).toBe(true);
+        expect(resultFindFalse).toBe(false);
+        expect(resultFindFalse2).toBe(false);
+    });
+
+    it("verifico se c'è un array di stringhe in OR nella classe", () => {
+        div.jdm_addClassList(["bar", "foo"]);
+        const resultFindTrue = div.jdm_findClassList(["bar", "foo"], true);
+        const resultFindFalse = div.jdm_findClassList(["bar", "test"], true);
+        const resultFindFalse2 = div.jdm_findClassList(["alt", "test"], true);
+        expect(resultFindTrue).toBe(true);
+        expect(resultFindFalse).toBe(true);
+        expect(resultFindFalse2).toBe(false);
     });
 });
 

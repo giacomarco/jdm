@@ -397,11 +397,28 @@ class Jdm extends HTMLElement {
      *
      * const div2 = JDM('<div>lorem ipsum</div>', document.body)
      * .jdm_toggleClassList(['class1', 'class2']); // Alterna le classi "class1" e "class2" sull'elemento div2.
-     *
-     *
      */
     jdm_toggleClassList(classList) {
         return _core.jdm_toggleClassList.call(this, classList);
+    }
+
+    /**
+     *  Permette di cercare una stringa o un array di stringhe all'interno della classe dell'elemento.
+     *  Normalmente ritorna true se tutti gli elementi di classList sono presenti nella classe dell'elemento
+     *  Se "some" è impostato a true cerca se sono presenti alcune classi
+     * @param {string|string[]} classList - Una singola classe CSS o un array di classi CSS da cercare.
+     * @param {boolean} [some=false] - Parametro che permette di scegliere se la ricerca è in AND o OR
+     * @returns {boolean} - ritorna true o false in base alla ricerca AND o OR
+     *
+     * @example
+     * const div = JDM('<div class="bar foo test" >lorem ipsum</div>', document.body)
+     *  .jdm_findClassList(["bar", "foo"]) // ritorna true perchè tutte le classi sono presenti
+     *
+     * const div = JDM('<div class="bar foo test" >lorem ipsum</div>', document.body)
+     *  .jdm_findClassList(["bar", "var"], true) // ritorna true perchè bar è presente nelle classi
+     */
+    jdm_findClassList(classList, some = false) {
+        return _core.jdm_findClassList.call(this, classList, some);
     }
 
     /**

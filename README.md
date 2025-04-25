@@ -90,6 +90,7 @@ node server.js
     * [.jdm_addClassList(classList)](#Jdm+jdm_addClassList) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_removeClassList(classList)](#Jdm+jdm_removeClassList) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_toggleClassList(classList)](#Jdm+jdm_toggleClassList) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_findClassList(classList, [some])](#Jdm+jdm_findClassList) ⇒ <code>boolean</code>
     * [.jdm_empty()](#Jdm+jdm_empty) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_destroy()](#Jdm+jdm_destroy) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_validate()](#Jdm+jdm_validate) ⇒ [<code>Jdm</code>](#Jdm)
@@ -330,6 +331,29 @@ const div = JDM('<div>lorem ipsum</div>', document.body)
 
 const div2 = JDM('<div>lorem ipsum</div>', document.body)
 .jdm_toggleClassList(['class1', 'class2']); // Alterna le classi "class1" e "class2" sull'elemento div2.
+```
+<a name="Jdm+jdm_findClassList"></a>
+
+### jdm.jdm\_findClassList(classList, [some]) ⇒ <code>boolean</code>
+Permette di cercare una stringa o un array di stringhe all'interno della classe dell'elemento.
+ Normalmente ritorna true se tutti gli elementi di classList sono presenti nella classe dell'elemento
+ Se "some" è impostato a true cerca se sono presenti alcune classi
+
+**Kind**: instance method of [<code>Jdm</code>](#Jdm)  
+**Returns**: <code>boolean</code> - - ritorna true o false in base alla ricerca AND o OR  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| classList | <code>string</code> \| <code>Array.&lt;string&gt;</code> |  | Una singola classe CSS o un array di classi CSS da cercare. |
+| [some] | <code>boolean</code> | <code>false</code> | Parametro che permette di scegliere se la ricerca è in AND o OR |
+
+**Example**  
+```js
+const div = JDM('<div class="bar foo test" >lorem ipsum</div>', document.body)
+ .jdm_findClassList(["bar", "foo"]) // ritorna true perchè tutte le classi sono presenti
+
+const div = JDM('<div class="bar foo test" >lorem ipsum</div>', document.body)
+ .jdm_findClassList(["bar", "var"], true) // ritorna true perchè bar è presente nelle classi
 ```
 <a name="Jdm+jdm_empty"></a>
 
