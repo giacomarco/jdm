@@ -154,6 +154,32 @@ describe("JDM - Base", () => {
         expect(div.children[2]).toBe(firstElement);
     });
 
+    it("inserisco prima un element", () => {
+        const firstElement = JDM("<div>primo</div>", div);
+        const secondElement = JDM("<div>second</div>", div);
+        const newElement = JDM("<div>new</div>");
+
+        secondElement.jdm_appendBefore(newElement);
+
+        expect(div.children[0]).toBe(firstElement);
+        expect(div.children[1]).toBe(newElement);
+        expect(div.children[2]).toBe(secondElement);
+    });
+
+    it("inserisco prima una lista di elementi", () => {
+        const firstElement = JDM("<div>primo</div>", div);
+        const secondElement = JDM("<div>second</div>", div);
+        const newElement = JDM("<div>new</div>");
+        const newElement2 = JDM("<div>new2</div>");
+
+        secondElement.jdm_appendBefore([newElement, newElement2]);
+
+        expect(div.children[0]).toBe(firstElement);
+        expect(div.children[1]).toBe(newElement);
+        expect(div.children[2]).toBe(newElement2);
+        expect(div.children[3]).toBe(secondElement);
+    });
+
     it("svuota un div (o elemento)", () => {
         const element = document.createElement("p");
         div.appendChild(element);

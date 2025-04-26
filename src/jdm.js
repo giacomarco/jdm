@@ -16,9 +16,13 @@ new Proto();
  * ```bash
  * npm install jdm_javascript_dom_manipulator
  * ```
+ * Esempio di utilizzo classico (da inserire prima degli script che usano JDM):
+ * ```html
+ * <script src="./dist/jdm.js"></script>
+ * ```
  * Esempio di utilizzo di un modulo ES6:
  * ```javascript
- * import './yourPath/dist/jdm.js';
+ * import './dist/jdm.js';
  * ```
  *
  * # USO
@@ -77,11 +81,6 @@ new Proto();
  * const div = JDM(domString, document.body);
  * ```
  *
- * ## ESEMPI:
- * Nella cartella example dentro un terminale:
- * ```terminal
- * node server.js
- * ```
  * @class
  */
 class Jdm extends HTMLElement {
@@ -324,6 +323,51 @@ class Jdm extends HTMLElement {
      */
     jdm_prepend(elementList) {
         return _core.jdm_prepend.call(this, elementList);
+    }
+
+    /**
+     *
+     * @param {HTMLElement|HTMLElement[]} elementList - Un singolo elemento DOM o un array di elementi DOM da aggiungere come figli.
+     * @param {HTMLElement} elementTarget - gli elementi di element list verranno inseriti prima di questo elemento
+     * @returns {Jdm} - Restituisce l'elemento DOM davanti al quale sono stati inseriti gli elementList, consentendo il chaining dei metodi.
+     *
+     * @example
+     * const div = JDM('<div></div>', document.body);
+     * const span1 = JDM('<span>foo</span>',div);
+     * const span2 = JDM('<span>bar</span>');
+     * const span3 = JDM('<span>test</span>');
+     * span1.jdm_appendBefore([span2, span3]);
+     * // Risultato
+     * <div>
+     *     <span>bar</span>
+     *     <span>test</span>
+     *     <span>foo</span>
+     * </div>
+     */
+    jdm_appendBefore(elementList) {
+        return _core.jdm_appendBefore.call(this, elementList);
+    }
+
+    /**
+     *
+     * @param {HTMLElement|HTMLElement[]} elementList - Un singolo elemento DOM o un array di elementi DOM da aggiungere come figli.
+     * @param {HTMLElement} elementTarget - gli elementi di element list verranno inseriti dopo questo elemento
+     * @returns {Jdm} - Restituisce l'elemento DOM dietro il quale sono stati inseriti gli elementList, consentendo il chaining dei metodi.
+     * @example
+     * const div = JDM('<div></div>', document.body);
+     * const span1 = JDM('<span>foo</span>',div);
+     * const span2 = JDM('<span>bar</span>');
+     * const span3 = JDM('<span>test</span>');
+     * span1.jdm_appendAfter([span2, span3]);
+     * // Risultato
+     * <div>
+     *     <span>foo</span>
+     *     <span>bar</span>
+     *     <span>test</span>
+     * </div>
+     */
+    jdm_appendAfter(elementList) {
+        return _core.jdm_appendAfter.call(this, elementList);
     }
 
     /**

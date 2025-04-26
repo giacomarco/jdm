@@ -1,17 +1,19 @@
 const path = require("path");
-const WebpackShellPluginNext = require('webpack-shell-plugin-next');
+const WebpackShellPluginNext = require("webpack-shell-plugin-next");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
-    entry: "./index.js", // Punto di ingresso
+    entry: "./index.js",
     output: {
         filename: "jdm.js",
         path: path.resolve(__dirname, "dist"),
-        publicPath: "/dist/",
-        libraryTarget: "module", // Usa "module" per il modulo ES
+        publicPath: "/",
+        library: "Jdm",
+        libraryTarget: "umd",
+        globalObject: "this",
     },
     experiments: {
-        outputModule: true, // Necessario per il supporto ai moduli ES
+        outputModule: false,
     },
     module: {
         rules: [
@@ -21,42 +23,39 @@ module.exports = {
                 use: {
                     loader: "babel-loader",
                     options: {
-                        presets: ["@babel/preset-env"], // Preset per compatibilità con ES
+                        presets: [["@babel/preset-env", { useBuiltIns: "usage", corejs: 3 }]],
                     },
                 },
             },
             {
                 test: /\.scss$/,
-                use: [
-                    "style-loader", // Inietta il CSS nel JS
-                    "css-loader", // Gestisce il CSS
-                    "sass-loader", // Compila il SCSS in CSS
-                ],
-            },
-            {
-                test: /\.html$/,
-                use: ["html-loader"], // Gestisce il caricamento degli HTML
+                use: ["style-loader", "css-loader", "sass-loader"],
             },
             {
                 test: /\.css$/,
-                use: ['style-loader', 'css-loader'], // Gestisce i file CSS
+                use: ["style-loader", "css-loader"],
+            },
+            {
+                test: /\.html$/,
+                use: ["html-loader"],
             },
         ],
     },
     plugins: [
-        new CleanWebpackPlugin(), // Pulisce la cartella dist prima della build
+        new CleanWebpackPlugin(),
         new WebpackShellPluginNext({
-            onAfterEmit: {
-                scripts: ['npm run jsdoc'], // Usa npm per eseguire lo script di documentazione
+            onAfterBuild: {
+                scripts: ["npm run docs:markdown", "npm run docs"],
                 blocking: false,
-                parallel: false
-            }
-        })
+                parallel: false,
+            },
+        }),
     ],
     devServer: {
-        static: "./dist", // Cartella static dove Webpack servirà i file
-        port: 3000, // Porta di sviluppo
-        open: true, // Apre automaticamente il browser
+        static: "./dist",
+        port: 3000,
+        open: true,
     },
-    mode: "production", // Modalità di produzione
+    mode: "production",
+    devtool: "source-map",
 };

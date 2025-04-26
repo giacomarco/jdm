@@ -28,6 +28,26 @@ export class _core {
     }
 
     /** @this {Jdm} */
+    static jdm_appendBefore(elementList) {
+        elementList = Array.isArray(elementList) ? elementList : [elementList];
+        const parent = this.node.parentNode;
+        for (const element of elementList) {
+            parent.insertBefore(element, this.node);
+        }
+        return this.node;
+    }
+
+    /** @this {Jdm} */
+    static jdm_appendAfter(elementList) {
+        elementList = Array.isArray(elementList) ? elementList : [elementList];
+        const parent = this.node.parentNode;
+        for (const element of elementList) {
+            parent.insertAfter(element, this.node);
+        }
+        return this.node;
+    }
+
+    /** @this {Jdm} */
     static jdm_setAttribute(attribute, value = null) {
         this.node.setAttribute(attribute, value);
         return this.node;

@@ -11,9 +11,13 @@ NPM
 ```bash
 npm install jdm_javascript_dom_manipulator
 ```
+Esempio di utilizzo classico (da inserire prima degli script che usano JDM):
+```html
+<script src="./dist/jdm.js"></script>
+```
 Esempio di utilizzo di un modulo ES6:
 ```javascript
-import './yourPath/dist/jdm.js';
+import './dist/jdm.js';
 ```
 
 # USO
@@ -72,12 +76,6 @@ const domString = `
 const div = JDM(domString, document.body);
 ```
 
-## ESEMPI:
-Nella cartella example dentro un terminale:
-```terminal
-node server.js
-```
-
 **Kind**: global class  
 
 * [Jdm](#Jdm)
@@ -86,6 +84,8 @@ node server.js
     * [.jdm_getAttribute(attribute)](#Jdm+jdm_getAttribute) ⇒ <code>string</code> \| <code>null</code>
     * [.jdm_append(elementList)](#Jdm+jdm_append) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_prepend(elementList)](#Jdm+jdm_prepend) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_appendBefore(elementList, elementTarget)](#Jdm+jdm_appendBefore) ⇒ [<code>Jdm</code>](#Jdm)
+    * [.jdm_appendAfter(elementList, elementTarget)](#Jdm+jdm_appendAfter) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_addId(id)](#Jdm+jdm_addId) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_addClassList(classList)](#Jdm+jdm_addClassList) ⇒ [<code>Jdm</code>](#Jdm)
     * [.jdm_removeClassList(classList)](#Jdm+jdm_removeClassList) ⇒ [<code>Jdm</code>](#Jdm)
@@ -247,6 +247,56 @@ div.jdm_prepend(span);
 <div>
     <span>foo</span>
     <p>paragrafo</p>
+</div>
+```
+<a name="Jdm+jdm_appendBefore"></a>
+
+### jdm.jdm\_appendBefore(elementList, elementTarget) ⇒ [<code>Jdm</code>](#Jdm)
+**Kind**: instance method of [<code>Jdm</code>](#Jdm)  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM davanti al quale sono stati inseriti gli elementList, consentendo il chaining dei metodi.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| elementList | <code>HTMLElement</code> \| <code>Array.&lt;HTMLElement&gt;</code> | Un singolo elemento DOM o un array di elementi DOM da aggiungere come figli. |
+| elementTarget | <code>HTMLElement</code> | gli elementi di element list verranno inseriti prima di questo elemento |
+
+**Example**  
+```js
+const div = JDM('<div></div>', document.body);
+const span1 = JDM('<span>foo</span>',div);
+const span2 = JDM('<span>bar</span>');
+const span3 = JDM('<span>test</span>');
+span1.jdm_appendBefore([span2, span3]);
+// Risultato
+<div>
+    <span>bar</span>
+    <span>test</span>
+    <span>foo</span>
+</div>
+```
+<a name="Jdm+jdm_appendAfter"></a>
+
+### jdm.jdm\_appendAfter(elementList, elementTarget) ⇒ [<code>Jdm</code>](#Jdm)
+**Kind**: instance method of [<code>Jdm</code>](#Jdm)  
+**Returns**: [<code>Jdm</code>](#Jdm) - - Restituisce l'elemento DOM dietro il quale sono stati inseriti gli elementList, consentendo il chaining dei metodi.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| elementList | <code>HTMLElement</code> \| <code>Array.&lt;HTMLElement&gt;</code> | Un singolo elemento DOM o un array di elementi DOM da aggiungere come figli. |
+| elementTarget | <code>HTMLElement</code> | gli elementi di element list verranno inseriti dopo questo elemento |
+
+**Example**  
+```js
+const div = JDM('<div></div>', document.body);
+const span1 = JDM('<span>foo</span>',div);
+const span2 = JDM('<span>bar</span>');
+const span3 = JDM('<span>test</span>');
+span1.jdm_appendAfter([span2, span3]);
+// Risultato
+<div>
+    <span>foo</span>
+    <span>bar</span>
+    <span>test</span>
 </div>
 ```
 <a name="Jdm+jdm_addId"></a>
