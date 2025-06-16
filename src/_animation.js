@@ -179,6 +179,20 @@ export class _animation {
     }
 
     /** @this {Jdm} */
+    static jdm_hide() {
+        this.jdm_setStyle("visibility", "hide");
+        this.jdm_setStyle("opacity", 0);
+        return this.node;
+    }
+
+    /** @this {Jdm} */
+    static jdm_show() {
+        this.jdm_setStyle("visibility", "visible");
+        this.jdm_setStyle("opacity", 1);
+        return this.node;
+    }
+
+    /** @this {Jdm} */
     static jdm_fadeIn(callbackFn, option = new AnimationOption()) {
         return _animation.jdm_animation.apply(this, [keyframe.fadeIn, callbackFn, option]);
     }

@@ -15,9 +15,9 @@ Esempio di utilizzo classico (da inserire prima degli script che usano JDM):
 ```html
 <script src="./dist/jdm.js"></script>
 ```
-Esempio di utilizzo di un modulo ES6:
+Esempio di utilizzo di un modulo ES6 (NB: usa jdm.es.js):
 ```javascript
-import './dist/jdm.js';
+import './dist/jdm.es.js';
 ```
 
 # USO

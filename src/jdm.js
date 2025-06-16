@@ -3,6 +3,63 @@ import { Proto } from "./proto.js";
 import { _animation, AnimationOption } from "./_animation.js";
 import { _core } from "./_core.js";
 
+const define = {
+    svgTags: [
+        "svg",
+        "g",
+        "defs",
+        "symbol",
+        "use",
+        "image",
+        "path",
+        "rect",
+        "circle",
+        "ellipse",
+        "line",
+        "polyline",
+        "polygon",
+        "text",
+        "tspan",
+        "textPath",
+        "marker",
+        "pattern",
+        "mask",
+        "clipPath",
+        "filter",
+        "feBlend",
+        "feColorMatrix",
+        "feComponentTransfer",
+        "feComposite",
+        "feConvolveMatrix",
+        "feDiffuseLighting",
+        "feDisplacementMap",
+        "feFlood",
+        "feGaussianBlur",
+        "feImage",
+        "feMerge",
+        "feMorphology",
+        "feOffset",
+        "feSpecularLighting",
+        "feTile",
+        "feTurbulence",
+        "linearGradient",
+        "radialGradient",
+        "stop",
+        "animate",
+        "animateTransform",
+        "animateMotion",
+        "set",
+        "foreignObject",
+        "view",
+        "switch",
+        "style",
+        "desc",
+        "title",
+        "metadata",
+        "script",
+    ],
+};
+
 new Proto();
 
 /**
@@ -139,17 +196,19 @@ class Jdm extends HTMLElement {
      * @throws {Error} Se il tipo dell'elemento è sconosciuto o non supportato, viene registrato un errore nel console.
      */
     #init(data) {
+        const parser = new DOMParser();
         switch (this.#checkType(data.element)) {
             case "tagString":
                 return document.createElement(data.element);
             case "domFromString":
-                const parser = new DOMParser();
-                return parser.parseFromString(data.element, "text/html").getRootNode().body.firstChild;
+            case "domFromHtml":
+                const str = data.element.trim();
+                const isSvg = new RegExp(`^<\\s*(${define.svgTags.join("|")})\\b`, "i").test(str);
+                const mime = isSvg ? "image/svg+xml" : "text/html";
+                const doc = parser.parseFromString(isSvg ? `<svg xmlns="http://www.w3.org/2000/svg">${str}</svg>` : str, mime);
+                return isSvg ? doc.documentElement.firstElementChild : doc.body.firstElementChild;
             case "elementDom":
                 return data.element;
-            case "domFromHtml":
-                const parserHtml = new DOMParser();
-                return parserHtml.parseFromString(data.element, "text/html").getRootNode().body.firstChild;
             case "tagInDom":
                 return this;
             case "unknown":
@@ -1050,6 +1109,14 @@ class Jdm extends HTMLElement {
      */
     jdm_clearAnimations() {
         return _animation.jdm_clearAnimations.call(this);
+    }
+
+    jdm_hide() {
+        return _animation.jdm_hide.call(this);
+    }
+
+    jdm_show() {
+        return _animation.jdm_hide.call(this);
     }
 
     /**
