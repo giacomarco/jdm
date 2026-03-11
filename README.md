@@ -80,58 +80,61 @@ const div = JDM(domString, document.body);
 
 * [Jdm](#Jdm)
     * [new Jdm([element], [parent], [classList], [deep], [...args])](#new_Jdm_new)
-    * [.jdm_setAttribute(attribute, [value])](#Jdm+jdm_setAttribute) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_getAttribute(attribute)](#Jdm+jdm_getAttribute) ⇒ <code>string</code> \| <code>null</code>
-    * [.jdm_append(elementList)](#Jdm+jdm_append) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_prepend(elementList)](#Jdm+jdm_prepend) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_appendBefore(elementList, elementTarget)](#Jdm+jdm_appendBefore) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_appendAfter(elementList, elementTarget)](#Jdm+jdm_appendAfter) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_addId(id)](#Jdm+jdm_addId) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_addClassList(classList)](#Jdm+jdm_addClassList) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_removeClassList(classList)](#Jdm+jdm_removeClassList) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_toggleClassList(classList)](#Jdm+jdm_toggleClassList) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_findClassList(classList, [some])](#Jdm+jdm_findClassList) ⇒ <code>boolean</code>
-    * [.jdm_empty()](#Jdm+jdm_empty) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_destroy()](#Jdm+jdm_destroy) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_validate()](#Jdm+jdm_validate) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_removeAttribute(attribute)](#Jdm+jdm_removeAttribute) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_setStyle(style, value)](#Jdm+jdm_setStyle) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_extendNode(name, [object])](#Jdm+jdm_extendNode) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_innerHTML(value)](#Jdm+jdm_innerHTML) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_binding(el, [event], [twoWayDataBinding])](#Jdm+jdm_binding) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_onInput([fn])](#Jdm+jdm_onInput) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_onChange([fn])](#Jdm+jdm_onChange) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_onSelect([fn])](#Jdm+jdm_onSelect) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_onDebounce([fn], [timeout])](#Jdm+jdm_onDebounce) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_onClick([fn])](#Jdm+jdm_onClick) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_onRightClick([fn])](#Jdm+jdm_onRightClick) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_onDoubleClick([fn])](#Jdm+jdm_onDoubleClick) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_onInvalid([fn])](#Jdm+jdm_onInvalid) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_onLoad([fn])](#Jdm+jdm_onLoad) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_onError([fn])](#Jdm+jdm_onError) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_onSubmit([fn])](#Jdm+jdm_onSubmit) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_setValue(value, [tooBoolean])](#Jdm+jdm_setValue) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_getValue()](#Jdm+jdm_getValue) ⇒ <code>any</code>
-    * [.jdm_genEvent(name, [data], [propagateToParents])](#Jdm+jdm_genEvent) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_addEventListener(name, [fn])](#Jdm+jdm_addEventListener) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_removeEventListener(name, [fn])](#Jdm+jdm_removeEventListener) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_extendChildNode()](#Jdm+jdm_extendChildNode) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_clearAnimations()](#Jdm+jdm_clearAnimations) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeIn([callbackFn], [option])](#Jdm+jdm_fadeIn) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeInDown([callbackFn], [option])](#Jdm+jdm_fadeInDown) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeInUp([callbackFn], [option])](#Jdm+jdm_fadeInUp) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeInLeft([callbackFn], [option])](#Jdm+jdm_fadeInLeft) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeInRight([callbackFn], [option])](#Jdm+jdm_fadeInRight) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeOut([callbackFn], [option])](#Jdm+jdm_fadeOut) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeOutRight([callbackFn], [option])](#Jdm+jdm_fadeOutRight) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeOutUp([callbackFn], [option])](#Jdm+jdm_fadeOutUp) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeOutDown([callbackFn], [option])](#Jdm+jdm_fadeOutDown) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_fadeOutLeft([callbackFn], [option])](#Jdm+jdm_fadeOutLeft) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_bounce([callbackFn], [option])](#Jdm+jdm_bounce) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_tada([callbackFn], [option])](#Jdm+jdm_tada) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_zoomIn([callbackFn], [option])](#Jdm+jdm_zoomIn) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_zoomOut([callbackFn], [option])](#Jdm+jdm_zoomOut) ⇒ [<code>Jdm</code>](#Jdm)
-    * [.jdm_rotation([callbackFn], [deg], [option])](#Jdm+jdm_rotation) ⇒ [<code>Jdm</code>](#Jdm)
+    * _instance_
+        * [.jdm_setAttribute(attribute, [value])](#Jdm+jdm_setAttribute) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_getAttribute(attribute)](#Jdm+jdm_getAttribute) ⇒ <code>string</code> \| <code>null</code>
+        * [.jdm_append(elementList)](#Jdm+jdm_append) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_prepend(elementList)](#Jdm+jdm_prepend) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_appendBefore(elementList, elementTarget)](#Jdm+jdm_appendBefore) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_appendAfter(elementList, elementTarget)](#Jdm+jdm_appendAfter) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_addId(id)](#Jdm+jdm_addId) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_addClassList(classList)](#Jdm+jdm_addClassList) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_removeClassList(classList)](#Jdm+jdm_removeClassList) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_toggleClassList(classList)](#Jdm+jdm_toggleClassList) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_findClassList(classList, [some])](#Jdm+jdm_findClassList) ⇒ <code>boolean</code>
+        * [.jdm_empty()](#Jdm+jdm_empty) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_destroy()](#Jdm+jdm_destroy) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_validate()](#Jdm+jdm_validate) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_removeAttribute(attribute)](#Jdm+jdm_removeAttribute) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_setStyle(style, value)](#Jdm+jdm_setStyle) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_extendNode(name, [object])](#Jdm+jdm_extendNode) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_innerHTML(value)](#Jdm+jdm_innerHTML) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_binding(el, [event], [twoWayDataBinding])](#Jdm+jdm_binding) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_onInput([fn])](#Jdm+jdm_onInput) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_onChange([fn])](#Jdm+jdm_onChange) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_onSelect([fn])](#Jdm+jdm_onSelect) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_onDebounce([fn], [timeout])](#Jdm+jdm_onDebounce) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_onClick([fn], [options])](#Jdm+jdm_onClick) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_onRightClick([fn])](#Jdm+jdm_onRightClick) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_onDoubleClick([fn])](#Jdm+jdm_onDoubleClick) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_onInvalid([fn])](#Jdm+jdm_onInvalid) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_onLoad([fn])](#Jdm+jdm_onLoad) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_onError([fn])](#Jdm+jdm_onError) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_onSubmit([fn])](#Jdm+jdm_onSubmit) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_setValue(value, [tooBoolean])](#Jdm+jdm_setValue) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_getValue()](#Jdm+jdm_getValue) ⇒ <code>any</code>
+        * [.jdm_genEvent(name, [data], [propagateToParents])](#Jdm+jdm_genEvent) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_addEventListener(name, [fn])](#Jdm+jdm_addEventListener) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_removeEventListener(name, [fn])](#Jdm+jdm_removeEventListener) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_extendChildNode()](#Jdm+jdm_extendChildNode) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_clearAnimations()](#Jdm+jdm_clearAnimations) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_fadeIn([callbackFn], [option])](#Jdm+jdm_fadeIn) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_fadeInDown([callbackFn], [option])](#Jdm+jdm_fadeInDown) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_fadeInUp([callbackFn], [option])](#Jdm+jdm_fadeInUp) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_fadeInLeft([callbackFn], [option])](#Jdm+jdm_fadeInLeft) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_fadeInRight([callbackFn], [option])](#Jdm+jdm_fadeInRight) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_fadeOut([callbackFn], [option])](#Jdm+jdm_fadeOut) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_fadeOutRight([callbackFn], [option])](#Jdm+jdm_fadeOutRight) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_fadeOutUp([callbackFn], [option])](#Jdm+jdm_fadeOutUp) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_fadeOutDown([callbackFn], [option])](#Jdm+jdm_fadeOutDown) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_fadeOutLeft([callbackFn], [option])](#Jdm+jdm_fadeOutLeft) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_bounce([callbackFn], [option])](#Jdm+jdm_bounce) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_tada([callbackFn], [option])](#Jdm+jdm_tada) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_zoomIn([callbackFn], [option])](#Jdm+jdm_zoomIn) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_zoomOut([callbackFn], [option])](#Jdm+jdm_zoomOut) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_rotation([callbackFn], [deg], [option])](#Jdm+jdm_rotation) ⇒ [<code>Jdm</code>](#Jdm)
+    * _static_
+        * [.on()](#Jdm.on)
 
 <a name="new_Jdm_new"></a>
 
@@ -650,7 +653,7 @@ const input = JDM('input', document.body)
 ```
 <a name="Jdm+jdm_onClick"></a>
 
-### jdm.jdm\_onClick([fn]) ⇒ [<code>Jdm</code>](#Jdm)
+### jdm.jdm\_onClick([fn], [options]) ⇒ [<code>Jdm</code>](#Jdm)
 Aggiunge un listener per l'evento `click` all'elemento DOM.
 Questo metodo consente di eseguire una funzione di callback ogni volta che si verifica un evento di tipo `click` sull'elemento.
 L'evento `click` viene attivato quando l'utente clicca su un elemento, come un pulsante o un link.
@@ -661,6 +664,7 @@ L'evento `click` viene attivato quando l'utente clicca su un elemento, come un p
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | [fn] | <code>function</code> | <code>() &#x3D;&gt; {}</code> | La funzione di callback da eseguire quando si verifica l'evento `click`.                                    La funzione riceverà l'evento come parametro. |
+| [options] | <code>EvtOpt</code> |  | Oggetto opzioni (parziale supportato) |
 
 **Example**  
 ```js
@@ -1286,3 +1290,9 @@ Applica un'animazione di rotazione all'elemento.
 JDM(`<div class="foo"> Rotate </div>`, document.body)
      .jdm_rotation(() => console.log('Rotazione completata'), 180, { duration: 1000 });
 ```
+<a name="Jdm.on"></a>
+
+### Jdm.on()
+EVENT
+
+**Kind**: static method of [<code>Jdm</code>](#Jdm)  

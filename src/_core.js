@@ -1,4 +1,5 @@
 import { _common } from "./_common.js";
+import { _evt } from "./_evt.js";
 
 export class _core {
     /** @this {Jdm} */
@@ -221,9 +222,9 @@ export class _core {
         } else if (this.tag === "form") {
             const setValue = (el, value) => {
                 if (el.type === "checkbox" || el.type === "radio") {
-                    el.checked = value;
+                    el.checked = value || false;
                 } else {
-                    el.value = value;
+                    el.value = value || "";
                 }
             };
 
@@ -267,6 +268,7 @@ export class _core {
     }
 
     /** @this {Jdm} */
+
     static jdm_getValue() {
         if (this.tag === "input" && (this.node.type === "checkbox" || this.node.type === "radio")) {
             return this.node.checked;
@@ -347,69 +349,85 @@ export class _core {
     }
 
     /** @this {Jdm} */
-    static jdm_onInput(fn = () => {}) {
-        this.node.addEventListener("input", fn);
+    static jdm_submit() {
+        const event = new Event("submit", { cancelable: true, bubbles: true });
+        if (!this.node.dispatchEvent(event)) return;
+        try {
+            this.node.submit();
+        } catch (e) {
+            throw new Error(`Element must be a form: ${e}`);
+        }
+        return this;
+    }
+
+    /** @this {Jdm} */
+    static jdm_onInput(fn = () => {}, opt) {
+        _evt.jdm_onElement(this.node, "input", fn, opt);
         return this.node;
     }
 
     /** @this {Jdm} */
-    static jdm_onChange(fn = () => {}) {
-        this.node.addEventListener("change", fn);
+    static jdm_onChange(fn = () => {}, opt) {
+        _evt.jdm_onElement(this.node, "change", fn, opt);
         return this.node;
     }
 
     /** @this {Jdm} */
-    static jdm_onSelect(fn = () => {}) {
-        this.node.addEventListener("select", fn);
+    static jdm_onSelect(fn = () => {}, opt) {
+        _evt.jdm_onElement(this.node, "select", fn, opt);
         return this.node;
     }
 
     /** @this {Jdm} */
-    static jdm_onDebounce(fn = () => {}, timeout = 300, method = "input") {
-        this.node.addEventListener(method, _common.debounce(fn, timeout));
+    static jdm_onDebounce(fn = () => {}, timeout = this.defadefaultDebounceTime, method = "input", opt) {
+        _evt.jdm_onElement(this.node, method, _common.debounce(fn, timeout), opt);
         return this.node;
     }
 
     /** @this {Jdm} */
-    static jdm_onClick(fn = () => {}) {
-        this.node.addEventListener("click", fn);
-
+    static jdm_onClick(fn = () => {}, opt) {
+        _evt.jdm_onElement(this.node, "click", fn, opt);
         return this.node;
     }
 
     /** @this {Jdm} */
-    static jdm_onRightClick(fn = () => {}) {
-        this.node.addEventListener("contextmenu", fn);
+    static jdm_onRightClick(fn = () => {}, opt) {
+        _evt.jdm_onElement(this.node, "contextmenu", fn, opt);
         return this.node;
     }
 
     /** @this {Jdm} */
-    static jdm_onDoubleClick(fn = () => {}) {
-        this.node.addEventListener("dblclick", fn);
+    static jdm_onDoubleClick(fn = () => {}, opt) {
+        _evt.jdm_onElement(this.node, "dblclick", fn, opt);
         return this.node;
     }
 
     /** @this {Jdm} */
-    static jdm_onInvalid(fn = () => {}) {
-        this.node.addEventListener("invalid", fn);
+    static jdm_onInvalid(fn = () => {}, opt) {
+        _evt.jdm_onElement(this.node, "invalid", fn, opt);
         return this.node;
     }
 
     /** @this {Jdm} */
-    static jdm_onLoad(fn = () => {}) {
-        this.node.addEventListener("load", fn);
+    static jdm_onLoad(fn = () => {}, opt) {
+        _evt.jdm_onElement(this.node, "load", fn, opt);
         return this.node;
     }
 
     /** @this {Jdm} */
-    static jdm_onError(fn = () => {}) {
-        this.node.addEventListener("error", fn);
+    static jdm_onError(fn = () => {}, opt) {
+        _evt.jdm_onElement(this.node, "error", fn, opt);
         return this.node;
     }
 
     /** @this {Jdm} */
-    static jdm_onSubmit(fn = e => {}) {
-        this.node.addEventListener("submit", fn);
+    static jdm_onSubmit(fn = e => {}, opt) {
+        _evt.jdm_onElement(this.node, "submit", fn, opt);
+        return this.node;
+    }
+    /** @this {Jdm} */
+    static jdm_setDebounceTime(time = this.defadefaultDebounceTime) {
+        this.defadefaultDebounceTime = time;
         return this.node;
     }
 }

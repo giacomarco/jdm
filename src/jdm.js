@@ -2,7 +2,7 @@ import { _common } from "./_common.js";
 import { Proto } from "./proto.js";
 import { _animation, AnimationOption } from "./_animation.js";
 import { _core } from "./_core.js";
-
+import { _evt as evt, _evt } from "./_evt.js";
 const define = {
     svgTags: [
         "svg",
@@ -170,6 +170,7 @@ class Jdm extends HTMLElement {
     constructor(element = null, parent = null, classList = null, deep = true, ...args) {
         super();
         const data = { element: element, parent: parent, classList: classList, deep: deep, args: args };
+        this.defadefaultDebounceTime = 300;
         this.node = this.#init(data);
         this.jdm_childNode = [];
         this.tag = this.node.tagName.toLowerCase();
@@ -757,7 +758,7 @@ class Jdm extends HTMLElement {
      * // Aggiunge un listener per l'evento 'input' con un debounce di 500 millisecondi,
      * // evitando chiamate troppo frequenti alla funzione di callback mentre l'utente sta digitando.
      */
-    jdm_onDebounce(fn = () => {}, timeout = 300, method = "input") {
+    jdm_onDebounce(fn = () => {}, timeout = this.defadefaultDebounceTime, method = "input") {
         return _core.jdm_onDebounce.call(this, fn, timeout, method);
     }
 
@@ -768,6 +769,7 @@ class Jdm extends HTMLElement {
      *
      * @param {Function} [fn=() => {}] - La funzione di callback da eseguire quando si verifica l'evento `click`.
      *                                    La funzione riceverà l'evento come parametro.
+     * @param {EvtOpt} [options] - Oggetto opzioni (parziale supportato)
      * @returns {Jdm} - Restituisce l'elemento DOM su cui è stato aggiunto l'event listener, consentendo il chaining dei metodi.
      *
      * @example
@@ -777,7 +779,7 @@ class Jdm extends HTMLElement {
      *  });
      * // Aggiunge un listener per l'evento 'click' che stampa un messaggio ogni volta che il pulsante viene cliccato.
      */
-    jdm_onClick(fn = () => {}) {
+    jdm_onClick(fn = () => {}, opt) {
         return _core.jdm_onClick.call(this, fn);
     }
 
@@ -1027,6 +1029,13 @@ class Jdm extends HTMLElement {
         return _core.jdm_genEvent.call(this, name, data, propagateToParents);
     }
 
+    jdm_on(name, fn, opt) {
+        return _evt.jdm_onElement.call(this, this.node, name, fn, opt);
+    }
+    jdm_off(name, fn, opt) {
+        return _evt.jdm_offElement.call(this, this.node, name, fn, opt);
+    }
+
     /**
      * Aggiunge un listener per un evento specificato sull'elemento DOM associato.
      * Consente di eseguire una funzione di callback quando l'evento si verifica.
@@ -1095,6 +1104,14 @@ class Jdm extends HTMLElement {
      */
     jdm_extendChildNode() {
         return _core.jdm_extendChildNode.call(this);
+    }
+
+    jdm_setDebounceTime(time = this.defadefaultDebounceTime) {
+        return _core.jdm_setDebounceTime.call(this, time);
+    }
+
+    jdm_submit() {
+        return _core.jdm_submit.call(this);
     }
 
     /** ANIMATION **/
@@ -1335,12 +1352,42 @@ class Jdm extends HTMLElement {
     jdm_rotation(callbackFn, deg = 360, option = new AnimationOption()) {
         return _animation.jdm_rotation.call(this, callbackFn, deg, option);
     }
+
+    /** EVENT **/
+
+    static on(name, fn) {
+        _evt.jdm_on(name, fn);
+        return this;
+    }
+
+    static off(name, fn) {
+        evt.jdm_off(name, fn);
+        return this;
+    }
+
+    static emit(name, data) {
+        evt.jdm_emit(name, data);
+        return this;
+    }
+
+    static once(name, fn) {
+        evt.jdm_once(name, fn);
+        return this;
+    }
 }
 
-window.JDM = (element = null, parent = null, classList = null, deep = true, ...args) => {
-    return new Jdm(element, parent, classList, deep, ...args);
-};
-window.Jdm = Jdm;
-customElements.define("jdm-element", Jdm);
+if (!window.JDM) {
+    window.JDM = (element = null, parent = null, classList = null, deep = true, ...args) => {
+        return new Jdm(element, parent, classList, deep, ...args);
+    };
+}
+
+if (!window.Jdm) {
+    window.Jdm = Jdm;
+}
+
+if (!customElements.get("jdm-element")) {
+    customElements.define("jdm-element", Jdm);
+}
 
 export { Jdm };

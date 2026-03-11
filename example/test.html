@@ -8,9 +8,17 @@
 <body>
 
     <div id="app"></div>
+    <button id="testa">testa </button>
 
 <script type="module">
     import "../src/jdm.js"
+
+    // JDM(document.querySelector('#testa')).jdm_onClick(()=> {
+    //     console.log('ascxas')
+    // })
+ JDM(document.querySelector('#testa')).jdm_onClick(()=> {
+        console.log('ascxas')
+    })
 
     //language=html
     const svgDom = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50" width="200" height="50"></svg>`
@@ -25,6 +33,7 @@
 
     JDM(document.querySelector("#app"));
     JDM('Qualcosa <span>in mezzo</span>', document.body);
+
 
 
 
