@@ -498,7 +498,9 @@ export class _core {
      * Promise-wrapper su un singolo evento. Risolve con l'oggetto event al primo fire.
      * @this {Jdm}
      * @param {string} eventName
-     * @param {{ timeout?: number, signal?: AbortSignal }} [opt]
+     * @param {Object} [opt]
+     * @param {number} [opt.timeout]
+     * @param {AbortSignal} [opt.signal]
      * @returns {Promise<Event>}
      */
     static jdm_waitFor(eventName, opt = {}) {
