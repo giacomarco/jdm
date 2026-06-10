@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="it">
+    <head>
+        <meta charset="utf-8" />
+        <title>jdm3 e2e fixture</title>
+    </head>
+    <body>
+        <div id="root"></div>
+        <script type="module">
+            import { Jdm } from "/src/jdm.js";
+            // expose globals for page.evaluate
+            window.Jdm = Jdm;
+            window.__jdmReady = true;
+        </script>
+    </body>
+</html>

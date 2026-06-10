@@ -1,8 +1,54 @@
 {
     "name": "jdm_javascript_dom_manipulator",
-    "version": "2.4.7",
+    "version": "2.5.0",
     "description": "framework javascript",
     "main": "index.js",
+    "module": "dist/jdm.es.js",
+    "types": "types/index.d.ts",
+    "sideEffects": [
+        "./index.js",
+        "./src/jdm.js",
+        "./src/_evt.js",
+        "./src/proto.js",
+        "./dist/*"
+    ],
+    "files": [
+        "src/",
+        "dist/",
+        "index.js",
+        "types/",
+        "LICENSE",
+        "README.md"
+    ],
+    "exports": {
+        ".": {
+            "types": "./types/index.d.ts",
+            "import": "./index.js",
+            "require": "./dist/jdm.js",
+            "default": "./index.js"
+        },
+        "./core": {
+            "types": "./types/core.d.ts",
+            "import": "./src/_core.js"
+        },
+        "./events": {
+            "types": "./types/events.d.ts",
+            "import": "./src/_evt.js"
+        },
+        "./animation": {
+            "types": "./types/animation.d.ts",
+            "import": "./src/_animation.js"
+        },
+        "./common": {
+            "types": "./types/common.d.ts",
+            "import": "./src/_common.js"
+        },
+        "./proto": {
+            "types": "./types/proto.d.ts",
+            "import": "./src/proto.js"
+        },
+        "./package.json": "./package.json"
+    },
     "directories": {
         "example": "example"
     },
@@ -10,9 +56,14 @@
         "test": "vitest",
         "test:run": "vitest run",
         "test:coverage": "vitest run --coverage",
+        "test:e2e": "playwright test",
+        "test:e2e:ui": "playwright test --ui",
+        "test:e2e:report": "playwright show-report",
+        "test:all": "npm run test:run && npm run test:e2e",
         "docs": "jsdoc -c jsdoc.json",
         "docs:markdown": "npx jsdoc-to-markdown ./src/**/*.js > ./README.md",
-        "build": "npm run test:coverage && webpack && npm run build:rollup && npm run docs:ma rkdown && npm run docs",
+        "types": "tsc -p tsconfig.types.json",
+        "build": "npm run test:coverage && webpack && npm run build:rollup && npm run docs:markdown && npm run docs",
         "build:rollup": "rollup -c"
     },
     "repository": {
@@ -35,6 +86,7 @@
         "@babel/cli": "^7.27.0",
         "@babel/core": "^7.26.10",
         "@babel/preset-env": "^7.26.9",
+        "@playwright/test": "^1.60.0",
         "@rollup/plugin-terser": "^0.4.4",
         "@vitest/coverage-v8": "^3.1.1",
         "babel-loader": "^10.0.0",
@@ -42,6 +94,7 @@
         "core-js": "^3.41.0",
         "css-loader": "^7.1.2",
         "html-webpack-plugin": "^5.6.3",
+        "http-server": "^14.1.1",
         "jsdoc": "^4.0.4",
         "jsdoc-to-markdown": "^9.1.1",
         "jsdom": "^26.1.0",
@@ -53,6 +106,7 @@
         "sass-loader": "^16.0.5",
         "style-loader": "^4.0.0",
         "taffydb": "^2.7.3",
+        "typescript": "^5.4.0",
         "vitest": "^3.1.1",
         "webpack": "^5.98.0",
         "webpack-cli": "^6.0.1",

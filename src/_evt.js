@@ -8,6 +8,7 @@ class EvtOpt {
 
 export class _evt {
     constructor() {
+        if (typeof window === "undefined") return;
         window.evtElementFnList = new WeakMap();
         window.evtListener = {};
     }
@@ -42,7 +43,8 @@ export class _evt {
 
     static jdm_emit(name, data) {
         if (!window.evtListener[name]) return;
-        window.evtListener[name].forEach(fn => fn(data));
+        // snapshot: handler-driven off() during emit must not skip subsequent handlers
+        [...window.evtListener[name]].forEach(fn => fn(data));
         return this;
     }
 
@@ -65,6 +67,12 @@ export class _evt {
         // se non voglio preservare i precedenti listener → li rimuovo
         if (opt.preservePrevEvent === false) {
             _evt.jdm_offElement(element, name);
+            // re-acquire after potential deletion
+            listEvent = window.evtElementFnList.get(element);
+            if (!listEvent) {
+                listEvent = new Map();
+                window.evtElementFnList.set(element, listEvent);
+            }
         }
 
         let handlers = listEvent.get(name);
@@ -73,32 +81,58 @@ export class _evt {
             listEvent.set(name, handlers);
         }
 
-        handlers.push({ fn, opt });
-        element.addEventListener(name, fn, opt);
-
+        let actualFn = fn;
         if (opt.jdm_once) {
-            listEvent.delete(name);
-            if (listEvent.size === 0) {
-                window.evtElementFnList.delete(element);
-            }
+            // wrapper auto-removes both DOM listener and internal tracking after first fire
+            actualFn = function onceWrapper(e) {
+                try {
+                    fn(e);
+                } finally {
+                    element.removeEventListener(name, actualFn, opt);
+                    const h = listEvent.get(name);
+                    if (h) {
+                        const idx = h.findIndex(x => x.fn === actualFn);
+                        if (idx >= 0) h.splice(idx, 1);
+                        if (h.length === 0) listEvent.delete(name);
+                    }
+                    if (listEvent.size === 0) {
+                        window.evtElementFnList.delete(element);
+                    }
+                }
+            };
         }
+
+        handlers.push({ fn: actualFn, opt });
+        element.addEventListener(name, actualFn, opt);
+
         return this;
     }
 
-    static jdm_offElement(element, name) {
+    static jdm_offElement(element, name, fn = null) {
         const listEvent = window.evtElementFnList.get(element);
         if (!listEvent) return this;
 
         const handlers = listEvent.get(name);
         if (!handlers) return this;
 
-        // rimuovo TUTTI i listener registrati per quell’evento
-        for (const { fn, opt } of handlers) {
-            element.removeEventListener(name, fn, opt);
+        if (fn) {
+            // remove only matching handler (native-like)
+            const idx = handlers.findIndex(h => h.fn === fn);
+            if (idx >= 0) {
+                const { opt } = handlers[idx];
+                element.removeEventListener(name, fn, opt);
+                handlers.splice(idx, 1);
+            }
+            if (handlers.length === 0) listEvent.delete(name);
+        } else {
+            // rimuovo TUTTI i listener registrati per quell'evento
+            for (const { fn: hfn, opt } of handlers) {
+                element.removeEventListener(name, hfn, opt);
+            }
+            listEvent.delete(name);
         }
-        listEvent.delete(name);
 
-        // se non ci sono più eventi → pulisco l’elemento
+        // se non ci sono più eventi → pulisco l'elemento
         if (listEvent.size === 0) {
             window.evtElementFnList.delete(element);
         }
@@ -110,4 +144,6 @@ export class _evt {
         return this;
     }
 }
-new _evt();
+if (typeof window !== "undefined") {
+    new _evt();
+}

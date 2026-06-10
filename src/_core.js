@@ -32,6 +32,10 @@ export class _core {
     static jdm_appendBefore(elementList) {
         elementList = Array.isArray(elementList) ? elementList : [elementList];
         const parent = this.node.parentNode;
+        if (!parent) {
+            console.warn("[JDM] jdm_appendBefore: node has no parent");
+            return this.node;
+        }
         for (const element of elementList) {
             parent.insertBefore(element, this.node);
         }
@@ -42,15 +46,26 @@ export class _core {
     static jdm_appendAfter(elementList) {
         elementList = Array.isArray(elementList) ? elementList : [elementList];
         const parent = this.node.parentNode;
-        for (const element of elementList) {
-            parent.insertAfter(element, this.node);
+        if (!parent) {
+            console.warn("[JDM] jdm_appendAfter: node has no parent");
+            return this.node;
+        }
+        // Native DOM has no `insertAfter` — use `insertBefore` with nextSibling (null = append at end).
+        // Iterate in reverse so the elements end up in passed order after this.node.
+        for (let i = elementList.length - 1; i >= 0; i--) {
+            parent.insertBefore(elementList[i], this.node.nextSibling);
         }
         return this.node;
     }
 
     /** @this {Jdm} */
-    static jdm_setAttribute(attribute, value = null) {
-        this.node.setAttribute(attribute, value);
+    static jdm_setAttribute(attribute, value = "") {
+        if (!attribute) {
+            console.warn("[JDM] jdm_setAttribute: empty attribute name");
+            return this.node;
+        }
+        // value=null senza fix sarebbe scritto come stringa "null" — neutralizziamo
+        this.node.setAttribute(attribute, value == null ? "" : value);
         return this.node;
     }
 
@@ -147,6 +162,10 @@ export class _core {
 
     /** @this {Jdm} */
     static jdm_validate() {
+        if (typeof this.node.checkValidity !== "function") {
+            console.warn("[JDM] jdm_validate: node has no checkValidity()");
+            return this.node;
+        }
         const validity = this.node.checkValidity();
         this.jdm_genEvent("validate", validity);
         return this.node;
@@ -160,6 +179,10 @@ export class _core {
 
     /** @this {Jdm} */
     static jdm_extendNode(name, object = null) {
+        if (name === "__proto__" || name === "prototype" || name === "constructor") {
+            console.warn(`[JDM] jdm_extendNode: refused unsafe name "${name}" (prototype pollution)`);
+            return this.node;
+        }
         this.node[name] = object;
         return this.node;
     }
@@ -198,9 +221,8 @@ export class _core {
             if (twoWayDataBinding) {
                 const elementListTmp = elementList.filter(elementTmp => elementTmp !== element);
                 elementListTmp.push(this.node);
-                for (const elementTmp of elementListTmp) {
-                    element.jdm_binding(elementListTmp, event, false);
-                }
+                // single recursive call: bind element → [others + this.node]. No inner loop (was N×N duplicate).
+                element.jdm_binding(elementListTmp, event, false);
             }
         }
 
@@ -222,9 +244,11 @@ export class _core {
         } else if (this.tag === "form") {
             const setValue = (el, value) => {
                 if (el.type === "checkbox" || el.type === "radio") {
-                    el.checked = value || false;
+                    // value falsy (null/undefined/0/""/false) → unchecked; tutto il resto truthy → checked
+                    el.checked = value == null ? false : !!value;
                 } else {
-                    el.value = value || "";
+                    // preserva 0 / false / "" come stringa rappresentativa; null/undefined → ""
+                    el.value = value == null ? "" : value;
                 }
             };
 
@@ -233,7 +257,8 @@ export class _core {
             };
 
             const populateForm = (form, data, prefix = "") => {
-                for (const key in data) {
+                if (data == null || typeof data !== "object") return;
+                for (const key of Object.keys(data)) {
                     const value = data[key];
                     const name = prefix ? `${prefix}[${key}]` : key;
                     const elementList = findElement(form, Array.isArray(value) ? `${name}[]` : name);
@@ -244,13 +269,13 @@ export class _core {
                                 checkboxes.forEach(checkbox => {
                                     setValue(checkbox, value.includes(checkbox.value));
                                 });
-                            } else if (typeof value === "object") {
+                            } else if (value !== null && typeof value === "object") {
                                 populateForm(form, value, name);
                             } else {
                                 setValue(element, value);
                             }
                         }
-                    } else if (typeof value === "object") {
+                    } else if (value !== null && typeof value === "object") {
                         populateForm(form, value, name);
                     }
                 }
@@ -258,13 +283,51 @@ export class _core {
             populateForm(this.node, value);
         } else {
             if (this.node.jdm_getAttribute("type") === "number" || this.node.jdm_getAttribute("type") === "range") {
-                this.node.value = value * 1;
+                const num = value * 1;
+                if (Number.isNaN(num)) {
+                    console.warn(`[JDM] jdm_setValue: non-numeric value "${value}" on number/range input — skipped`);
+                } else {
+                    this.node.value = num;
+                }
             } else {
                 this.node.value = value;
             }
         }
 
         return this.node;
+    }
+
+    /**
+     * Variante di setValue senza coerce automatico via `toBoolean()`.
+     * Equivalente a `jdm_setValue(value, false)` ma con default esplicito.
+     * @this {Jdm}
+     */
+    static jdm_setValueRaw(value) {
+        return _core.jdm_setValue.call(this, value, false);
+    }
+
+    /**
+     * Ritorna il valore RAW del campo senza coerce magic ("null" → null, FormData split, ecc.).
+     * Per form, ritorna FormData direttamente. Per altri input, ritorna node.value (string).
+     * @this {Jdm}
+     */
+    static jdm_getValueRaw() {
+        if (this.tag === "form") return new FormData(this.node);
+        if (this.tag === "input" && (this.node.type === "checkbox" || this.node.type === "radio")) {
+            return this.node.checked;
+        }
+        return this.node.value;
+    }
+
+    /**
+     * Ritorna il valore come Number per input number/range. Per altri tipi ritorna NaN.
+     * @this {Jdm}
+     * @returns {number}
+     */
+    static jdm_getValueAsNumber() {
+        if (typeof this.node.valueAsNumber === "number") return this.node.valueAsNumber;
+        const n = Number(this.node.value);
+        return n;
     }
 
     /** @this {Jdm} */
@@ -351,13 +414,13 @@ export class _core {
     /** @this {Jdm} */
     static jdm_submit() {
         const event = new Event("submit", { cancelable: true, bubbles: true });
-        if (!this.node.dispatchEvent(event)) return;
+        if (!this.node.dispatchEvent(event)) return this.node;
         try {
             this.node.submit();
         } catch (e) {
             throw new Error(`Element must be a form: ${e}`);
         }
-        return this;
+        return this.node;
     }
 
     /** @this {Jdm} */
@@ -429,5 +492,85 @@ export class _core {
     static jdm_setDebounceTime(time = this.defadefaultDebounceTime) {
         this.defadefaultDebounceTime = time;
         return this.node;
+    }
+
+    /**
+     * Promise-wrapper su un singolo evento. Risolve con l'oggetto event al primo fire.
+     * @this {Jdm}
+     * @param {string} eventName
+     * @param {{ timeout?: number, signal?: AbortSignal }} [opt]
+     * @returns {Promise<Event>}
+     */
+    static jdm_waitFor(eventName, opt = {}) {
+        return new Promise((resolve, reject) => {
+            const node = this.node;
+            let timer = null;
+            const handler = e => {
+                if (timer) clearTimeout(timer);
+                node.removeEventListener(eventName, handler);
+                resolve(e);
+            };
+            node.addEventListener(eventName, handler, { once: true });
+            if (opt.timeout && opt.timeout > 0) {
+                timer = setTimeout(() => {
+                    node.removeEventListener(eventName, handler);
+                    reject(new Error(`[JDM] jdm_waitFor: timeout after ${opt.timeout}ms waiting for "${eventName}"`));
+                }, opt.timeout);
+            }
+            if (opt.signal) {
+                opt.signal.addEventListener(
+                    "abort",
+                    () => {
+                        if (timer) clearTimeout(timer);
+                        node.removeEventListener(eventName, handler);
+                        reject(new Error("[JDM] jdm_waitFor: aborted"));
+                    },
+                    { once: true },
+                );
+            }
+        });
+    }
+
+    /**
+     * Event delegation: registra un listener sul node che fa match su `selector`.
+     * Pure addition. Ritorna funzione di unsubscribe.
+     * @this {Jdm}
+     * @param {string} eventName
+     * @param {string} selector
+     * @param {function(Event, HTMLElement): void} fn
+     * @returns {function(): void} unsubscribe
+     */
+    static jdm_delegate(eventName, selector, fn) {
+        const node = this.node;
+        const handler = e => {
+            const target = e.target.closest(selector);
+            if (target && node.contains(target)) {
+                fn(e, target);
+            }
+        };
+        node.addEventListener(eventName, handler);
+        return () => node.removeEventListener(eventName, handler);
+    }
+
+    /**
+     * Batcha una serie di operazioni DOM dentro un singolo requestAnimationFrame.
+     * Pure addition.
+     * @this {Jdm}
+     * @param {function(HTMLElement): void} fn
+     * @returns {Promise<HTMLElement>}
+     */
+    static jdm_batch(fn) {
+        return new Promise(resolve => {
+            const node = this.node;
+            const raf = typeof requestAnimationFrame === "function" ? requestAnimationFrame : cb => setTimeout(cb, 16);
+            raf(() => {
+                try {
+                    fn(node);
+                } catch (e) {
+                    console.warn("[JDM] jdm_batch: errore nel callback —", e);
+                }
+                resolve(node);
+            });
+        });
     }
 }

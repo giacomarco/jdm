@@ -139,6 +139,11 @@ export const keyframe = {
     ],
     rotation: deg => [
         {
+            transform: "rotate(0deg)",
+            transformOrigin: "center center",
+            easing: "linear",
+        },
+        {
             transform: `rotate(${deg}deg)`,
             transformOrigin: "center center",
             easing: "linear",
@@ -172,6 +177,30 @@ export class _animation {
         return this.node;
     }
 
+    /**
+     * Variante di clearAnimations che NON azzera `transform`/`opacity` inline.
+     * Cancella solo le animazioni attive e reset `animation`/`transition` CSS.
+     * Pure addition — non sostituisce `jdm_clearAnimations`.
+     * @this {Jdm}
+     */
+    static jdm_cancelAnimations() {
+        if (typeof this.node.getAnimations === "function") {
+            this.node.getAnimations().forEach(animation => animation.cancel());
+        }
+        this.node.style.animation = "none";
+        this.node.style.transition = "none";
+        return this.node;
+    }
+
+    /**
+     * Reset tutti gli stili inline del nodo. Pure addition.
+     * @this {Jdm}
+     */
+    static jdm_resetStyles() {
+        this.node.removeAttribute("style");
+        return this.node;
+    }
+
     /** @this {Jdm} */
     static jdm_animation(keyframe, callbackFn, option = new AnimationOption()) {
         _animation.#animate.apply(this, [keyframe, option, callbackFn]);
@@ -180,7 +209,7 @@ export class _animation {
 
     /** @this {Jdm} */
     static jdm_hide() {
-        this.jdm_setStyle("visibility", "hide");
+        this.jdm_setStyle("visibility", "hidden");
         this.jdm_setStyle("opacity", 0);
         return this.node;
     }

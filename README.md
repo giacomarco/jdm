@@ -81,6 +81,7 @@ const div = JDM(domString, document.body);
 * [Jdm](#Jdm)
     * [new Jdm([element], [parent], [classList], [deep], [...args])](#new_Jdm_new)
     * _instance_
+        * [.version](#Jdm+version) : <code>string</code>
         * [.jdm_setAttribute(attribute, [value])](#Jdm+jdm_setAttribute) ⇒ [<code>Jdm</code>](#Jdm)
         * [.jdm_getAttribute(attribute)](#Jdm+jdm_getAttribute) ⇒ <code>string</code> \| <code>null</code>
         * [.jdm_append(elementList)](#Jdm+jdm_append) ⇒ [<code>Jdm</code>](#Jdm)
@@ -117,6 +118,7 @@ const div = JDM(domString, document.body);
         * [.jdm_addEventListener(name, [fn])](#Jdm+jdm_addEventListener) ⇒ [<code>Jdm</code>](#Jdm)
         * [.jdm_removeEventListener(name, [fn])](#Jdm+jdm_removeEventListener) ⇒ [<code>Jdm</code>](#Jdm)
         * [.jdm_extendChildNode()](#Jdm+jdm_extendChildNode) ⇒ [<code>Jdm</code>](#Jdm)
+        * [.jdm_setValueRaw()](#Jdm+jdm_setValueRaw)
         * [.jdm_clearAnimations()](#Jdm+jdm_clearAnimations) ⇒ [<code>Jdm</code>](#Jdm)
         * [.jdm_fadeIn([callbackFn], [option])](#Jdm+jdm_fadeIn) ⇒ [<code>Jdm</code>](#Jdm)
         * [.jdm_fadeInDown([callbackFn], [option])](#Jdm+jdm_fadeInDown) ⇒ [<code>Jdm</code>](#Jdm)
@@ -135,6 +137,9 @@ const div = JDM(domString, document.body);
         * [.jdm_rotation([callbackFn], [deg], [option])](#Jdm+jdm_rotation) ⇒ [<code>Jdm</code>](#Jdm)
     * _static_
         * [.on()](#Jdm.on)
+        * [.use(plugin)](#Jdm.use) ⇒ [<code>Jdm</code>](#Jdm)
+        * [._invalidateMethodCache()](#Jdm._invalidateMethodCache)
+        * [.inspect(node, [depth])](#Jdm.inspect)
 
 <a name="new_Jdm_new"></a>
 
@@ -165,6 +170,12 @@ const domString = `
 JDM(domString, document.body)
 // Crea un nuovo div con la classe 'my-class', un paragrafo child e lo aggiunge tutto al body
 ```
+<a name="Jdm+version"></a>
+
+### jdm.version : <code>string</code>
+Versione del pacchetto, esposta come static read-only.
+
+**Kind**: instance property of [<code>Jdm</code>](#Jdm)  
 <a name="Jdm+jdm_setAttribute"></a>
 
 ### jdm.jdm\_setAttribute(attribute, [value]) ⇒ [<code>Jdm</code>](#Jdm)
@@ -1007,6 +1018,12 @@ const domString = `
   console.log(div.element2);
   console.log(div.element3);
 ```
+<a name="Jdm+jdm_setValueRaw"></a>
+
+### jdm.jdm\_setValueRaw()
+ENHANCED API (pure additions)
+
+**Kind**: instance method of [<code>Jdm</code>](#Jdm)  
 <a name="Jdm+jdm_clearAnimations"></a>
 
 ### jdm.jdm\_clearAnimations() ⇒ [<code>Jdm</code>](#Jdm)
@@ -1296,3 +1313,42 @@ JDM(`<div class="foo"> Rotate </div>`, document.body)
 EVENT
 
 **Kind**: static method of [<code>Jdm</code>](#Jdm)  
+<a name="Jdm.use"></a>
+
+### Jdm.use(plugin) ⇒ [<code>Jdm</code>](#Jdm)
+Registra un plugin che aggiunge metodi `jdm_*` o estende la libreria.
+Il plugin riceve `{ Jdm, _core, _evt, _common, _animation }` e può:
+  - aggiungere metodi al prototype di Jdm (verranno auto-bind sul node)
+  - aggiungere static su Jdm
+  - aggiungere metodi static su _core / _evt
+
+NB: per essere riconosciuto dal binding sui nodi, ogni nuovo metodo deve
+iniziare con `jdm_` ed essere definito su Jdm.prototype PRIMA della
+creazione del primo nodo (o la cache va invalidata via `Jdm._invalidateMethodCache()`).
+
+**Kind**: static method of [<code>Jdm</code>](#Jdm)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| plugin | <code>function</code> | riceve `{ Jdm, _core, _evt, _common, _animation }` |
+
+<a name="Jdm._invalidateMethodCache"></a>
+
+### Jdm.\_invalidateMethodCache()
+Forza re-discovery dei metodi `jdm_*` su `Jdm.prototype`. Da chiamare se un plugin viene
+registrato dopo la creazione del primo nodo e si vuole che le istanze successive lo vedano.
+
+**Kind**: static method of [<code>Jdm</code>](#Jdm)  
+<a name="Jdm.inspect"></a>
+
+### Jdm.inspect(node, [depth])
+Pretty-print della struttura `jdm_childNode` ricorsiva di un nodo.
+Utile in DevTools per ispezionare la gerarchia jdm.
+
+**Kind**: static method of [<code>Jdm</code>](#Jdm)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| node | <code>HTMLElement</code> |  | 
+| [depth] | <code>number</code> | <code>0</code> | 
+

@@ -60,6 +60,14 @@ const define = {
     ],
 };
 
+// Pre-compiled once at module load instead of per-call inside #init.
+const SVG_TAG_SET = new Set(define.svgTags.map(t => t.toLowerCase()));
+const SVG_FIRST_TAG_RE = new RegExp(`^<\\s*(${define.svgTags.join("|")})\\b`, "i");
+// Single DOMParser instance reused across all parses.
+const SHARED_DOM_PARSER = typeof DOMParser !== "undefined" ? new DOMParser() : null;
+// Cached jdm_* method list (filled lazily on first instance, then reused).
+let CACHED_JDM_METHODS = null;
+
 new Proto();
 
 /**
@@ -197,16 +205,21 @@ class Jdm extends HTMLElement {
      * @throws {Error} Se il tipo dell'elemento è sconosciuto o non supportato, viene registrato un errore nel console.
      */
     #init(data) {
-        const parser = new DOMParser();
         switch (this.#checkType(data.element)) {
             case "tagString":
                 return document.createElement(data.element);
             case "domFromString":
             case "domFromHtml":
                 const str = data.element.trim();
-                const isSvg = new RegExp(`^<\\s*(${define.svgTags.join("|")})\\b`, "i").test(str);
+                const isSvg = SVG_FIRST_TAG_RE.test(str);
                 const mime = isSvg ? "image/svg+xml" : "text/html";
-                const doc = parser.parseFromString(isSvg ? `<svg xmlns="http://www.w3.org/2000/svg">${str}</svg>` : str, mime);
+                const doc = SHARED_DOM_PARSER.parseFromString(
+                    isSvg ? `<svg xmlns="http://www.w3.org/2000/svg">${str}</svg>` : str,
+                    mime,
+                );
+                if (doc.querySelector("parsererror")) {
+                    console.warn("[JDM] DOMParser parsererror — input may be malformed:", str);
+                }
                 return isSvg ? doc.documentElement.firstElementChild : doc.body.firstElementChild;
             case "elementDom":
                 return data.element;
@@ -278,8 +291,14 @@ class Jdm extends HTMLElement {
 
                 const jdmElement = JDM(child, null, null, true, { mainNode: mainNode });
                 if (dataName) {
+                    if (mainNode.jdm_childNode[dataName] !== undefined) {
+                        console.warn(`[JDM] duplicate data-name "${dataName}" — overwriting previous reference`);
+                    }
                     mainNode.jdm_childNode[dataName] = jdmElement;
                 } else if (name) {
+                    if (mainNode.jdm_childNode[name] !== undefined) {
+                        console.warn(`[JDM] duplicate name "${name}" — overwriting previous reference`);
+                    }
                     mainNode.jdm_childNode[name] = jdmElement;
                 }
             }
@@ -296,12 +315,18 @@ class Jdm extends HTMLElement {
      *
      */
     #addJdmMethodToNode() {
-        const methodList = Object.getOwnPropertyNames(Jdm.prototype);
-        const jdm_methodList = methodList.filter(elemento => {
-            return elemento.startsWith("jdm_");
-        });
+        // custom-element path: this.node === this → prototype lookup already reaches every jdm_* method,
+        // self-binding would only shadow prototype with bound copies and bloat Object.keys output.
+        if (this.node === this) return;
 
-        for (const jdmMethod of jdm_methodList) {
+        // List of jdm_* methods cached once at first access (covers Jdm.prototype + any plugin additions
+        // that landed before first instance). Plugins added after first instance see refreshed list via
+        // Jdm.use() which resets the cache.
+        if (CACHED_JDM_METHODS === null) {
+            CACHED_JDM_METHODS = Object.getOwnPropertyNames(Jdm.prototype).filter(n => n.startsWith("jdm_"));
+        }
+
+        for (const jdmMethod of CACHED_JDM_METHODS) {
             this.node[jdmMethod] = this[jdmMethod].bind(this);
         }
     }
@@ -321,7 +346,7 @@ class Jdm extends HTMLElement {
      *   .jdm_setAttribute('counter', 1);
      *
      */
-    jdm_setAttribute(attribute, value = null) {
+    jdm_setAttribute(attribute, value = "") {
         return _core.jdm_setAttribute.call(this, attribute, value);
     }
 
@@ -695,8 +720,8 @@ class Jdm extends HTMLElement {
      * });
      * // Aggiunge un listener per l'evento 'input' che stampa il valore dell'input ogni volta che cambia.
      */
-    jdm_onInput(fn = () => {}) {
-        return _core.jdm_onInput.call(this, fn);
+    jdm_onInput(fn = () => {}, opt) {
+        return _core.jdm_onInput.call(this, fn, opt);
     }
 
     /**
@@ -715,8 +740,8 @@ class Jdm extends HTMLElement {
      * });
      * // Aggiunge un listener per l'evento 'change' che stampa il valore dell'input ogni volta che cambia.
      */
-    jdm_onChange(fn = () => {}) {
-        return _core.jdm_onChange.call(this, fn);
+    jdm_onChange(fn = () => {}, opt) {
+        return _core.jdm_onChange.call(this, fn, opt);
     }
 
     /**
@@ -735,8 +760,8 @@ class Jdm extends HTMLElement {
      * });
      * // Aggiunge un listener per l'evento 'select' che stampa il valore del campo di input ogni volta che viene selezionato del testo.
      */
-    jdm_onSelect(fn = () => {}) {
-        return _core.jdm_onSelect.call(this, fn);
+    jdm_onSelect(fn = () => {}, opt) {
+        return _core.jdm_onSelect.call(this, fn, opt);
     }
 
     /**
@@ -758,8 +783,8 @@ class Jdm extends HTMLElement {
      * // Aggiunge un listener per l'evento 'input' con un debounce di 500 millisecondi,
      * // evitando chiamate troppo frequenti alla funzione di callback mentre l'utente sta digitando.
      */
-    jdm_onDebounce(fn = () => {}, timeout = this.defadefaultDebounceTime, method = "input") {
-        return _core.jdm_onDebounce.call(this, fn, timeout, method);
+    jdm_onDebounce(fn = () => {}, timeout = this.defadefaultDebounceTime, method = "input", opt) {
+        return _core.jdm_onDebounce.call(this, fn, timeout, method, opt);
     }
 
     /**
@@ -780,7 +805,7 @@ class Jdm extends HTMLElement {
      * // Aggiunge un listener per l'evento 'click' che stampa un messaggio ogni volta che il pulsante viene cliccato.
      */
     jdm_onClick(fn = () => {}, opt) {
-        return _core.jdm_onClick.call(this, fn);
+        return _core.jdm_onClick.call(this, fn, opt);
     }
 
     /**
@@ -800,8 +825,8 @@ class Jdm extends HTMLElement {
      * });
      * // Aggiunge un listener per l'evento 'contextmenu' che esegue la funzione di callback ogni volta che si fa clic destro sull'elemento.
      */
-    jdm_onRightClick(fn = () => {}) {
-        return _core.jdm_onRightClick.call(this, fn);
+    jdm_onRightClick(fn = () => {}, opt) {
+        return _core.jdm_onRightClick.call(this, fn, opt);
     }
 
     /**
@@ -821,8 +846,8 @@ class Jdm extends HTMLElement {
      *  });
      * // Aggiunge un listener per l'evento 'dblclick' che esegue la funzione di callback ogni volta che l'utente fa doppio clic sull'elemento.
      */
-    jdm_onDoubleClick(fn = () => {}) {
-        return _core.jdm_onDoubleClick.call(this, fn);
+    jdm_onDoubleClick(fn = () => {}, opt) {
+        return _core.jdm_onDoubleClick.call(this, fn, opt);
     }
 
     /**
@@ -848,8 +873,8 @@ class Jdm extends HTMLElement {
      *      })
      * // Aggiunge un listener per l'evento 'invalid' che esegue la funzione di callback quando l'input non è valido.
      */
-    jdm_onInvalid(fn = () => {}) {
-        return _core.jdm_onInvalid.call(this, fn);
+    jdm_onInvalid(fn = () => {}, opt) {
+        return _core.jdm_onInvalid.call(this, fn, opt);
     }
 
     /**
@@ -870,8 +895,8 @@ class Jdm extends HTMLElement {
      *  });
      * // Aggiunge un listener per l'evento 'load' che esegue la funzione di callback ogni volta che l'immagine è completamente caricata.
      */
-    jdm_onLoad(fn = () => {}) {
-        return _core.jdm_onLoad.call(this, fn);
+    jdm_onLoad(fn = () => {}, opt) {
+        return _core.jdm_onLoad.call(this, fn, opt);
     }
 
     /**
@@ -892,8 +917,8 @@ class Jdm extends HTMLElement {
      *      });
      * // Aggiunge un listener per l'evento 'error' che esegue la funzione di callback ogni volta che si verifica un errore nel caricamento dell'immagine.
      */
-    jdm_onError(fn = () => {}) {
-        return _core.jdm_onError.call(this, fn);
+    jdm_onError(fn = () => {}, opt) {
+        return _core.jdm_onError.call(this, fn, opt);
     }
 
     /**
@@ -921,8 +946,8 @@ class Jdm extends HTMLElement {
      *      })
      * // Aggiunge un listener per l'evento 'submit' che esegue la funzione di callback ogni volta che il modulo viene inviato.
      */
-    jdm_onSubmit(fn = e => {}) {
-        return _core.jdm_onSubmit.call(this, fn);
+    jdm_onSubmit(fn = e => {}, opt) {
+        return _core.jdm_onSubmit.call(this, fn, opt);
     }
 
     /**
@@ -1114,6 +1139,40 @@ class Jdm extends HTMLElement {
         return _core.jdm_submit.call(this);
     }
 
+    /** ENHANCED API (pure additions) **/
+
+    jdm_setValueRaw(value) {
+        return _core.jdm_setValueRaw.call(this, value);
+    }
+
+    jdm_getValueRaw() {
+        return _core.jdm_getValueRaw.call(this);
+    }
+
+    jdm_getValueAsNumber() {
+        return _core.jdm_getValueAsNumber.call(this);
+    }
+
+    jdm_waitFor(eventName, opt) {
+        return _core.jdm_waitFor.call(this, eventName, opt);
+    }
+
+    jdm_delegate(eventName, selector, fn) {
+        return _core.jdm_delegate.call(this, eventName, selector, fn);
+    }
+
+    jdm_batch(fn) {
+        return _core.jdm_batch.call(this, fn);
+    }
+
+    jdm_cancelAnimations() {
+        return _animation.jdm_cancelAnimations.call(this);
+    }
+
+    jdm_resetStyles() {
+        return _animation.jdm_resetStyles.call(this);
+    }
+
     /** ANIMATION **/
 
     /**
@@ -1133,7 +1192,7 @@ class Jdm extends HTMLElement {
     }
 
     jdm_show() {
-        return _animation.jdm_hide.call(this);
+        return _animation.jdm_show.call(this);
     }
 
     /**
@@ -1374,19 +1433,83 @@ class Jdm extends HTMLElement {
         evt.jdm_once(name, fn);
         return this;
     }
+
+    /** PLUGIN / META **/
+
+    /**
+     * Versione del pacchetto, esposta come static read-only.
+     * @type {string}
+     */
+    static version = "2.5.0";
+
+    /**
+     * Registra un plugin che aggiunge metodi `jdm_*` o estende la libreria.
+     * Il plugin riceve `{ Jdm, _core, _evt, _common, _animation }` e può:
+     *   - aggiungere metodi al prototype di Jdm (verranno auto-bind sul node)
+     *   - aggiungere static su Jdm
+     *   - aggiungere metodi static su _core / _evt
+     *
+     * NB: per essere riconosciuto dal binding sui nodi, ogni nuovo metodo deve
+     * iniziare con `jdm_` ed essere definito su Jdm.prototype PRIMA della
+     * creazione del primo nodo (o la cache va invalidata via `Jdm._invalidateMethodCache()`).
+     *
+     * @param {function(Object): void} plugin - riceve `{ Jdm, _core, _evt, _common, _animation }`
+     * @returns {Jdm}
+     */
+    static use(plugin) {
+        if (typeof plugin !== "function") {
+            console.warn("[JDM] Jdm.use: plugin deve essere una funzione");
+            return Jdm;
+        }
+        plugin({ Jdm, _core, _evt, _common, _animation });
+        // invalida cache: plugin potrebbe aver aggiunto metodi
+        CACHED_JDM_METHODS = null;
+        return Jdm;
+    }
+
+    /**
+     * Forza re-discovery dei metodi `jdm_*` su `Jdm.prototype`. Da chiamare se un plugin viene
+     * registrato dopo la creazione del primo nodo e si vuole che le istanze successive lo vedano.
+     */
+    static _invalidateMethodCache() {
+        CACHED_JDM_METHODS = null;
+    }
+
+    /**
+     * Pretty-print della struttura `jdm_childNode` ricorsiva di un nodo.
+     * Utile in DevTools per ispezionare la gerarchia jdm.
+     * @param {HTMLElement} node
+     * @param {number} [depth=0]
+     */
+    static inspect(node, depth = 0) {
+        if (!node) return;
+        const pad = "  ".repeat(depth);
+        const tag = node.tagName ? node.tagName.toLowerCase() : "?";
+        const name = node.getAttribute?.("data-name") || node.getAttribute?.("name") || "";
+        // eslint-disable-next-line no-console
+        console.log(`${pad}<${tag}${name ? ` name="${name}"` : ""}>`);
+        const children = node.jdm_childNode;
+        if (children && typeof children === "object" && !Array.isArray(children)) {
+            for (const key of Object.keys(children)) {
+                Jdm.inspect(children[key], depth + 1);
+            }
+        }
+    }
 }
 
-if (!window.JDM) {
-    window.JDM = (element = null, parent = null, classList = null, deep = true, ...args) => {
-        return new Jdm(element, parent, classList, deep, ...args);
-    };
+if (typeof window !== "undefined") {
+    if (!window.JDM) {
+        window.JDM = (element = null, parent = null, classList = null, deep = true, ...args) => {
+            return new Jdm(element, parent, classList, deep, ...args);
+        };
+    }
+
+    if (!window.Jdm) {
+        window.Jdm = Jdm;
+    }
 }
 
-if (!window.Jdm) {
-    window.Jdm = Jdm;
-}
-
-if (!customElements.get("jdm-element")) {
+if (typeof customElements !== "undefined" && !customElements.get("jdm-element")) {
     customElements.define("jdm-element", Jdm);
 }
 
