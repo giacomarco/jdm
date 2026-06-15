@@ -2114,6 +2114,60 @@ describe("JDM - Lista A: #loopOverChild duplicate-name warn", () => {
         const el = JDM('<div><span data-name="x">A</span><span data-name="x">B</span></div>', document.body);
         expect(el.jdm_childNode.x.textContent).toBe("B");
     });
+
+    it("warn aggregato: una sola riga per chiave anche con N occorrenze ripetute", () => {
+        const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+        JDM(
+            '<div><span data-name="del">1</span><span data-name="del">2</span><span data-name="del">3</span><span data-name="del">4</span></div>',
+            document.body
+        );
+        const calls = warn.mock.calls.filter(c => String(c[0]).includes('duplicate data-name "del"'));
+        expect(calls.length).toBe(1);
+        warn.mockRestore();
+    });
+
+    it("Jdm.warnDuplicateNames=false silenzia i warn", () => {
+        const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+        Jdm.warnDuplicateNames = false;
+        const el = JDM('<div><span data-name="x">A</span><span data-name="x">B</span></div>', document.body);
+        Jdm.warnDuplicateNames = true;
+        const calls = warn.mock.calls.filter(c => String(c[0]).includes("duplicate"));
+        expect(calls.length).toBe(0);
+        // comportamento di raccolta invariato
+        expect(el.jdm_childNode.x.textContent).toBe("B");
+        warn.mockRestore();
+    });
+});
+
+describe("JDM - debounce: rename defaultDebounceTime + alias retrocompat", () => {
+    it("jdm_onDebounce/jdm_setDebounceTime usano il default rinominato senza errori", () => {
+        const el = JDM("<input>", document.body);
+        // se il rename avesse rotto il default param, qui userebbe undefined → comunque non deve lanciare
+        expect(() => el.jdm_onDebounce(() => {})).not.toThrow();
+        expect(el.jdm_setDebounceTime()).toBe(el);
+        expect(el.jdm_setDebounceTime(500)).toBe(el);
+    });
+
+    it("alias deprecato defadefaultDebounceTime resta in sync con defaultDebounceTime", () => {
+        const obj = {};
+        // replica dell'accessor definito nel costruttore
+        obj.defaultDebounceTime = 300;
+        Object.defineProperty(obj, "defadefaultDebounceTime", {
+            get() {
+                return this.defaultDebounceTime;
+            },
+            set(v) {
+                this.defaultDebounceTime = v;
+            },
+            enumerable: false,
+            configurable: true,
+        });
+        expect(obj.defadefaultDebounceTime).toBe(300);
+        obj.defadefaultDebounceTime = 500;
+        expect(obj.defaultDebounceTime).toBe(500);
+        obj.defaultDebounceTime = 700;
+        expect(obj.defadefaultDebounceTime).toBe(700);
+    });
 });
 
 describe("JDM - Lista A: #addJdmMethodToNode custom-element self-bind skip", () => {
