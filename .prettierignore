@@ -1,0 +1,12 @@
+# Build & generated output
+dist/
+docs/
+README.md
+test/coverage/
+test/test-results.json
+test/junit-report.xml
+test-results/
+playwright-report/
+node_modules/
+package-lock.json
+*.min.js

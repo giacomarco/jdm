@@ -360,9 +360,7 @@ test.describe("Form exhaustive: HTML5 input types (real browser)", () => {
                 { type, value },
             );
             // accept exact match or case-normalized for color
-            expect(
-                result.written === value || result.written.toLowerCase() === value.toLowerCase(),
-            ).toBe(true);
+            expect(result.written === value || result.written.toLowerCase() === value.toLowerCase()).toBe(true);
         });
     }
 });

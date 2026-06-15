@@ -25,10 +25,13 @@ test.describe("Animation (browser-real)", () => {
             const el = new window.Jdm("<div>x</div>", document.body);
             let done = false;
             await new Promise(resolve => {
-                el.jdm_fadeIn(() => {
-                    done = true;
-                    resolve();
-                }, { duration: 30 });
+                el.jdm_fadeIn(
+                    () => {
+                        done = true;
+                        resolve();
+                    },
+                    { duration: 30 },
+                );
             });
             return done;
         });
@@ -109,10 +112,13 @@ test.describe("Animation (browser-real)", () => {
                 const el = new window.Jdm("<div>x</div>", document.body);
                 let fired = false;
                 await new Promise(resolve => {
-                    el[`jdm_${m}`](() => {
-                        fired = true;
-                        resolve();
-                    }, { duration: 20 });
+                    el[`jdm_${m}`](
+                        () => {
+                            fired = true;
+                            resolve();
+                        },
+                        { duration: 20 },
+                    );
                 });
                 return fired;
             }, method);
@@ -125,10 +131,14 @@ test.describe("Animation (browser-real)", () => {
             const el = new window.Jdm("<div>x</div>", document.body);
             let fired = false;
             await new Promise(resolve => {
-                el.jdm_rotation(() => {
-                    fired = true;
-                    resolve();
-                }, 180, { duration: 30 });
+                el.jdm_rotation(
+                    () => {
+                        fired = true;
+                        resolve();
+                    },
+                    180,
+                    { duration: 30 },
+                );
             });
             return fired;
         });

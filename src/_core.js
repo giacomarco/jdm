@@ -234,8 +234,8 @@ export class _core {
         if (tooBoolean) {
             try {
                 value = value.toBoolean();
-            } catch (e) {
-                value = value;
+            } catch {
+                // not a boolean-coercible string → keep the original value
             }
         }
 

@@ -91,10 +91,7 @@ test.describe("DOM insertion", () => {
 
     test("empty resetta form completo", async ({ jdm: page }) => {
         const v = await page.evaluate(() => {
-            const form = new window.Jdm(
-                '<form><input name="a" value="x"><input name="b" type="checkbox" checked></form>',
-                document.body,
-            );
+            const form = new window.Jdm('<form><input name="a" value="x"><input name="b" type="checkbox" checked></form>', document.body);
             form.jdm_empty();
             return { a: form.elements.a.value, b: form.elements.b.checked };
         });

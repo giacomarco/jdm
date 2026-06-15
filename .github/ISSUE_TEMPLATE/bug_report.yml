@@ -1,0 +1,33 @@
+name: Bug report
+description: Report incorrect or unexpected behavior
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: JDM version
+      placeholder: "e.g. 2.6.0"
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: Minimal code that reproduces the issue.
+      render: javascript
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: "browser/Node version, bundler, framework"
+    validations:
+      required: false
