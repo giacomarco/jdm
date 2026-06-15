@@ -150,6 +150,16 @@ new Proto();
  */
 class Jdm extends HTMLElement {
     // class Jdm {
+
+    /**
+     * Abilita/disabilita i `console.warn` su `data-name`/`name` duplicati raccolti in `jdm_childNode`.
+     * Default `true` (comportamento storico). I warning sono aggregati a una riga per chiave per nodo,
+     * quindi una struttura ripetuta non produce più spam per ogni occorrenza.
+     * Impostare a `false` per silenziarli del tutto.
+     * @type {boolean}
+     */
+    static warnDuplicateNames = true;
+
     /**
      * Crea una nuova istanza della classe Jdm e manipola l'elemento DOM.
      *
@@ -178,7 +188,18 @@ class Jdm extends HTMLElement {
     constructor(element = null, parent = null, classList = null, deep = true, ...args) {
         super();
         const data = { element: element, parent: parent, classList: classList, deep: deep, args: args };
-        this.defadefaultDebounceTime = 300;
+        this.defaultDebounceTime = 300;
+        // Alias deprecato del refuso storico (<=2.5.0). Mantenuto per retrocompat, tiene in sync il nome corretto.
+        Object.defineProperty(this, "defadefaultDebounceTime", {
+            get() {
+                return this.defaultDebounceTime;
+            },
+            set(v) {
+                this.defaultDebounceTime = v;
+            },
+            enumerable: false,
+            configurable: true,
+        });
         this.node = this.#init(data);
         this.jdm_childNode = [];
         this.tag = this.node.tagName.toLowerCase();
@@ -292,17 +313,47 @@ class Jdm extends HTMLElement {
                 const jdmElement = JDM(child, null, null, true, { mainNode: mainNode });
                 if (dataName) {
                     if (mainNode.jdm_childNode[dataName] !== undefined) {
-                        console.warn(`[JDM] duplicate data-name "${dataName}" — overwriting previous reference`);
+                        Jdm.#warnDuplicateName(mainNode, "data-name", dataName);
                     }
                     mainNode.jdm_childNode[dataName] = jdmElement;
                 } else if (name) {
                     if (mainNode.jdm_childNode[name] !== undefined) {
-                        console.warn(`[JDM] duplicate name "${name}" — overwriting previous reference`);
+                        Jdm.#warnDuplicateName(mainNode, "name", name);
                     }
                     mainNode.jdm_childNode[name] = jdmElement;
                 }
             }
         }
+    }
+
+    /**
+     * Emette un solo `console.warn` per chiave duplicata per nodo principale, evitando lo spam
+     * (1 riga per occorrenza) su strutture ripetute. Rispetta il flag {@link Jdm.warnDuplicateNames}.
+     *
+     * @private
+     * @param {HTMLElement} mainNode - Il nodo che raccoglie i riferimenti in `jdm_childNode`.
+     * @param {"name"|"data-name"} kind - Il tipo di attributo duplicato.
+     * @param {string} key - Il valore duplicato.
+     * @returns {void}
+     */
+    static #warnDuplicateName(mainNode, kind, key) {
+        if (!Jdm.warnDuplicateNames) return;
+        let seen = mainNode.__jdmDuplicateWarned;
+        if (!seen) {
+            seen = new Set();
+            Object.defineProperty(mainNode, "__jdmDuplicateWarned", {
+                value: seen,
+                enumerable: false,
+                writable: true,
+                configurable: true,
+            });
+        }
+        const id = `${kind}:${key}`;
+        if (seen.has(id)) return;
+        seen.add(id);
+        console.warn(
+            `[JDM] duplicate ${kind} "${key}" — only the last reference is kept in jdm_childNode (use unique names)`
+        );
     }
 
     /**
@@ -783,7 +834,7 @@ class Jdm extends HTMLElement {
      * // Aggiunge un listener per l'evento 'input' con un debounce di 500 millisecondi,
      * // evitando chiamate troppo frequenti alla funzione di callback mentre l'utente sta digitando.
      */
-    jdm_onDebounce(fn = () => {}, timeout = this.defadefaultDebounceTime, method = "input", opt) {
+    jdm_onDebounce(fn = () => {}, timeout = this.defaultDebounceTime, method = "input", opt) {
         return _core.jdm_onDebounce.call(this, fn, timeout, method, opt);
     }
 
@@ -1131,7 +1182,7 @@ class Jdm extends HTMLElement {
         return _core.jdm_extendChildNode.call(this);
     }
 
-    jdm_setDebounceTime(time = this.defadefaultDebounceTime) {
+    jdm_setDebounceTime(time = this.defaultDebounceTime) {
         return _core.jdm_setDebounceTime.call(this, time);
     }
 
