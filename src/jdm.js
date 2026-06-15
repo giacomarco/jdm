@@ -230,18 +230,16 @@ class Jdm extends HTMLElement {
             case "tagString":
                 return document.createElement(data.element);
             case "domFromString":
-            case "domFromHtml":
+            case "domFromHtml": {
                 const str = data.element.trim();
                 const isSvg = SVG_FIRST_TAG_RE.test(str);
                 const mime = isSvg ? "image/svg+xml" : "text/html";
-                const doc = SHARED_DOM_PARSER.parseFromString(
-                    isSvg ? `<svg xmlns="http://www.w3.org/2000/svg">${str}</svg>` : str,
-                    mime,
-                );
+                const doc = SHARED_DOM_PARSER.parseFromString(isSvg ? `<svg xmlns="http://www.w3.org/2000/svg">${str}</svg>` : str, mime);
                 if (doc.querySelector("parsererror")) {
                     console.warn("[JDM] DOMParser parsererror — input may be malformed:", str);
                 }
                 return isSvg ? doc.documentElement.firstElementChild : doc.body.firstElementChild;
+            }
             case "elementDom":
                 return data.element;
             case "tagInDom":
@@ -351,9 +349,7 @@ class Jdm extends HTMLElement {
         const id = `${kind}:${key}`;
         if (seen.has(id)) return;
         seen.add(id);
-        console.warn(
-            `[JDM] duplicate ${kind} "${key}" — only the last reference is kept in jdm_childNode (use unique names)`
-        );
+        console.warn(`[JDM] duplicate ${kind} "${key}" — only the last reference is kept in jdm_childNode (use unique names)`);
     }
 
     /**
@@ -1537,7 +1533,6 @@ class Jdm extends HTMLElement {
         const pad = "  ".repeat(depth);
         const tag = node.tagName ? node.tagName.toLowerCase() : "?";
         const name = node.getAttribute?.("data-name") || node.getAttribute?.("name") || "";
-        // eslint-disable-next-line no-console
         console.log(`${pad}<${tag}${name ? ` name="${name}"` : ""}>`);
         const children = node.jdm_childNode;
         if (children && typeof children === "object" && !Array.isArray(children)) {

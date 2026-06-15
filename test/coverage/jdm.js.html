@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">99.65% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1464/1469</span>
+                <span class='fraction'>1459/1464</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">98.08% </span>
+                <span class="strong">98.07% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>154/157</span>
+                <span class='fraction'>153/156</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">99.65% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1464/1469</span>
+                <span class='fraction'>1459/1464</span>
             </div>
         
             
@@ -1625,12 +1625,7 @@
 <a name='L1560'></a><a href='#L1560'>1560</a>
 <a name='L1561'></a><a href='#L1561'>1561</a>
 <a name='L1562'></a><a href='#L1562'>1562</a>
-<a name='L1563'></a><a href='#L1563'>1563</a>
-<a name='L1564'></a><a href='#L1564'>1564</a>
-<a name='L1565'></a><a href='#L1565'>1565</a>
-<a name='L1566'></a><a href='#L1566'>1566</a>
-<a name='L1567'></a><a href='#L1567'>1567</a>
-<a name='L1568'></a><a href='#L1568'>1568</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L1563'></a><a href='#L1563'>1563</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -1868,11 +1863,9 @@
 <span class="cline-any cline-yes">566x</span>
 <span class="cline-any cline-yes">566x</span>
 <span class="cline-any cline-yes">566x</span>
-<span class="cline-any cline-yes">566x</span>
-<span class="cline-any cline-yes">566x</span>
-<span class="cline-any cline-yes">566x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">566x</span>
 <span class="cline-any cline-yes">566x</span>
 <span class="cline-any cline-yes">738x</span>
 <span class="cline-any cline-yes">163x</span>
@@ -1984,8 +1977,6 @@
 <span class="cline-any cline-yes">31x</span>
 <span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-yes">20x</span>
-<span class="cline-any cline-yes">20x</span>
-<span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-yes">31x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -3167,7 +3158,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
@@ -3429,18 +3419,16 @@ class Jdm extends HTMLElement {
             case "tagString":
                 return document.createElement(data.element);
             case "domFromString":
-            case "domFromHtml":
+            case "domFromHtml": {
                 const str = data.element.trim();
                 const isSvg = SVG_FIRST_TAG_RE.test(str);
                 const mime = isSvg ? "image/svg+xml" : "text/html";
-                const doc = SHARED_DOM_PARSER.parseFromString(
-                    isSvg ? `&lt;svg xmlns="http://www.w3.org/2000/svg"&gt;${str}&lt;/svg&gt;` : str,
-                    mime,
-                );
+                const doc = SHARED_DOM_PARSER.parseFromString(isSvg ? `&lt;svg xmlns="http://www.w3.org/2000/svg"&gt;${str}&lt;/svg&gt;` : str, mime);
                 if (doc.querySelector("parsererror")) {
                     console.warn("[JDM] DOMParser parsererror — input may be malformed:", str);
                 }
                 return isSvg ? doc.documentElement.firstElementChild : doc.body.firstElementChild;
+            }
             case "elementDom":
                 return data.element;
             case "tagInDom":
@@ -3550,9 +3538,7 @@ class Jdm extends HTMLElement {
         const id = `${kind}:${key}`;
         if (seen.has(id)) return;
         seen.add(id);
-        console.warn(
-            `[JDM] duplicate ${kind} "${key}" — only the last reference is kept in jdm_childNode (use unique names)`
-        );
+        console.warn(`[JDM] duplicate ${kind} "${key}" — only the last reference is kept in jdm_childNode (use unique names)`);
     }
 &nbsp;
     /**
@@ -4736,7 +4722,6 @@ class Jdm extends HTMLElement {
         const pad = "  ".repeat(depth);
         const tag = node.tagName ? node.tagName.toLowerCase() <span class="branch-0 cbranch-no" title="branch not covered" >: "?";</span>
         const name = node.getAttribute?.("data-name") || node.getAttribute?.("name") || "";
-        // eslint-disable-next-line no-console
         console.log(`${pad}&lt;${tag}${name ? ` name="${name}"` : ""}&gt;`);
         const children = node.jdm_childNode;
         if (children &amp;&amp; typeof children === "object" &amp;&amp; !Array.isArray(children)) {
@@ -4771,7 +4756,7 @@ export { Jdm };
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-15T20:24:29.886Z
+                at 2026-06-15T20:46:12.733Z
             </div>
         <script src="prettify.js"></script>
         <script>

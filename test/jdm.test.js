@@ -2119,7 +2119,7 @@ describe("JDM - Lista A: #loopOverChild duplicate-name warn", () => {
         const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
         JDM(
             '<div><span data-name="del">1</span><span data-name="del">2</span><span data-name="del">3</span><span data-name="del">4</span></div>',
-            document.body
+            document.body,
         );
         const calls = warn.mock.calls.filter(c => String(c[0]).includes('duplicate data-name "del"'));
         expect(calls.length).toBe(1);
@@ -2198,9 +2198,7 @@ describe("JDM - Lista A: #addJdmMethodToNode custom-element self-bind skip", () 
 
     it("nodo NON custom mantiene metodi jdm_* come own-property (legacy)", () => {
         const el = JDM("<div></div>", document.body);
-        const ownJdmMethods = Object.getOwnPropertyNames(el).filter(
-            p => p.startsWith("jdm_") && typeof el[p] === "function",
-        );
+        const ownJdmMethods = Object.getOwnPropertyNames(el).filter(p => p.startsWith("jdm_") && typeof el[p] === "function");
         expect(ownJdmMethods.length).toBeGreaterThan(10);
     });
 });

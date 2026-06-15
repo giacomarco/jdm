@@ -28,9 +28,7 @@ test.describe("Event handlers (DOM)", () => {
         expect(detail).toEqual({ foo: 1 });
     });
 
-    test("onInput / onChange / onSelect / onClick / onDoubleClick / onRightClick / onInvalid / onLoad / onError", async ({
-        jdm: page,
-    }) => {
+    test("onInput / onChange / onSelect / onClick / onDoubleClick / onRightClick / onInvalid / onLoad / onError", async ({ jdm: page }) => {
         const result = await page.evaluate(async () => {
             const input = new window.Jdm('<input type="text">', document.body);
             const counts = { input: 0, change: 0, select: 0, click: 0, dblclick: 0, contextmenu: 0, invalid: 0 };

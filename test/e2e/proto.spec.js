@@ -10,12 +10,7 @@ test.describe("Proto patches (String/Number)", () => {
     });
 
     test("'yes'/'no'/'1'/'0' supportati", async ({ jdm: page }) => {
-        const res = await page.evaluate(() => [
-            "yes".toBoolean(),
-            "no".toBoolean(),
-            "1".toBoolean(),
-            "0".toBoolean(),
-        ]);
+        const res = await page.evaluate(() => ["yes".toBoolean(), "no".toBoolean(), "1".toBoolean(), "0".toBoolean()]);
         expect(res).toEqual([true, false, true, false]);
     });
 

@@ -1,14 +1,14 @@
 {
-  "source": {
-    "include": ["src"],
-    "exclude": ["node_modules"],
-    "includePattern": ".js$",
-    "excludePattern": "(node_modules|dist)"
-  },
-  "opts": {
-    "template": "node_modules/minami",
-    "destination": "./docs",
-    "recurse": true,
-    "readme": "./README.md"
-  }
+    "source": {
+        "include": ["src"],
+        "exclude": ["node_modules"],
+        "includePattern": ".js$",
+        "excludePattern": "(node_modules|dist)"
+    },
+    "opts": {
+        "template": "node_modules/minami",
+        "destination": "./docs",
+        "recurse": true,
+        "readme": "./README.md"
+    }
 }

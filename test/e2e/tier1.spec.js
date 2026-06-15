@@ -3,10 +3,11 @@ import { test, expect } from "./helpers.js";
 test.describe("Tier 1 — pure API additions", () => {
     test("Jdm.use plugin riceve ctx con moduli", async ({ jdm: page }) => {
         const result = await page.evaluate(async () => {
-            const { _core, _evt, _common, _animation } = await import("/src/jdm.js")
-                .then(() => import("/src/_core.js").then(c => ({
+            const { _core, _evt, _common, _animation } = await import("/src/jdm.js").then(() =>
+                import("/src/_core.js").then(c => ({
                     _core: c._core,
-                })));
+                })),
+            );
             let ok = false;
             window.Jdm.use(ctx => {
                 ok = !!(ctx.Jdm && ctx._core && ctx._evt && ctx._common && ctx._animation);
