@@ -1491,7 +1491,7 @@ class Jdm extends HTMLElement {
      * Versione del pacchetto, esposta come static read-only.
      * @type {string}
      */
-    static version = "2.5.0";
+    static version = "2.6.0";
 
     /**
      * Registra un plugin che aggiunge metodi `jdm_*` o estende la libreria.
