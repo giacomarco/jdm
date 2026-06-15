@@ -81,6 +81,7 @@ const div = JDM(domString, document.body);
 * [Jdm](#Jdm)
     * [new Jdm([element], [parent], [classList], [deep], [...args])](#new_Jdm_new)
     * _instance_
+        * [.warnDuplicateNames](#Jdm+warnDuplicateNames) : <code>boolean</code>
         * [.version](#Jdm+version) : <code>string</code>
         * [.jdm_setAttribute(attribute, [value])](#Jdm+jdm_setAttribute) ⇒ [<code>Jdm</code>](#Jdm)
         * [.jdm_getAttribute(attribute)](#Jdm+jdm_getAttribute) ⇒ <code>string</code> \| <code>null</code>
@@ -170,6 +171,15 @@ const domString = `
 JDM(domString, document.body)
 // Crea un nuovo div con la classe 'my-class', un paragrafo child e lo aggiunge tutto al body
 ```
+<a name="Jdm+warnDuplicateNames"></a>
+
+### jdm.warnDuplicateNames : <code>boolean</code>
+Abilita/disabilita i `console.warn` su `data-name`/`name` duplicati raccolti in `jdm_childNode`.
+Default `true` (comportamento storico). I warning sono aggregati a una riga per chiave per nodo,
+quindi una struttura ripetuta non produce più spam per ogni occorrenza.
+Impostare a `false` per silenziarli del tutto.
+
+**Kind**: instance property of [<code>Jdm</code>](#Jdm)  
 <a name="Jdm+version"></a>
 
 ### jdm.version : <code>string</code>

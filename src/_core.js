@@ -442,7 +442,7 @@ export class _core {
     }
 
     /** @this {Jdm} */
-    static jdm_onDebounce(fn = () => {}, timeout = this.defadefaultDebounceTime, method = "input", opt) {
+    static jdm_onDebounce(fn = () => {}, timeout = this.defaultDebounceTime, method = "input", opt) {
         _evt.jdm_onElement(this.node, method, _common.debounce(fn, timeout), opt);
         return this.node;
     }
@@ -489,8 +489,8 @@ export class _core {
         return this.node;
     }
     /** @this {Jdm} */
-    static jdm_setDebounceTime(time = this.defadefaultDebounceTime) {
-        this.defadefaultDebounceTime = time;
+    static jdm_setDebounceTime(time = this.defaultDebounceTime) {
+        this.defaultDebounceTime = time;
         return this.node;
     }
 
