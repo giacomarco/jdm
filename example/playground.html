@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>jdm · playground</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* =====================================================================
+ * boxDS — design system (flat, Bootstrap-5-like) — INLINE per single-file.
+ * Accent #7cba56 · Inter · light/dark via [data-theme] · prefisso .ds- / --ds-
+ * ===================================================================== */
+:root,[data-theme="light"]{
+  --ds-primary:#7cba56;--ds-primary-rgb:124,186,86;--ds-primary-hover:#70ad4a;--ds-primary-active:#5f9a3d;--ds-on-primary:#11270a;
+  --ds-secondary:#6c757d;--ds-on-secondary:#fff;--ds-success:#3fa64d;--ds-on-success:#fff;--ds-danger:#dc3545;--ds-on-danger:#fff;
+  --ds-warning:#f0ad4e;--ds-on-warning:#2a1c00;--ds-info:#3aa9d6;--ds-on-info:#03212b;
+  --ds-bg:#fff;--ds-bg-subtle:#f5f7f4;--ds-surface:#fff;--ds-surface-2:#f7f9f6;--ds-border:#dde1dc;--ds-border-strong:#c6ccc4;
+  --ds-text:#1f2421;--ds-text-muted:#69716b;--ds-heading:#141815;--ds-link:#4f9a2f;--ds-code-bg:#f4f6f3;--ds-code-text:#2c3a22;
+  --ds-focus-ring:rgba(var(--ds-primary-rgb),.35);--ds-shadow-sm:0 1px 2px rgba(16,24,16,.06);
+  --ds-shadow:0 1px 2px rgba(16,24,16,.05),0 2px 8px rgba(16,24,16,.06);--ds-overlay:rgba(20,24,20,.45);
+}
+[data-theme="dark"]{
+  --ds-primary:#7cba56;--ds-primary-hover:#8bc766;--ds-primary-active:#9ad078;--ds-on-primary:#0c1c06;
+  --ds-secondary:#8a929b;--ds-on-secondary:#0e1114;--ds-success:#4cb85c;--ds-on-success:#07210c;--ds-danger:#ef5350;--ds-on-danger:#2a0606;
+  --ds-warning:#f0ad4e;--ds-on-warning:#2a1c00;--ds-info:#4cc0e8;--ds-on-info:#03212b;
+  --ds-bg:#121518;--ds-bg-subtle:#171b1f;--ds-surface:#1a1f23;--ds-surface-2:#20262b;--ds-border:#2b333a;--ds-border-strong:#3b454d;
+  --ds-text:#dde3e0;--ds-text-muted:#939c97;--ds-heading:#eef2f0;--ds-link:#9ad078;--ds-code-bg:#0f1418;--ds-code-text:#c8d3c2;
+  --ds-focus-ring:rgba(var(--ds-primary-rgb),.45);--ds-shadow-sm:0 1px 2px rgba(0,0,0,.4);
+  --ds-shadow:0 1px 2px rgba(0,0,0,.45),0 4px 12px rgba(0,0,0,.4);--ds-overlay:rgba(0,0,0,.6);
+}
+:root{
+  --ds-font-sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --ds-font-mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
+  --ds-fs-xs:1rem;--ds-fs-sm:1rem;--ds-fs-base:1rem;--ds-fs-lg:1.125rem;--ds-fs-xl:1.5rem;--ds-fs-2xl:1.875rem;--ds-fs-3xl:2.5rem;
+  --ds-fw-normal:400;--ds-fw-medium:500;--ds-fw-semibold:600;--ds-fw-bold:700;
+  --ds-sp-1:.25rem;--ds-sp-2:.5rem;--ds-sp-3:.75rem;--ds-sp-4:1rem;--ds-sp-5:1.5rem;--ds-sp-6:2rem;--ds-sp-7:3rem;
+  --ds-radius-sm:.25rem;--ds-radius:.375rem;--ds-radius-lg:.5rem;--ds-radius-pill:50rem;--ds-transition:150ms ease;
+}
+*,*::before,*::after{box-sizing:border-box;}
+.ds-root,body.ds{margin:0;font-family:var(--ds-font-sans);font-size:var(--ds-fs-base);line-height:1.5;color:var(--ds-text);
+  background-color:var(--ds-bg);-webkit-font-smoothing:antialiased;transition:background-color var(--ds-transition),color var(--ds-transition);}
+.ds-root :where(h1,h2,h3,h4,h5,h6){color:var(--ds-heading);font-weight:var(--ds-fw-semibold);line-height:1.2;margin:0 0 var(--ds-sp-3);letter-spacing:-.011em;}
+.ds-root code,.ds-root kbd{font-family:var(--ds-font-mono);font-size:.875em;}
+.ds-root ::selection{background:rgba(var(--ds-primary-rgb),.3);}
+.ds-muted{color:var(--ds-text-muted);}.ds-small{font-size:var(--ds-fs-sm);}
+.ds-eyebrow{font-family:var(--ds-font-mono);font-size:var(--ds-fs-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--ds-text-muted);}
+.ds-btn{--_bg:var(--ds-surface);--_fg:var(--ds-text);--_bd:var(--ds-border-strong);display:inline-flex;align-items:center;justify-content:center;gap:.45em;
+  font:var(--ds-fw-medium) var(--ds-fs-sm)/1.5 var(--ds-font-sans);padding:.44rem .85rem;border:1px solid var(--_bd);border-radius:var(--ds-radius);
+  background:var(--_bg);color:var(--_fg);cursor:pointer;white-space:nowrap;user-select:none;
+  transition:background var(--ds-transition),border-color var(--ds-transition),color var(--ds-transition),box-shadow var(--ds-transition),transform var(--ds-transition);}
+.ds-btn:active{transform:translateY(.5px);}.ds-btn:focus-visible{box-shadow:0 0 0 3px var(--ds-focus-ring);outline:none;}
+.ds-btn:disabled,.ds-btn.is-disabled{opacity:.55;pointer-events:none;}
+.ds-btn--primary{--_bg:var(--ds-primary);--_fg:var(--ds-on-primary);--_bd:var(--ds-primary);}
+.ds-btn--primary:hover{--_bg:var(--ds-primary-hover);--_bd:var(--ds-primary-hover);}
+.ds-btn--primary:active{--_bg:var(--ds-primary-active);--_bd:var(--ds-primary-active);}
+.ds-btn--outline{--_bg:transparent;--_fg:var(--ds-primary);--_bd:var(--ds-primary);}
+.ds-btn--outline:hover{--_bg:var(--ds-primary);--_fg:var(--ds-on-primary);}
+.ds-btn--danger{--_bg:var(--ds-danger);--_fg:var(--ds-on-danger);--_bd:var(--ds-danger);}
+.ds-btn--sm{padding:.26rem .55rem;font-size:var(--ds-fs-xs);}
+.ds-input,.ds-select,.ds-textarea{display:block;width:100%;font:var(--ds-fw-normal) var(--ds-fs-sm)/1.5 var(--ds-font-sans);color:var(--ds-text);
+  background:var(--ds-surface);border:1px solid var(--ds-border-strong);border-radius:var(--ds-radius);padding:.46rem .7rem;appearance:none;
+  transition:border-color var(--ds-transition),box-shadow var(--ds-transition);}
+.ds-input::placeholder,.ds-textarea::placeholder{color:var(--ds-text-muted);opacity:.8;}
+.ds-input:focus,.ds-select:focus,.ds-textarea:focus{outline:none;border-color:var(--ds-primary);box-shadow:0 0 0 3px var(--ds-focus-ring);}
+.ds-textarea{min-height:5rem;resize:vertical;}
+.ds-select{padding-right:2rem;background-repeat:no-repeat;background-position:right .6rem center;background-size:14px;
+  background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237cba56' stroke-width='2.5' stroke-linecap='round'%3e%3cpath d='M6 9l6 6 6-6'/%3e%3c/svg%3e");}
+.ds-card{background:var(--ds-surface);border:1px solid var(--ds-border);border-radius:var(--ds-radius-lg);box-shadow:var(--ds-shadow-sm);overflow:hidden;}
+.ds-card__header{padding:.8rem 1.1rem;border-bottom:1px solid var(--ds-border);font-weight:var(--ds-fw-semibold);color:var(--ds-heading);}
+.ds-card__body{padding:1.1rem;}
+.ds-code{background:var(--ds-code-bg);border:1px solid var(--ds-border);border-radius:var(--ds-radius-lg);overflow:hidden;}
+.ds-code__head{display:flex;align-items:center;justify-content:space-between;padding:.45rem .8rem;border-bottom:1px solid var(--ds-border);
+  font-family:var(--ds-font-mono);font-size:var(--ds-fs-xs);color:var(--ds-text-muted);}
+.ds-code__copy{font-family:var(--ds-font-mono);font-size:var(--ds-fs-xs);text-transform:uppercase;letter-spacing:.08em;background:none;
+  border:1px solid var(--ds-border-strong);border-radius:var(--ds-radius-sm);padding:.15rem .45rem;color:var(--ds-text-muted);cursor:pointer;}
+.ds-code__copy:hover{color:var(--ds-primary);border-color:var(--ds-primary);}
+.ds-code pre{margin:0;padding:.9rem 1rem;overflow:auto;font-family:var(--ds-font-mono);font-size:var(--ds-fs-sm);line-height:1.6;color:var(--ds-code-text);}
+.ds-appbar{display:flex;align-items:center;gap:1rem;padding:.7rem clamp(1rem,4vw,2rem);background:var(--ds-surface);border-bottom:1px solid var(--ds-border);}
+.ds-appbar__brand{display:flex;align-items:center;gap:.55rem;font-weight:var(--ds-fw-bold);color:var(--ds-heading);font-size:var(--ds-fs-lg);}
+.ds-appbar__brand .ds-dot{width:.7rem;height:.7rem;border-radius:50%;background:var(--ds-primary);}
+.ds-appbar__spacer{margin-left:auto;}
+.ds-switch{display:inline-flex;align-items:center;gap:.55rem;cursor:pointer;font-size:var(--ds-fs-sm);}
+.ds-switch>input{appearance:none;position:relative;width:2.1rem;height:1.15rem;flex:none;background:var(--ds-border-strong);
+  border-radius:var(--ds-radius-pill);margin:0;transition:background var(--ds-transition);}
+.ds-switch>input::after{content:'';position:absolute;top:2px;left:2px;width:calc(1.15rem - 4px);height:calc(1.15rem - 4px);
+  background:#fff;border-radius:50%;box-shadow:var(--ds-shadow-sm);transition:transform var(--ds-transition);}
+.ds-switch>input:checked{background:var(--ds-primary);}.ds-switch>input:checked::after{transform:translateX(.95rem);}
+.ds-switch>input:focus-visible{outline:none;box-shadow:0 0 0 3px var(--ds-focus-ring);}
+.ds-badge{display:inline-flex;align-items:center;gap:.3em;padding:.2em .55em;font-size:var(--ds-fs-xs);font-weight:var(--ds-fw-semibold);
+  line-height:1;border-radius:var(--ds-radius-sm);background:var(--ds-primary);color:var(--ds-on-primary);}
+.ds-badge--soft{background:rgba(var(--ds-primary-rgb),.16);color:var(--ds-primary-active);}
+[data-theme="dark"] .ds-badge--soft{color:var(--ds-primary);}
+
+/* ============ layout playground (sulla falsariga di boxDatatable) ============ */
+body.ds-root{min-height:100dvh;display:flex;flex-direction:column;}
+@media (min-width:1081px){body.ds-root{height:100dvh;overflow:hidden;}}
+main{width:100%;flex:1;min-height:0;padding:var(--ds-sp-5) clamp(1rem,3vw,2.5rem) var(--ds-sp-7);display:grid;
+  grid-template-columns:minmax(360px,420px) minmax(0,1fr);grid-template-rows:minmax(0,1fr);gap:var(--ds-sp-5);align-items:stretch;}
+@media (max-width:1080px){main{grid-template-columns:1fr;grid-template-rows:auto;align-items:start;}}
+.rail{align-self:stretch;min-height:0;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:var(--ds-sp-4);padding-right:4px;}
+.rail>*{flex:none;}
+.col-main{display:flex;flex-direction:column;gap:var(--ds-sp-4);min-width:0;min-height:0;overflow-y:auto;overscroll-behavior:contain;}
+.col-main>.ds-card{flex:none;}
+@media (max-width:1080px){.rail,.col-main{overflow:visible;min-height:auto;padding-right:0;}}
+.ds-card__header{display:flex;align-items:center;justify-content:space-between;font-size:var(--ds-fs-sm);}
+.ds-card__header .ds-eyebrow{font-size:.6rem;}
+.fields{display:grid;gap:var(--ds-sp-3);}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:var(--ds-sp-3);}
+.lbl{display:block;font-family:var(--ds-font-mono);font-size:1rem;line-height:1.3;color:var(--ds-text-muted);margin-bottom:.3rem;word-break:break-word;}
+.cfg{font-family:var(--ds-font-mono);font-size:1rem;padding:.45rem .6rem;}
+
+/* gruppi di bottoni API */
+.api-group{display:flex;flex-direction:column;gap:.5rem;}
+.api-group__label{font-family:var(--ds-font-mono);font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ds-text-muted);}
+.api-grid{display:flex;flex-wrap:wrap;gap:.4rem;}
+.api-grid .ds-btn{font-family:var(--ds-font-mono);font-size:1rem;padding:.4rem .65rem;}
+
+/* toolbar sopra lo stage */
+.stage-bar{display:flex;align-items:center;gap:var(--ds-sp-3);flex-wrap:wrap;padding:var(--ds-sp-3) var(--ds-sp-4);border-bottom:1px solid var(--ds-border);}
+.stage-bar .pill{font-family:var(--ds-font-mono);font-size:.9rem;padding:.25rem .6rem;border:1px solid var(--ds-border-strong);
+  border-radius:999px;color:var(--ds-text-muted);white-space:nowrap;}
+.stage-bar .pill b{color:var(--ds-text);font-weight:600;}
+.stage-bar .pill--accent{border-color:var(--ds-primary);color:var(--ds-primary-active);}
+[data-theme="dark"] .stage-bar .pill--accent{color:var(--ds-primary);}
+.stage-bar__spacer{flex:1;}
+
+/* lo stage: box animabile + scratch + input valori */
+.stage{padding:var(--ds-sp-5);display:flex;flex-direction:column;gap:var(--ds-sp-5);align-items:center;min-height:340px;}
+#box{width:150px;height:150px;background:var(--ds-primary);color:var(--ds-on-primary);display:flex;align-items:center;justify-content:center;
+  border:none;border-radius:var(--ds-radius-lg);font-weight:var(--ds-fw-bold);font-size:1.2rem;cursor:pointer;box-shadow:var(--ds-shadow);}
+#box .play{font-size:2.4rem;line-height:1;}
+.scratch-wrap{width:100%;}
+.scratch-wrap .lbl{text-align:left;}
+#scratch{min-height:64px;width:100%;border:1px dashed var(--ds-border-strong);border-radius:var(--ds-radius);padding:var(--ds-sp-3);
+  display:flex;flex-wrap:wrap;gap:.4rem;align-items:flex-start;background:var(--ds-surface-2);}
+#scratch:empty::before{content:'— jdm_append / innerHTML / empty rendono qui —';color:var(--ds-text-muted);font-size:.9rem;}
+#scratch .chip{display:inline-block;padding:.2rem .55rem;border-radius:999px;background:rgba(var(--ds-primary-rgb),.16);
+  color:var(--ds-primary-active);border:1px solid rgba(var(--ds-primary-rgb),.5);font-size:.9rem;}
+[data-theme="dark"] #scratch .chip{color:var(--ds-primary);}
+.val-row{width:100%;display:grid;grid-template-columns:1fr auto;gap:.5rem;align-items:center;}
+.attr-view{width:100%;font-family:var(--ds-font-mono);font-size:.85rem;color:var(--ds-text-muted);word-break:break-all;}
+.attr-view b{color:var(--ds-primary-active);}
+[data-theme="dark"] .attr-view b{color:var(--ds-primary);}
+
+/* sandbox editabile (eval) */
+.sandbox-ta{font-family:var(--ds-font-mono);font-size:1rem;line-height:1.55;min-height:150px;background:var(--ds-code-bg);}
+.sandbox-actions{display:flex;gap:.5rem;align-items:center;margin-top:var(--ds-sp-3);flex-wrap:wrap;}
+
+/* code panel: sempre dark (editor look) */
+.pg-code{background:#11161b;border-color:#11161b;flex:1;min-height:240px;display:flex;flex-direction:column;}
+@media (max-width:1080px){.pg-code{flex:none;min-height:0;}}
+.pg-code .ds-code__head{background:#161c22;border-bottom:1px solid rgba(255,255,255,.07);color:#8a93a0;}
+.pg-code .ds-code__head .dots{display:inline-flex;gap:5px;margin-right:.55rem;vertical-align:middle;}
+.pg-code .ds-code__head .dots i{width:9px;height:9px;border-radius:50%;display:inline-block;}
+.pg-code .ds-code__copy{color:#8a93a0;border-color:rgba(255,255,255,.15);}
+.pg-code .ds-code__copy:hover{color:#fff;border-color:var(--ds-primary);}
+.pg-code pre{color:#c4cdd6;flex:1;min-height:0;max-height:none;overflow:auto;font-size:1rem;line-height:1.6;}
+.pg-code--ref{flex:none;}.pg-code--ref pre{flex:none;max-height:460px;}
+@media (max-width:1080px){.pg-code pre{max-height:520px;}}
+.pg-code pre.flash{animation:flash .5s ease;}
+@keyframes flash{from{background:rgba(124,186,86,.16);}to{background:transparent;}}
+.tok-com{color:#6b7682;font-style:italic;}.tok-str{color:#9ccb6a;}.tok-num{color:#d6a567;}.tok-lit{color:#7cba56;}.tok-key{color:#d6dde4;}
+
+#log{font-family:var(--ds-font-mono);font-size:1rem;line-height:1.6;height:200px;overflow:auto;}
+#log .t{color:var(--ds-text-muted);}#log .ev{color:var(--ds-primary-active);}
+[data-theme="dark"] #log .ev{color:var(--ds-primary);}
+#log .api{color:var(--ds-info);}#log .er{color:var(--ds-danger);}
+#log:empty::before{content:'— in ascolto —';color:var(--ds-text-muted);}
+</style>
+</head>
+<body class="ds ds-root">
+
+<header class="ds-appbar">
+  <div class="ds-appbar__brand"><span class="ds-dot"></span> jdm</div>
+  <span class="ds-eyebrow">// playground</span>
+  <div class="ds-appbar__spacer"></div>
+  <span class="ds-small ds-muted">config <span style="color:var(--ds-primary)">→</span> codice live</span>
+  <label class="ds-switch" style="margin-left:1rem"><input type="checkbox" id="themeSwitch"><span id="themeLabel" class="ds-small ds-muted">light</span></label>
+</header>
+
+<main>
+  <!-- ============ RAIL ============ -->
+  <div class="rail">
+
+    <!-- 01 · animazioni (copre example/animation.html al 100%) -->
+    <section class="ds-card">
+      <div class="ds-card__header"><span>animazioni</span><span class="ds-eyebrow">01</span></div>
+      <div class="ds-card__body fields">
+        <div><span class="lbl">animazione</span>
+          <select class="ds-select cfg" id="cfg-anim">
+            <option value="jdm_fadeIn">jdm_fadeIn</option><option value="jdm_fadeOut">jdm_fadeOut</option>
+            <option value="jdm_fadeInUp">jdm_fadeInUp</option><option value="jdm_fadeInDown">jdm_fadeInDown</option>
+            <option value="jdm_fadeInLeft">jdm_fadeInLeft</option><option value="jdm_fadeInRight">jdm_fadeInRight</option>
+            <option value="jdm_fadeOutUp">jdm_fadeOutUp</option><option value="jdm_fadeOutDown">jdm_fadeOutDown</option>
+            <option value="jdm_fadeOutLeft">jdm_fadeOutLeft</option><option value="jdm_fadeOutRight">jdm_fadeOutRight</option>
+            <option value="jdm_bounce">jdm_bounce</option><option value="jdm_tada">jdm_tada</option>
+            <option value="jdm_zoomIn">jdm_zoomIn</option><option value="jdm_zoomOut">jdm_zoomOut</option>
+            <option value="jdm_rotation">jdm_rotation</option>
+          </select>
+        </div>
+        <div class="grid-2">
+          <div><span class="lbl">duration (ms)</span><input class="ds-input cfg" id="cfg-duration" type="number" min="0" value="1000"></div>
+          <div><span class="lbl">delay (ms)</span><input class="ds-input cfg" id="cfg-delay" type="number" min="0" value="0"></div>
+          <div><span class="lbl">deg (rotation)</span><input class="ds-input cfg" id="cfg-deg" type="number" value="360"></div>
+          <div><span class="lbl">iterations</span><input class="ds-input cfg" id="cfg-iterations" type="text" value="1" placeholder="1 / 3 / Infinity"></div>
+          <div><span class="lbl">easing</span>
+            <select class="ds-select cfg" id="cfg-easing"><option value="">(default)</option><option value="ease">ease</option>
+              <option value="ease-in">ease-in</option><option value="ease-out">ease-out</option><option value="ease-in-out">ease-in-out</option>
+              <option value="linear">linear</option><option value="step-start">step-start</option><option value="step-end">step-end</option></select></div>
+          <div><span class="lbl">fill</span>
+            <select class="ds-select cfg" id="cfg-fill"><option value="">(default)</option><option value="none">none</option>
+              <option value="forwards">forwards</option><option value="backwards">backwards</option><option value="both">both</option><option value="auto">auto</option></select></div>
+          <div><span class="lbl">composite</span>
+            <select class="ds-select cfg" id="cfg-composite"><option value="">(default)</option><option value="replace">replace</option>
+              <option value="add">add</option><option value="accumulate">accumulate</option></select></div>
+          <div><span class="lbl">direction</span>
+            <select class="ds-select cfg" id="cfg-direction"><option value="">(default)</option><option value="normal">normal</option>
+              <option value="reverse">reverse</option><option value="alternate">alternate</option><option value="alternate-reverse">alternate-reverse</option></select></div>
+        </div>
+        <div class="api-grid">
+          <button class="ds-btn ds-btn--primary" id="anim-play">▶ play</button>
+          <button class="ds-btn" data-api="clearAnim">jdm_clearAnimations()</button>
+          <button class="ds-btn" data-api="cancelAnim">jdm_cancelAnimations()</button>
+          <button class="ds-btn" data-api="resetStyles">jdm_resetStyles()</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 · API sul box/scratch (copre example/Jdm.html: setAttribute, onClick, ecc.) -->
+    <section class="ds-card">
+      <div class="ds-card__header"><span>api</span><span class="ds-eyebrow">02</span></div>
+      <div class="ds-card__body" style="display:flex;flex-direction:column;gap:var(--ds-sp-3)">
+        <div class="api-group"><span class="api-group__label">attributi / id / class</span>
+          <div class="api-grid">
+            <button class="ds-btn ds-btn--sm" data-api="setAttribute">jdm_setAttribute</button>
+            <button class="ds-btn ds-btn--sm" data-api="getAttribute">jdm_getAttribute</button>
+            <button class="ds-btn ds-btn--sm" data-api="removeAttribute">jdm_removeAttribute</button>
+            <button class="ds-btn ds-btn--sm" data-api="addId">jdm_addId</button>
+            <button class="ds-btn ds-btn--sm" data-api="addClass">jdm_addClassList</button>
+            <button class="ds-btn ds-btn--sm" data-api="toggleClass">jdm_toggleClassList</button>
+            <button class="ds-btn ds-btn--sm" data-api="removeClass">jdm_removeClassList</button>
+            <button class="ds-btn ds-btn--sm" data-api="findClass">jdm_findClassList</button>
+          </div>
+        </div>
+        <div class="api-group"><span class="api-group__label">inserimento / contenuto</span>
+          <div class="api-grid">
+            <button class="ds-btn ds-btn--sm" data-api="append">jdm_append</button>
+            <button class="ds-btn ds-btn--sm" data-api="prepend">jdm_prepend</button>
+            <button class="ds-btn ds-btn--sm" data-api="appendBefore">jdm_appendBefore</button>
+            <button class="ds-btn ds-btn--sm" data-api="appendAfter">jdm_appendAfter</button>
+            <button class="ds-btn ds-btn--sm" data-api="innerHTML">jdm_innerHTML</button>
+            <button class="ds-btn ds-btn--sm" data-api="empty">jdm_empty</button>
+            <button class="ds-btn ds-btn--sm" data-api="extendChildNode">jdm_extendChildNode</button>
+          </div>
+        </div>
+        <div class="api-group"><span class="api-group__label">style / visibilità</span>
+          <div class="api-grid">
+            <button class="ds-btn ds-btn--sm" data-api="setStyle">jdm_setStyle</button>
+            <button class="ds-btn ds-btn--sm" data-api="hide">jdm_hide</button>
+            <button class="ds-btn ds-btn--sm" data-api="show">jdm_show</button>
+          </div>
+        </div>
+        <div class="api-group"><span class="api-group__label">eventi (→ event log)</span>
+          <div class="api-grid">
+            <button class="ds-btn ds-btn--sm" data-api="onClick">jdm_onClick</button>
+            <button class="ds-btn ds-btn--sm" data-api="onDoubleClick">jdm_onDoubleClick</button>
+            <button class="ds-btn ds-btn--sm" data-api="onRightClick">jdm_onRightClick</button>
+            <button class="ds-btn ds-btn--sm" data-api="onInput">jdm_onInput</button>
+            <button class="ds-btn ds-btn--sm" data-api="onChange">jdm_onChange</button>
+            <button class="ds-btn ds-btn--sm" data-api="onDebounce">jdm_onDebounce</button>
+            <button class="ds-btn ds-btn--sm" data-api="genEvent">jdm_genEvent</button>
+            <button class="ds-btn ds-btn--sm" data-api="waitFor">jdm_waitFor</button>
+            <button class="ds-btn ds-btn--sm" data-api="delegate">jdm_delegate</button>
+            <button class="ds-btn ds-btn--sm" data-api="batch">jdm_batch</button>
+          </div>
+        </div>
+        <div class="api-group"><span class="api-group__label">valori (sull'input sotto al box)</span>
+          <div class="api-grid">
+            <button class="ds-btn ds-btn--sm" data-api="setValue">jdm_setValue</button>
+            <button class="ds-btn ds-btn--sm" data-api="getValue">jdm_getValue</button>
+            <button class="ds-btn ds-btn--sm" data-api="getValueAsNumber">jdm_getValueAsNumber</button>
+            <button class="ds-btn ds-btn--sm" data-api="binding">jdm_binding</button>
+          </div>
+        </div>
+        <div class="api-group"><span class="api-group__label">statici / globali</span>
+          <div class="api-grid">
+            <button class="ds-btn ds-btn--sm" data-api="emit">Jdm.emit / on</button>
+            <button class="ds-btn ds-btn--sm" data-api="debounce">_common.debounce</button>
+            <button class="ds-btn ds-btn--sm" data-api="inspect">Jdm.inspect</button>
+            <button class="ds-btn ds-btn--sm" data-api="version">Jdm.version</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 · event log -->
+    <section class="ds-card">
+      <div class="ds-card__header"><span>event log</span><button class="ds-code__copy" id="log-clear" style="border-color:var(--ds-border-strong)">clear</button></div>
+      <div class="ds-card__body" style="padding:0"><div id="log" class="ds-card__body"></div></div>
+    </section>
+  </div>
+
+  <!-- ============ MAIN ============ -->
+  <div class="col-main">
+    <section class="ds-card">
+      <div class="stage-bar">
+        <span class="pill pill--accent"><b id="stat-anim">jdm_fadeIn</b></span>
+        <span class="pill">scratch · <b id="stat-children">0</b> nodi</span>
+        <span class="pill" id="stat-classes">0 class</span>
+        <span class="stage-bar__spacer"></span>
+        <span class="pill">box · clic = play · API a sinistra</span>
+      </div>
+      <div class="stage">
+        <button id="box" data-name="box"><span class="play">▶</span></button>
+        <div class="scratch-wrap">
+          <span class="lbl">#scratch <span class="ds-muted">(target di append / innerHTML / empty)</span></span>
+          <div id="scratch"></div>
+        </div>
+        <div class="val-row">
+          <input class="ds-input" id="valInput" data-name="valInput" placeholder="input per jdm_setValue / getValue / binding">
+          <span class="ds-badge ds-badge--soft" id="valMirror">mirror</span>
+        </div>
+        <div class="attr-view" id="attrView">box · in attesa…</div>
+      </div>
+    </section>
+
+    <!-- sandbox eval (copre example/Jdm.html + example/test.html) -->
+    <section class="ds-card">
+      <div class="ds-card__header"><span>sandbox · scrivi JDM ed esegui</span><span class="ds-eyebrow">eval</span></div>
+      <div class="ds-card__body">
+        <div style="margin-bottom:var(--ds-sp-3)">
+          <span class="lbl">preset</span>
+          <select class="ds-select cfg" id="presetSel">
+            <option value="setAttr">jdm_setAttribute chain (da Jdm.html)</option>
+            <option value="extend">jdm_extendChildNode (data-name → proprietà)</option>
+            <option value="svg">SVG + text node (da test.html)</option>
+            <option value="mixed">contenuto misto / selettore (da test.html)</option>
+            <option value="events">jdm_onClick + animazione</option>
+          </select>
+        </div>
+        <textarea class="ds-textarea sandbox-ta" id="sandbox" spellcheck="false"></textarea>
+        <div class="sandbox-actions">
+          <button class="ds-btn ds-btn--primary" id="run">Execute</button>
+          <button class="ds-btn" id="clearOut">pulisci output</button>
+          <span class="ds-small ds-muted">il codice gira con <code>eval</code> · <code>JDM</code>/<code>Jdm</code> globali · output sotto</span>
+        </div>
+        <div id="sandboxOut" style="margin-top:var(--ds-sp-4)"></div>
+      </div>
+    </section>
+
+    <!-- live code (riflette la config animazione) -->
+    <div class="ds-code pg-code">
+      <div class="ds-code__head">
+        <span><span class="dots"><i style="background:#bd3c12"></i><i style="background:#caa23a"></i><i style="background:#7cba56"></i></span>box.jdm_…(…) · live</span>
+        <button class="ds-code__copy" id="copy">copy</button>
+      </div>
+      <pre class="code" id="code"></pre>
+    </div>
+
+    <!-- reference statico: tutta l'API jdm -->
+    <div class="ds-code pg-code pg-code--ref">
+      <div class="ds-code__head">
+        <span><span class="dots"><i style="background:#bd3c12"></i><i style="background:#caa23a"></i><i style="background:#7cba56"></i></span>riferimento · API jdm (mock)</span>
+        <button class="ds-code__copy" id="copyRef">copy</button>
+      </div>
+      <pre class="code" id="codeRef"></pre>
+    </div>
+  </div>
+</main>
+
+<!-- jdm: build classico (espone window.JDM / window.Jdm). Gira anche via file://. -->
+<script src="../dist/jdm.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  // ---- theme switch (persistito) ----
+  var root = document.documentElement, sw = document.getElementById('themeSwitch'), tl = document.getElementById('themeLabel');
+  function setTheme(t){ root.setAttribute('data-theme', t); sw.checked = t === 'dark'; tl.textContent = t; try{ localStorage.setItem('jdm-pg-theme', t); }catch(e){} }
+  setTheme((function(){ try{ return localStorage.getItem('jdm-pg-theme'); }catch(e){ return null; } })() || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+  sw.addEventListener('change', function(){ setTheme(sw.checked ? 'dark' : 'light'); });
+
+  // ---- event log ----
+  var logEl = document.getElementById('log');
+  function now(){ return new Date().toLocaleTimeString('it-IT', { hour12:false }); }
+  function log(k, m){ var d = document.createElement('div'); d.innerHTML = '<span class="t">'+now()+'</span> <span class="'+k+'">'+m+'</span>'; logEl.prepend(d); }
+  document.getElementById('log-clear').onclick = function(){ logEl.innerHTML = ''; };
+
+  // Nel build classico (dist/jdm.js) window.Jdm è il namespace { Jdm: classe };
+  // la classe coi metodi statici (emit/on/once/inspect/version) è window.Jdm.Jdm.
+  // Nel build ESM, invece, l'import `Jdm` è già la classe. Resolver robusto:
+  var JdmClass = (window.Jdm && typeof window.Jdm.Jdm === 'function') ? window.Jdm.Jdm : window.Jdm;
+
+  // ---- nodi stage ----
+  var box = JDM(document.querySelector('#box'));
+  var scratch = JDM(document.querySelector('#scratch'));
+  var valInput = JDM(document.querySelector('#valInput'));
+  var attrView = document.getElementById('attrView');
+  var valMirror = document.getElementById('valMirror');
+
+  function refreshStats(){
+    document.getElementById('stat-anim').textContent = val('cfg-anim');
+    document.getElementById('stat-children').textContent = document.querySelectorAll('#scratch > *').length;
+    var n = box.classList.length;
+    document.getElementById('stat-classes').textContent = n + ' class';
+  }
+  function refreshAttrView(){
+    var attrs = [];
+    for (var i = 0; i < box.attributes.length; i++){ var a = box.attributes[i]; attrs.push('<b>'+a.name+'</b>="'+a.value+'"'); }
+    attrView.innerHTML = '&lt;button ' + attrs.join(' ') + '&gt;';
+    refreshStats();
+  }
+
+  // ---- helper config ----
+  function val(id){ return document.getElementById(id).value; }
+  function readAnim(){
+    var iterRaw = val('cfg-iterations').trim();
+    var iterations = iterRaw === 'Infinity' ? Infinity : (parseInt(iterRaw, 10) || 1);
+    var o = {
+      name: val('cfg-anim'),
+      duration: parseInt(val('cfg-duration'), 10) || 1000,
+      delay: parseInt(val('cfg-delay'), 10) || 0,
+      iterations: iterations,
+      deg: parseInt(val('cfg-deg'), 10) || 360,
+      easing: val('cfg-easing') || undefined,
+      fill: val('cfg-fill') || undefined,
+      composite: val('cfg-composite') || undefined,
+      direction: val('cfg-direction') || undefined,
+    };
+    return o;
+  }
+  function animOptions(c){
+    // ricostruisce l'oggetto opzioni come lo passa example/animation.html
+    return {
+      duration: c.duration, delay: c.delay,
+      fill: c.fill, easing: c.easing, composite: c.composite, direction: c.direction,
+      iterations: c.iterations === Infinity ? Infinity : c.iterations,
+    };
+  }
+
+  // ---- live code (riflette la config) ----
+  function genCode(c){
+    var lines = [];
+    lines.push('  duration: ' + c.duration + ',');
+    lines.push('  delay: ' + c.delay + ',');
+    if (c.easing)    lines.push("  easing: '" + c.easing + "',");
+    if (c.fill)      lines.push("  fill: '" + c.fill + "',");
+    if (c.composite) lines.push("  composite: '" + c.composite + "',");
+    if (c.direction) lines.push("  direction: '" + c.direction + "',");
+    lines.push('  iterations: ' + (c.iterations === Infinity ? 'Infinity' : c.iterations) + ',');
+    var opt = '{\n' + lines.join('\n') + '\n}';
+    var call = c.name === 'jdm_rotation'
+      ? "box." + c.name + "(() => console.log('" + c.name + " complete'), " + c.deg + ", " + opt + ");"
+      : "box." + c.name + "(() => console.log('" + c.name + " complete'), " + opt + ");";
+    return "const box = JDM(document.querySelector('#box'));\n\nbox.jdm_clearAnimations();\n" + call;
+  }
+  function esc(s){ return s.replace(/[&<>]/g, function(m){ return ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[m]; }); }
+  function highlight(code){
+    var re = /(\/\/[^\n]*)|('(?:[^'\\]|\\.)*')|(\b\d+(?:\.\d+)?\b)|(\b(?:true|false|null|Infinity|undefined)\b)|([A-Za-z_$][\w$]*)(?=\s*:)/g;
+    var out = '', last = 0, m;
+    while ((m = re.exec(code))){
+      out += esc(code.slice(last, m.index));
+      var cls = m[1] ? 'tok-com' : m[2] ? 'tok-str' : m[3] ? 'tok-num' : m[4] ? 'tok-lit' : 'tok-key';
+      out += '<span class="'+cls+'">'+esc(m[0])+'</span>'; last = re.lastIndex;
+    }
+    return out + esc(code.slice(last));
+  }
+  var codeEl = document.getElementById('code');
+  function renderCode(){
+    var code = genCode(readAnim());
+    codeEl.innerHTML = highlight(code);
+    codeEl.classList.remove('flash'); void codeEl.offsetWidth; codeEl.classList.add('flash');
+    refreshStats();
+  }
+  document.querySelectorAll('.cfg').forEach(function(el){ el.addEventListener('change', renderCode); });
+  document.getElementById('copy').onclick = function(){
+    try { navigator.clipboard.writeText(genCode(readAnim())); log('api', 'codice copiato'); } catch(e){ log('er', 'copy non disponibile'); }
+  };
+
+  // ---- play animazione (copre example/animation.html) ----
+  function play(){
+    var c = readAnim();
+    box.jdm_clearAnimations();
+    var opt = animOptions(c);
+    if (typeof box[c.name] !== 'function'){ log('er', 'metodo ' + c.name + ' non trovato'); return; }
+    log('ev', 'play · ' + c.name + '(' + c.duration + 'ms)');
+    if (c.name === 'jdm_rotation') box[c.name](function(){ log('ev', c.name + ' complete'); }, c.deg, opt);
+    else box[c.name](function(){ log('ev', c.name + ' complete'); }, opt);
+  }
+  document.getElementById('anim-play').onclick = play;
+  box.jdm_onClick(play); // clic sul box = play (come animation.html)
+
+  // ---- API palette ----
+  var classPool = ['ds-badge', 'shake', 'is-active', 'highlight'];
+  var classIdx = 0;
+  var colorPool = ['#7cba56', '#3aa9d6', '#f0ad4e', '#dc3545', '#6c757d'];
+  var colorIdx = 0;
+  var appendIdx = 0;
+
+  var api = {
+    // attr / id / class
+    setAttribute: function(){ var v = 'v' + Math.floor(performance.now() % 1000); box.jdm_setAttribute('data-demo', v); log('api', "jdm_setAttribute('data-demo', '"+v+"')"); refreshAttrView(); },
+    getAttribute: function(){ log('api', "jdm_getAttribute('data-demo') → " + JSON.stringify(box.jdm_getAttribute('data-demo'))); },
+    removeAttribute: function(){ box.jdm_removeAttribute('data-demo'); log('api', "jdm_removeAttribute('data-demo')"); refreshAttrView(); },
+    addId: function(){ box.jdm_addId('theBox'); log('api', "jdm_addId('theBox')"); refreshAttrView(); },
+    addClass: function(){ var c = classPool[classIdx++ % classPool.length]; box.jdm_addClassList(c); log('api', "jdm_addClassList('"+c+"')"); refreshStats(); },
+    toggleClass: function(){ box.jdm_toggleClassList('highlight'); log('api', "jdm_toggleClassList('highlight')"); refreshStats(); },
+    removeClass: function(){ box.jdm_removeClassList('highlight'); log('api', "jdm_removeClassList('highlight')"); refreshStats(); },
+    findClass: function(){ log('api', "jdm_findClassList('highlight') → " + box.jdm_findClassList('highlight')); },
+    // inserimento / contenuto
+    append: function(){ appendIdx++; JDM('<span class="chip">chip '+appendIdx+'</span>', scratch); log('api', "jdm_append(chip "+appendIdx+")"); refreshStats(); },
+    prepend: function(){ appendIdx++; var n = JDM('<span class="chip">first '+appendIdx+'</span>'); scratch.jdm_prepend(n); log('api', "jdm_prepend(first "+appendIdx+")"); refreshStats(); },
+    appendBefore: function(){ var n = JDM('<span class="chip">before</span>'); scratch.jdm_appendBefore(n); log('api', "jdm_appendBefore(...) — fratello prima di #scratch"); },
+    appendAfter: function(){ var n = JDM('<span class="chip">after</span>'); scratch.jdm_appendAfter(n); log('api', "jdm_appendAfter(...) — fratello dopo #scratch"); },
+    innerHTML: function(){ scratch.jdm_innerHTML('<span class="chip">innerHTML set ✓</span>'); log('api', "jdm_innerHTML('…')"); refreshStats(); },
+    empty: function(){ scratch.jdm_empty(); log('api', "jdm_empty() → #scratch svuotato"); refreshStats(); },
+    extendChildNode: function(){
+      // crea un sotto-albero con data-name e indicizza i figli (come example/Jdm.html)
+      scratch.jdm_empty();
+      var dom = JDM('<div class="chip" data-name="alpha">alpha</div><div class="chip" data-name="beta">beta</div>', scratch).jdm_extendChildNode();
+      log('api', "jdm_extendChildNode() → dom.alpha / dom.beta indicizzati");
+      try { dom.alpha.jdm_setStyle('outline', '2px solid var(--ds-primary)'); } catch(e){}
+      refreshStats();
+    },
+    // style / visibilità
+    setStyle: function(){ var col = colorPool[colorIdx++ % colorPool.length]; box.jdm_setStyle('background-color', col); log('api', "jdm_setStyle('background-color', '"+col+"')"); },
+    hide: function(){ box.jdm_hide(); log('api', 'jdm_hide()'); },
+    show: function(){ box.jdm_show(); log('api', 'jdm_show()'); },
+    // eventi
+    onClick: function(){ box.jdm_onClick(function(){ log('ev', 'box click'); }); log('api', 'jdm_onClick registrato (clic sul box)'); },
+    onDoubleClick: function(){ box.jdm_onDoubleClick(function(){ log('ev', 'box dblclick'); }); log('api', 'jdm_onDoubleClick registrato'); },
+    onRightClick: function(){ box.jdm_onRightClick(function(){ log('ev', 'box contextmenu'); }); log('api', 'jdm_onRightClick registrato'); },
+    onInput: function(){ valInput.jdm_onInput(function(){ log('ev', 'input → ' + valInput.value); }); log('api', 'jdm_onInput registrato (scrivi nell\'input)'); },
+    onChange: function(){ valInput.jdm_onChange(function(){ log('ev', 'change → ' + valInput.value); }); log('api', 'jdm_onChange registrato'); },
+    onDebounce: function(){ valInput.jdm_onDebounce(function(){ log('ev', 'debounce → ' + valInput.value); }, 400, 'input'); log('api', 'jdm_onDebounce(400ms) registrato'); },
+    genEvent: function(){ box.jdm_addEventListener('jdmCustom', function(e){ log('ev', 'jdmCustom ricevuto · ' + JSON.stringify(e.detail)); }); box.jdm_genEvent('jdmCustom', { ts: Date.now() }); log('api', "jdm_genEvent('jdmCustom', {ts})"); },
+    waitFor: function(){ log('api', 'jdm_waitFor("click") → clicca il box entro 5s'); box.jdm_waitFor('click', { timeout: 5000 }).then(function(){ log('ev', 'waitFor risolto · click'); }).catch(function(){ log('er', 'waitFor timeout'); }); },
+    delegate: function(){ var off = scratch.jdm_delegate('click', '.chip', function(e, t){ log('ev', 'delegate · chip "'+t.textContent+'"'); }); log('api', 'jdm_delegate(click, .chip) → clicca una chip (auto-off 8s)'); setTimeout(off, 8000); },
+    batch: function(){ box.jdm_batch(function(n){ n.style.transform = 'scale(1.1)'; n.style.borderRadius = '50%'; }).then(function(){ log('ev', 'jdm_batch applicato (rAF)'); }); log('api', 'jdm_batch(fn) → mutazioni in un frame'); },
+    // valori
+    setValue: function(){ valInput.jdm_setValue('valore jdm ' + new Date().getSeconds()); valMirror.textContent = valInput.value; log('api', "jdm_setValue('…')"); },
+    getValue: function(){ log('api', 'jdm_getValue() → ' + JSON.stringify(valInput.jdm_getValue())); },
+    getValueAsNumber: function(){ log('api', 'jdm_getValueAsNumber() → ' + valInput.jdm_getValueAsNumber()); },
+    binding: function(){ valInput.jdm_binding(valMirror, 'input', false); log('api', 'jdm_binding(valInput → mirror) · scrivi nell\'input'); },
+    // statici / globali
+    emit: function(){ JdmClass.once('pgBus', function(d){ log('ev', 'Jdm bus · ' + JSON.stringify(d)); }); JdmClass.emit('pgBus', { hello: 'jdm' }); log('api', "Jdm.once('pgBus') + Jdm.emit('pgBus', {hello})"); },
+    debounce: function(){
+      // _common è esposto solo nel build ESM; nel build classico (dist/jdm.js) no.
+      // Fallback: stessa semantica del debounce interno, così il bottone funziona ovunque.
+      var deb = (typeof _common !== 'undefined' && _common.debounce) ? _common.debounce
+        : function(fn, t){ var id; return function(){ var a = arguments, self = this; clearTimeout(id); id = setTimeout(function(){ fn.apply(self, a); }, t || 300); }; };
+      var f = deb(function(){ log('ev', 'debounce eseguito (1 sola volta)'); }, 300);
+      f(); f(); f(); log('api', 'debounce: 3 chiamate ravvicinate → 1 esecuzione');
+    },
+    inspect: function(){ JdmClass.inspect(box); log('api', 'Jdm.inspect(box) → vedi console'); },
+    version: function(){ log('api', 'Jdm.version → ' + JdmClass.version); },
+  };
+  document.querySelectorAll('[data-api]').forEach(function(b){
+    b.onclick = function(){ try { api[b.dataset.api](); } catch(e){ log('er', b.dataset.api + ' → ' + e.message); } };
+  });
+  // i 3 bottoni anim extra sono in api{} ma stanno nella card 01
+  api.clearAnim = function(){ box.jdm_clearAnimations(); log('api', 'jdm_clearAnimations()'); };
+  api.cancelAnim = function(){ box.jdm_cancelAnimations(); log('api', 'jdm_cancelAnimations()'); };
+  api.resetStyles = function(){ box.jdm_resetStyles(); log('api', 'jdm_resetStyles() → stili inline azzerati'); };
+
+  // mirror input → badge (feedback visivo immediato)
+  valInput.addEventListener('input', function(){ valMirror.textContent = valInput.value || 'mirror'; });
+
+  // ---- sandbox eval (copre example/Jdm.html + example/test.html) ----
+  var PRESETS = {
+    setAttr:
+"// da example/Jdm.html — chain di jdm_setAttribute\n" +
+"const div = JDM('<div class=\"chip\">lorem & ipsum</div>', out)\n" +
+"  .jdm_setAttribute('id', 'myDiv')\n" +
+"  .jdm_setAttribute('data-test', 'foo')\n" +
+"  .jdm_setAttribute('counter', 1);\n" +
+"console.log('attributi:', div.id, div.dataset.test, div.getAttribute('counter'));",
+    extend:
+"// jdm_extendChildNode: i discendenti con data-name diventano proprietà del nodo\n" +
+"const dom = JDM(`<div class=\"ds-cluster\">\n" +
+"  <span class=\"chip\" data-name=\"title\">titolo</span>\n" +
+"  <button class=\"ds-btn ds-btn--sm\" data-name=\"action\">azione</button>\n" +
+"</div>`, out).jdm_extendChildNode();\n" +
+"dom.action.jdm_onClick(() => console.log('click su', dom.title.textContent));",
+    svg:
+"// da example/test.html — SVG + text node\n" +
+"const svg = JDM('<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 200 50\" width=\"200\" height=\"50\"></svg>', out);\n" +
+"JDM('<text x=\"10\" y=\"32\" font-family=\"sans-serif\" font-size=\"22\" fill=\"currentColor\">Testo in SVG</text>', svg);",
+    mixed:
+"// da example/test.html — contenuto misto + selettore\n" +
+"JDM('Qualcosa <span class=\"chip\">in mezzo</span> al testo', out);\n" +
+"JDM(out).jdm_addClassList('highlight');",
+    events:
+"// jdm_onClick + animazione su un nodo creato al volo\n" +
+"const b = JDM('<button class=\"ds-btn ds-btn--primary\">animami</button>', out);\n" +
+"b.jdm_onClick(() => b.jdm_tada(() => console.log('tada!'), { duration: 700 }));",
+  };
+  var sandbox = document.getElementById('sandbox');
+  var sandboxOut = document.getElementById('sandboxOut');
+  var presetSel = document.getElementById('presetSel');
+  function loadPreset(){ sandbox.value = PRESETS[presetSel.value]; }
+  presetSel.addEventListener('change', loadPreset);
+  loadPreset();
+  document.getElementById('clearOut').onclick = function(){ sandboxOut.innerHTML = ''; log('api', 'output sandbox pulito'); };
+  document.getElementById('run').onclick = function(){
+    var out = JDM('<div class="ds-card" style="padding:.8rem;margin-top:.4rem"></div>', sandboxOut);
+    try {
+      // `out` è in scope per gli snippet (target di rendering); JDM/Jdm sono globali
+      (function (out) { eval(sandbox.value); })(out);
+      log('ev', 'sandbox eseguito ✓');
+    } catch (e) {
+      out.jdm_innerHTML('<span style="color:var(--ds-danger)">' + esc(String(e)) + '</span>');
+      log('er', 'sandbox → ' + e.message);
+    }
+  };
+
+  // ---- reference statico: API jdm completa (mock) ----
+  var REFERENCE_SRC =
+"import { JDM, Jdm } from 'jdm_javascript_dom_manipulator';\n" +
+"// build classico (dist/jdm.js): JDM e Jdm sono globali su window.\n\n" +
+"// ── creazione ─────────────────────────────────────────────\n" +
+"const node = JDM('<div>ciao</div>', document.body /*parent*/, ['c1'] /*class*/, true /*deep*/);\n" +
+"JDM(document.querySelector('#esistente'));   // wrappa un nodo esistente\n\n" +
+"// ── attributi / id / class ───────────────────────────────\n" +
+"node.jdm_setAttribute('data-x', 1).jdm_getAttribute('data-x');\n" +
+"node.jdm_removeAttribute('data-x').jdm_addId('mio');\n" +
+"node.jdm_addClassList(['a','b']).jdm_toggleClassList('a').jdm_removeClassList('b');\n" +
+"node.jdm_findClassList('a');                 // boolean\n\n" +
+"// ── inserimento / contenuto ──────────────────────────────\n" +
+"node.jdm_append(child).jdm_prepend(child);\n" +
+"node.jdm_appendBefore(sib).jdm_appendAfter(sib);\n" +
+"node.jdm_innerHTML('<b>x</b>').jdm_empty().jdm_destroy();\n" +
+"node.jdm_extendChildNode();                  // data-name dei figli → proprietà\n\n" +
+"// ── style / visibilità ───────────────────────────────────\n" +
+"node.jdm_setStyle('color', 'red').jdm_hide().jdm_show().jdm_resetStyles();\n\n" +
+"// ── valori / form ────────────────────────────────────────\n" +
+"input.jdm_setValue('x'); input.jdm_getValue(); input.jdm_getValueAsNumber();\n" +
+"input.jdm_setValueRaw(v); input.jdm_getValueRaw();\n" +
+"form.jdm_validate().jdm_submit();\n" +
+"input.jdm_binding(target, 'input', true /*twoWay*/);\n\n" +
+"// ── eventi ───────────────────────────────────────────────\n" +
+"node.jdm_onClick(fn).jdm_onDoubleClick(fn).jdm_onRightClick(fn);\n" +
+"node.jdm_onInput(fn).jdm_onChange(fn).jdm_onSubmit(fn).jdm_onInvalid(fn);\n" +
+"node.jdm_onDebounce(fn, 300, 'input').jdm_setDebounceTime(500);\n" +
+"node.jdm_on('evt', fn, { jdm_once:true, bubbles:true }).jdm_off('evt', fn);\n" +
+"node.jdm_genEvent('evt', { data:1 }, true /*propagate*/);\n" +
+"const off = node.jdm_delegate('click', '.row', (e, t) => {}); // off() per disiscriversi\n" +
+"await node.jdm_waitFor('load', { timeout: 5000 });\n" +
+"await node.jdm_batch(n => { n.style.left = '0'; });   // mutazioni in 1 frame\n\n" +
+"// ── animazioni ───────────────────────────────────────────\n" +
+"node.jdm_fadeIn(cb, { duration:1000, easing:'ease', delay:0, iterations:1 });\n" +
+"node.jdm_fadeOut(); node.jdm_fadeInUp(); node.jdm_fadeInDown();\n" +
+"node.jdm_fadeInLeft(); node.jdm_fadeInRight(); node.jdm_fadeOutUp();\n" +
+"node.jdm_fadeOutDown(); node.jdm_fadeOutLeft(); node.jdm_fadeOutRight();\n" +
+"node.jdm_bounce(); node.jdm_tada(); node.jdm_zoomIn(); node.jdm_zoomOut();\n" +
+"node.jdm_rotation(cb, 360, { duration:800 });\n" +
+"node.jdm_animation(keyframes, cb, opt);      // keyframe custom\n" +
+"node.jdm_clearAnimations(); node.jdm_cancelAnimations();\n\n" +
+"// ── statici / bus globale ────────────────────────────────\n" +
+"Jdm.on('evt', fn); Jdm.once('evt', fn); Jdm.emit('evt', data); Jdm.off('evt', fn);\n" +
+"Jdm.use(ctx => { /* plugin */ }); Jdm.inspect(node); Jdm.version;\n" +
+"_common.debounce(fn, 300); _common.genEvent(node, 'evt', data);\n" +
+"_evt.jdm_onElement(node, 'evt', fn);";
+  document.getElementById('codeRef').innerHTML = highlight(REFERENCE_SRC);
+  document.getElementById('copyRef').onclick = function(){
+    try { navigator.clipboard.writeText(REFERENCE_SRC); log('api', 'riferimento copiato'); } catch(e){ log('er', 'copy non disponibile'); }
+  };
+
+  // ---- init ----
+  refreshAttrView();
+  renderCode();
+})();
+</script>
+</body>
+</html>
