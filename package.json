@@ -75,7 +75,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/giacomarco/jdm.git"
+        "url": "git+https://github.com/communicationbox/jdm.git"
     },
     "keywords": [
         "jdm",
@@ -86,9 +86,9 @@
     "author": "Marco Giacobazzi",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/giacomarco/jdm/issues"
+        "url": "https://github.com/communicationbox/jdm/issues"
     },
-    "homepage": "https://github.com/giacomarco/jdm#readme",
+    "homepage": "https://github.com/communicationbox/jdm#readme",
     "devDependencies": {
         "@babel/cli": "^7.27.0",
         "@babel/core": "^7.26.10",

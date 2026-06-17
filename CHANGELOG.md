@@ -51,7 +51,7 @@ is first marked **Deprecated** here for at least one minor release (see
   manipulator: `Jdm` class, `JDM` factory global, `<jdm-element>` custom
   element, animations, form value handling, `String/Number.prototype` helpers.
 
-[Unreleased]: https://github.com/giacomarco/jdm/compare/v2.6.0...HEAD
-[2.6.0]: https://github.com/giacomarco/jdm/compare/v2.5.0...v2.6.0
-[2.5.0]: https://github.com/giacomarco/jdm/compare/v2.4.7...v2.5.0
-[2.4.7]: https://github.com/giacomarco/jdm/releases/tag/v2.4.7
+[Unreleased]: https://github.com/communicationbox/jdm/compare/v2.6.0...HEAD
+[2.6.0]: https://github.com/communicationbox/jdm/compare/v2.5.0...v2.6.0
+[2.5.0]: https://github.com/communicationbox/jdm/compare/v2.4.7...v2.5.0
+[2.4.7]: https://github.com/communicationbox/jdm/releases/tag/v2.4.7

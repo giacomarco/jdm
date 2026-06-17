@@ -14,7 +14,7 @@ The latest 2.x release line receives security fixes.
 Please **do not** open a public issue for security problems.
 
 Report privately via GitHub's
-[security advisories](https://github.com/giacomarco/jdm/security/advisories/new),
+[security advisories](https://github.com/communicationbox/jdm/security/advisories/new),
 or email the maintainer (see `package.json` author / repository profile).
 
 Include: affected version, a description, and a minimal reproduction if

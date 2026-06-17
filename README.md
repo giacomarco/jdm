@@ -4,7 +4,7 @@
 # JDM — JavaScript DOM Manipulator
 
 [![npm version](https://img.shields.io/npm/v/jdm_javascript_dom_manipulator.svg)](https://www.npmjs.com/package/jdm_javascript_dom_manipulator)
-[![CI](https://github.com/giacomarco/jdm/actions/workflows/ci.yml/badge.svg)](https://github.com/giacomarco/jdm/actions/workflows/ci.yml)
+[![CI](https://github.com/communicationbox/jdm/actions/workflows/ci.yml/badge.svg)](https://github.com/communicationbox/jdm/actions/workflows/ci.yml)
 [![license](https://img.shields.io/npm/l/jdm_javascript_dom_manipulator.svg)](./LICENSE)
 [![bundle size](https://img.shields.io/badge/gzip-~6KB-brightgreen.svg)](#)
 
